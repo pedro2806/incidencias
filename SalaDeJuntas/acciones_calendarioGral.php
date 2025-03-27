@@ -12,9 +12,9 @@ $result = $conn->query($sql);
 $reservas = [];
 while ($row = $result->fetch_assoc()) {
 $reservas[] = [
-'title' => $row['nombre_sala'] . ' - ' . $row['nombre_usuario'], // Mostrar el nombre de la sala y el usuario
-'start' => $row['fecha_hora_inicio'],
-'end'   => $row['fecha_hora_fin']
+    'title' => $row['nombre_sala'] . ' - ' . $row['nombre_usuario'], // Mostrar el nombre de la sala y el usuario
+    'start' => $row['fecha_hora_inicio'],
+    'end'   => $row['fecha_hora_fin']
 ];
 }
 
