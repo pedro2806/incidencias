@@ -17,31 +17,33 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.css">
 </head>
 <body class = "bg-gradient-primary">
+
     <div class = "container">
+
+        <!-- Outer Row -->
         <div class = "row justify-content-center">
+
             <div class = "col-xl-10 col-lg-12 col-md-9">
+
                 <div class = "card o-hidden border-0 shadow-lg my-5">
                     <div class = "card-body p-0">
+                        <!-- Nested Row within Card Body -->
                         <div class = "row">
-                        <div class="d-none d-sm-block bg-login-image" 
-                            style="background-image: url('img/MESS_05_Imagotipo.svg'); 
-                                    background-size: cover; 
-                                    background-position: center; 
-                                    width: 80%; 
-                                    height: 300px;">
-                        </div>
-                            <!--LOGIN-->
+                            <div class = "col-sm-6 d-none d-sm-block bg-login-image">
+                                <br>
+                                <center>
+                                    <b>
+                                        RR HH<br>
+                                        Incidencias
+                                    </b>
+                                </center>
+                            </div>
                             <div class = "col-lg-6">
                                 <div class = "p-5">
                                     <div class = "text-center">
-                                    <center>
-                                        <b>
-                                            RR HH<br>
-                                            Incidencias
-                                        </b>
-                                    </center>
                                         <h1 class = "h4 text-gray-900 mb-4">Bienvenido</h1>
                                     </div>
+                                    <br>
                                     <form class = "user" method = "POST">
                                         <!--Se cambio type por text. Sebas 20/03/2025
                                         <div class = "form-group">
@@ -64,37 +66,34 @@
                                         <center>
                                             <input class = "btn btn-primary" type = "submit" name = "btningresar" value = "   Acceder   "/>                                       
                                         </center>
-                                        <!--<a class = "small" href = "forgot-password">Olvide mi contraseña</a>--> 
-                                        <br>
-                                        <br>
                                         <br>
                                         <hr>
                                     </form>                      
+                                        <div class = "text-center" id='calendar'></div>
+                                        <br> 
+                                        <hr>   
+                                        <div class = "text-center">
+                                            <center>
+                                                <p class="alert alert-info">
+                                                    Soporte del sistema:
+                                                    <a href="mailto:sebastian.gutierrez@mess.com.mx">sebastian.gutierrez@mess.com.mx</a> 
+                                                    o 
+                                                    <a href="mailto:pedro.martinez@mess.com.mx">pedro.martinez@mess.com.mx</a>
+                                                </p>
+                                            </center>
+                                            <!--<a class = "small" href = "forgot-password">Olvide mi contraseña</a>-->
+                                        </div>                                        
+                                        <hr>
                                 </div>
                             </div>
-                            <!--AGENDA SALA DE JUNTAS-->
-                            <div class = "col-lg-6">
-                                <div class = "p-5">
-                                    <div class = "text-center" id='calendar'></div>                             
-                                </div>
-                                <hr>
-                            </div>    
-                            <!--BARRA DE SOPORTE-->
-                            <div class = "col-lg-6 mx-auto">
-                                <center>
-                                    <p class="alert alert-info">
-                                        Soporte del sistema:
-                                        <a href="mailto:sebastian.gutierrez@mess.com.mx">sebastian.gutierrez@mess.com.mx</a> 
-                                        o 
-                                        <a href="mailto:pedro.martinez@mess.com.mx">pedro.martinez@mess.com.mx</a>
-                                    </p>
-                                </center>
-                            </div>          
                         </div>
                     </div>
                 </div>
+
             </div>
+
         </div>
+
     </div>
     <?php
         session_start();
@@ -149,10 +148,10 @@
             
         }
     ?>
-    <script src = "https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src = "vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src = "js/sb-admin-2.min.js"></script>
-    <script src = "https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.js"></script>
     <script src = "vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script>
     $(document).ready(function () {
