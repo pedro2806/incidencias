@@ -14,7 +14,25 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.css">
     <!-- Custom styles for this template-->
     <link href = "css/sb-admin-2.min.css" rel = "stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.css">
+
+    <style>
+        .bg-login-image {
+            background-image: url('img/MESS_05_Imagotipo.svg');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat; 
+            width: 100%; /* Ocupar el ancho completo del contenedor */
+            max-width: 300px; /* Ancho máximo */
+            height: 200px; /* Altura fija */
+            margin: 0 auto; /* Centrar la imagen */
+        }
+        @media (max-width: 767.98px) { /* Para pantallas pequeñas */
+            .bg-login-image {
+                max-width: 200px; /* Reducir el ancho máximo */
+                height: 150px; /* Reducir la altura */
+            }
+        }
+    </style>
 </head>
 <body class = "bg-gradient-primary">
     <div class = "container">
@@ -23,16 +41,12 @@
                 <div class = "card o-hidden border-0 shadow-lg my-5">
                     <div class = "card-body p-0">
                         <div class = "row">
-                        <div class="d-none d-sm-block bg-login-image" 
-                            style="background-image: url('img/MESS_05_Imagotipo.svg'); 
-                                    background-size: cover; 
-                                    background-position: center; 
-                                    width: 80%; 
-                                    height: 300px;">
-                        </div>
+                            <div class="d-lg-block bg-login-image"></div>
+                        </div>      
+                        <div class = "row">
                             <!--LOGIN-->
                             <div class = "col-lg-6">
-                                <div class = "p-5">
+                                <div class = "p-0">
                                     <div class = "text-center">
                                     <center>
                                         <b>
@@ -68,19 +82,19 @@
                                         <br>
                                         <br>
                                         <br>
-                                        <hr>
                                     </form>                      
                                 </div>
                             </div>
                             <!--AGENDA SALA DE JUNTAS-->
                             <div class = "col-lg-6">
-                                <div class = "p-5">
+                                <div class = "p-0">
                                     <div class = "text-center" id='calendar'></div>                             
                                 </div>
-                                <hr>
-                            </div>    
-                            <!--BARRA DE SOPORTE-->
-                            <div class = "col-lg-6 mx-auto">
+                            </div>  
+                        </div>
+                        <!--BARRA DE SOPORTE-->
+                        <div class="row">  
+                            <div class = "col-lg-12 mx-auto">
                                 <center>
                                     <p class="alert alert-info">
                                         Soporte del sistema:
@@ -172,30 +186,8 @@
                     var nombreEmpleado = info.event.title;
                     var fechaInicio = info.event.start;
                     var fechaFin = info.event.end;
-
-                    // Formatear la fecha y hora de inicio
-                    var diaInicio = fechaInicio.getDate();
-                    var mesInicio = fechaInicio.getMonth() + 1; // Los meses comienzan desde 0
-                    var añoInicio = fechaInicio.getFullYear();
-                    var horasInicio = fechaInicio.getHours();
-                    var minutosInicio = fechaInicio.getMinutes().toString().padStart(2, '0');
-
-                    var fechaInicioFormateada = diaInicio + '/' + mesInicio + '/' + añoInicio + ' ' + horasInicio + ':' + minutosInicio;
-
-                    // Si se tiene una fecha de fin, formatear también
-                    var fechaFinFormateada = '';
-                    if (fechaFin) {
-                        var diaFin = fechaFin.getDate();
-                        var mesFin = fechaFin.getMonth() + 1;
-                        var añoFin = fechaFin.getFullYear();
-                        var horasFin = fechaFin.getHours();
-                        var minutosFin = fechaFin.getMinutes().toString().padStart(2, '0');
-
-                        fechaFinFormateada = '<br>Fin: ' + diaFin + '/' + mesFin + '/' + añoFin + ' ' + horasFin + ':' + minutosFin;
-                    }
-
-                    // Mostrar el nombre del empleado, la fecha y hora de inicio, y la fecha y hora de fin (si existe)
-                    var displayText = nombreEmpleado + 'Inicio: ' + fechaInicioFormateada + fechaFinFormateada;
+                    var descripcion = info.event.extendedProps.descripcion || 'Sin descripción'; // Obtener la descripción del evento
+                    var displayText = nombreEmpleado + '<br>' + descripcion;
 
                     return { html: displayText };
                 }
