@@ -22,7 +22,7 @@ if($accion == 'rrhh'){
 }
 
 if($accion == 'login'){
-    $Calendario_Login = "SELECT reservas.id, reservas.fecha_hora_inicio, reservas.fecha_hora_fin, salas.nombre_sala, usuarios.nombre AS nombre_usuario 
+    $Calendario_Login = "SELECT reservas.id, reservas.fecha_hora_inicio, reservas.fecha_hora_fin, salas.nombre_sala, usuarios.nombre AS nombre_usuario, reservas.descripcion
     FROM reservas 
     JOIN salas ON reservas.id_sala = salas.id_sala
     JOIN usuarios ON reservas.id_usuario = usuarios.noEmpleado
@@ -34,7 +34,8 @@ if($accion == 'login'){
         $reservas[] = [
         'title' => $row['nombre_usuario'], // Mostrar el nombre el usuario
         'start' => $row['fecha_hora_inicio'],
-        'end'   => $row['fecha_hora_fin']
+        'end'   => $row['fecha_hora_fin'],
+        'descripcion' => $row['descripcion'] // Mostrar la descripción de la reserva      
         ];
     }
     echo json_encode($reservas);

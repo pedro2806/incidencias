@@ -34,11 +34,15 @@
                     <div class="row">
                         <div class="col-xl-3 col-lg-3">
                             <label for="fecha_hora_inicio">Fecha y hora de inicio:</label>
-                            <input class="form-control" type="datetime-local" id="fecha_hora_inicio" name="fecha_hora_inicio" required><br><br>
+                            <input class="form-control" type="datetime-local" id="fecha_hora_inicio" name="fecha_hora_inicio" required>
                         </div>
                         <div class="col-xl-3 col-lg-3">
                             <label for="fecha_hora_fin">Fecha y hora de fin:</label>
-                            <input class="form-control" type="datetime-local" id="fecha_hora_fin" name="fecha_hora_fin" required><br><br>
+                            <input class="form-control" type="datetime-local" id="fecha_hora_fin" name="fecha_hora_fin" required>
+                        </div>
+                        <div class="col-xl-3 col-lg-3">
+                            <label for="descripcion">Motivo:</label>
+                            <textarea class="form-control" type="text-area" id="descripcion" name="descripcion" required></textarea><br><br>
                         </div>
                     </div>
                     <div class="row">
@@ -83,6 +87,39 @@
         verCalendario();
     });
 
+    //Funcion para limitar la fecha y hora de inicio 
+    document.addEventListener("DOMContentLoaded", function () {
+        let inputFechaHoraInicio = document.getElementById("fecha_hora_inicio");
+        let inputFechaHoraFin = document.getElementById("fecha_hora_fin");
+
+        inputFechaHoraInicio.addEventListener("input", function () {
+            let fechaSeleccionada = new Date(this.value);
+            let hora = fechaSeleccionada.getHours();
+
+            if (hora < 7 || hora >= 19) {
+                Swal.fire({
+                    title: `Por favor, selecciona una hora válida.`,
+                    text: `Debe estar entre las 7:00 y las 19:00.`,
+                    icon: "warning",
+                });
+                this.value = ""; // Borra el valor si está fuera del rango
+            }
+        });
+        inputFechaHoraFin.addEventListener("input", function () {
+            let fechaSeleccionada = new Date(this.value);
+            let hora = fechaSeleccionada.getHours();
+
+            if (hora < 7 || hora >= 19) {
+                Swal.fire({
+                    title: `Por favor, selecciona una hora válida.`,
+                    text: `Debe estar entre las 7:00 y las 19:00.`,
+                    icon: "warning",
+                });
+                this.value = ""; // Borra el valor si está fuera del rango
+            }
+        });
+    });
+
     function verCalendario() {
         var calendarEl = document.getElementById('calendar');
 
@@ -92,13 +129,17 @@
             events: 'acciones_calendarioGral.php?opcion=rrhh', // Aquí llamas a tu PHP que devuelve las vacaciones en JSON
             editable: false,
             slotMinTime: '07:00:00', // Mostrar desde las 7am
-            slotMaxTime: '19:00:00', // Mostrar hasta las 19pm
+            slotMaxTime: '20:00:00', // Mostrar hasta las 19pm
+            eventTimeFormat: { //Formato de 24 horas
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false // Desactivar el formato de 12 horas
+            },
             eventContent: function(info) {
                 // Personalizar el contenido del evento
                 var nombreEmpleado = info.event.title;
                 var fechaInicio = info.event.start;
                 var fechaFin = info.event.end;
-                alert(fechaFin);
                 // Formatear la fecha y hora de inicio
                 var diaInicio = fechaInicio.getDate();
                 var mesInicio = fechaInicio.getMonth() + 1; 
@@ -130,16 +171,16 @@
         calendar.render();
     }
 
-
     function generarSolicitud() {
         finicio = $('#fecha_hora_inicio').val();
         ffin = $('#fecha_hora_fin').val();
+        descripcion = $('#descripcion').val();
         accion = "agregaSolicitud";
         $.ajax({
                 url: 'acciones_agendarSala.php',
                 type: 'POST',
                 dataType: 'json',
-                data:{ finicio, ffin, accion},
+                data:{ finicio, ffin, descripcion, accion},
                 success: function (response) {
                     Swal.fire({
                         title: "Reserva registrada con éxito!",
@@ -151,7 +192,7 @@
                 error: function (jqXHR, textStatus, errorThrown) {                    
                     Swal.fire({
                         title: "Hubo un problema al registrar la reserva. Inténtalo nuevamente.",
-                        icon: "success",
+                        icon: "error",
                         draggable: true
                     });                    
                 }

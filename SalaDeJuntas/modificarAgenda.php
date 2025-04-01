@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Sala de Juntas - Modificar Reserva">
+    <meta name="author" content="MESS Team">
+    <meta name="keywords" content="Sala de Juntas, Modificar, Reservas, Gestión">
+    <title>Sala de Juntas - Modificar Reserva</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="../css/sb-admin-2.min.css" rel="stylesheet">
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        <?php include 'menu.php'; ?>
+
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <?php include '../encabezado.php'; ?>
+
+                <div class="container-fluid">
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Mis Reservas</h1>
+                    </div>
+
+                    <!-- Tabla para mostrar las reservaciones -->
+                    <div class="table-responsive">
+                        <table id="tablaReservas" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Fecha Fin</th>
+                                    <th>Descripción</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                include '../conn.php';
+                                $noEmpleado = $_COOKIE['noEmpleado']; // Obtener el número de empleado desde la cookie
+
+                                // Consulta para obtener las reservaciones del usuario
+                                $sql = "SELECT id, fecha_hora_inicio, fecha_hora_fin, descripcion 
+                                        FROM reservas 
+                                        WHERE id_usuario = $noEmpleado";
+                                $result = $conn->query($sql);
+
+                                if ($result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        echo "<tr>";
+                                        echo "<td>" . $row['id'] . "</td>";
+                                        echo "<td>" . $row['fecha_hora_inicio'] . "</td>";
+                                        echo "<td>" . $row['fecha_hora_fin'] . "</td>";
+                                        echo "<td>" . $row['descripcion'] . "</td>";
+                                        echo "<td>
+                                                <button class='btn btn-warning btn-sm' onclick='editarReserva(" . $row['id'] . ")'>Editar</button>
+                                                <button class='btn btn-danger btn-sm' onclick='eliminarReserva(" . $row['id'] . ")'>Eliminar</button>
+                                              </td>";
+                                        echo "</tr>";
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='5' class='text-center'>No tienes reservaciones registradas.</td></tr>";
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; MESS 2025</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Modal para editar reserva -->
+    <div class="modal fade" id="modalEditarReserva" tabindex="-1" aria-labelledby="modalEditarReservaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditarReservaLabel">Editar Reserva</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditarReserva">
+                        <input type="hidden" id="id" name="id">
+                        <div class="mb-3">
+                            <label for="fecha_hora_inicio" class="form-label">Fecha y hora de inicio:</label>
+                            <input type="datetime-local" class="form-control" id="fecha_hora_inicio" name="fecha_hora_inicio" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fecha_hora_fin" class="form-label">Fecha y hora de fin:</label>
+                            <input type="datetime-local" class="form-control" id="fecha_hora_fin" name="fecha_hora_fin" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción:</label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" required></textarea>
+                        </div>
+                        <button type="button" class="btn btn-success" id="btnGuardarCambios">Confirmar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Inicializar DataTables
+            $('#tablaReservas').DataTable();
+
+            // Función para editar una reserva
+            window.editarReserva = function (id) {
+                // Obtener los datos de la reserva mediante AJAX
+                $.ajax({
+                    url: 'acciones_agendarSala.php',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: { accion: 'obtenerReserva', id: id },
+                    success: function (response) {
+                        if (response.success) {
+                            // Llenar el formulario del modal con los datos de la reserva
+                            $('#id').val(response.data.id);
+                            $('#fecha_hora_inicio').val(response.data.fecha_hora_inicio);
+                            $('#fecha_hora_fin').val(response.data.fecha_hora_fin);
+                            $('#descripcion').val(response.data.descripcion);
+
+                            // Mostrar el modal
+                            $('#modalEditarReserva').modal('show');
+                        } else {
+                            Swal.fire({
+                                title: "Error",
+                                text: response.message || "No se pudo obtener la información de la reserva.",
+                                icon: "error"
+                            });
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Error al procesar la solicitud.",
+                            icon: "error"
+                        });
+                    }
+                });
+            };
+
+            // Función para guardar los cambios de la reserva
+            $('#btnGuardarCambios').click(function () {
+                const id = $('#id').val();
+                const finicio = $('#fecha_hora_inicio').val();
+                const ffin = $('#fecha_hora_fin').val();
+                const descripcion = $('#descripcion').val();
+
+                // Validar que los campos no estén vacíos
+                if (!finicio || !ffin || !descripcion) {
+                    Swal.fire({
+                        title: "Espera",
+                        text: "Por favor, completa todos los campos.",
+                        icon: "warning"
+                    });
+                    return;
+                }
+
+                // Enviar los datos actualizados mediante AJAX
+                $.ajax({
+                    url: 'acciones_agendarSala.php',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: { accion: 'actualizaSolicitud', id, finicio, ffin, descripcion },
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: "Éxito",
+                                text: "Reserva actualizada con éxito.",
+                                icon: "success"
+                            }).then(() => {
+                                $('#modalEditarReserva').modal('hide');
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                title: "Error",
+                                text: response.message || "No se pudo actualizar la reserva.",
+                                icon: "error"
+                            });
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Error al procesar la solicitud.",
+                            icon: "error"
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
