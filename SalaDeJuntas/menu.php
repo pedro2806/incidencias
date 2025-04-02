@@ -1,5 +1,4 @@
 <?php
-    
     include '../conn.php';
     if($_COOKIE['noEmpleado'] == '' || $_COOKIE['noEmpleado'] == null){
         echo '<script>window.location.assign("index")</script>';
@@ -8,10 +7,8 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
 <!-- Sidebar -->
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
 <!-- Sidebar - Brand -->
 <a class="sidebar-brand d-flex align-items-center justify-content-center" href="inicio">
     <div class="sidebar-brand-icon rotate-n-1">
@@ -38,7 +35,7 @@
         <i class="fas fa-fw fa-calendar-day"></i>
         <span>Sala de Juntas</span>
     </a>
-    <div id="collapseTwo" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingUtilities">
         <div class="bg-white py-2 collapse-inner rounded">
             <a class="collapse-item" href="modificarAgenda">Modificar/Eliminar Solicitud</a>
             <a class="collapse-item" href="index">Ver calendario</a>
@@ -46,7 +43,8 @@
     </div>
 </li>
 <hr class="sidebar-divider d-none d-md-block">
+</ul>
 <div class="text-center d-none d-md-inline">
-    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    <button class="rounded-circle border-0" id="sidebarToggle"></button> 
 </div>
 </ul>

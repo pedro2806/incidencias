@@ -2,8 +2,8 @@
 include '../conn.php';
 
 $noEmpleado = $_COOKIE['noEmpleado'];
-$finicio = $_POST["finicio"];
-$ffin = $_POST["ffin"];
+$finicio =  date('Y-m-d H:i:s', strtotime($_POST["finicio"]));
+$ffin =  date('Y-m-d H:i:s', strtotime($_POST["ffin"]));
 
 $descripcion = $_POST['descripcion'];
 $id = $_POST["id"];
@@ -11,26 +11,28 @@ $id = $_POST["id"];
 $accion = $_POST["accion"];
 
 if($accion == "agregaSolicitud") {
-
-    // Validar si ya existe una reserva en el horario seleccionado
-    $sqlVerifica = "SELECT * FROM reservas 
-                     WHERE id_sala = 1 
-                     AND ((fecha_hora_inicio <= '$finicio' AND fecha_hora_fin > '$finicio') OR
-                         (fecha_hora_inicio < '$ffin' AND fecha_hora_fin >= '$ffin') OR
-                         (fecha_hora_inicio >= '$finicio' AND fecha_hora_fin <= '$ffin'))";
-
-    $resultadoVerifica = $conn->query($sqlVerifica);
-
-    if (mysqli_num_rows($resultadoVerifica) > 0) {
-        echo json_encode([
-            'success' => false,
-            'message' => 'Ya existe una reserva en el horario seleccionado. Por favor, elige otro horario.']);
-    } else {
+    
         $sql = "INSERT INTO reservas (id_usuario, id_sala, fecha_hora_inicio, fecha_hora_fin, estatus, descripcion) 
                 VALUES ($noEmpleado, 1, '$finicio', '$ffin', 'Reservada', '$descripcion' )";
         $resultadoNuevaSolicitud = $conn->query($sql);
         
         echo json_encode($resultadoNuevaSolicitud);
+    
+}
+
+if ($accion == "verificaReserva"){
+    
+    $sqlVerifica = "SELECT * FROM reservas 
+                    WHERE id_sala = 1 
+                    AND fecha_hora_inicio <= '$ffin' 
+                    AND fecha_hora_fin >= '$finicio'";
+
+    $resultadoVerifica = $conn->query($sqlVerifica);
+
+    if ($resultadoVerifica->num_rows > 0) {
+        echo json_encode(['success' => false]); // Hay conflicto
+    } else {
+        echo json_encode(['success' => true]); // No hay conflicto
     }
 }
 
@@ -54,6 +56,7 @@ if($accion == "actualizaSolicitud") {
     echo json_encode($resultadoActualiza);
 }
 
+// Obtener información de la reserva para editar
 if ($accion == "obtenerReserva") {
    
     $sqlObtenerInfo = "SELECT id, fecha_hora_inicio, fecha_hora_fin, descripcion 
@@ -75,6 +78,7 @@ if ($accion == "obtenerReserva") {
     }
 }
 
+// Obtener todas las reservas del usuario para mostrarlas en el calendario
 if ($accion == "obtenerReservas") {
     $sqlObtenerReservas = "SELECT id, fecha_hora_inicio, fecha_hora_fin, descripcion 
                            FROM reservas 
@@ -87,7 +91,30 @@ if ($accion == "obtenerReservas") {
             $reservas[] = $row;
         }
     }
+    echo json_encode([
+        'success' => true,
+        'data' => $reservas
+    ]);
+}
 
+if ($accion == "VerReservasCanceladas"){
+    $sqlVerCanceladas = "SELECT reservas.id, reservas.fecha_hora_inicio, reservas.fecha_hora_fin, 
+                                usuarios.nombre AS nombre_usuario, reservas.descripcion 
+                         FROM reservas  
+                         JOIN usuarios ON reservas.id_usuario = usuarios.noEmpleado 
+                         WHERE reservas.estatus = 'Cancelada'";
+
+    $result2 = $conn->query($sqlVerCanceladas);
+    $reservas = [];
+    while ($row = $result2->fetch_assoc()) {
+        $reservas[] = [
+        'id' => $row['id'], 
+        'nombre_usuario' => $row['nombre_usuario'], 
+        'fecha_hora_inicio' => $row['fecha_hora_inicio'],
+        'fecha_hora_fin'   => $row['fecha_hora_fin'],
+        'descripcion' => $row['descripcion']       
+        ];
+    }
     echo json_encode([
         'success' => true,
         'data' => $reservas

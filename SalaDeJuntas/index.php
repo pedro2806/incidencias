@@ -47,7 +47,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xl-3 col-lg-3">
-                            <button id="btnSolicitar" type="button" class="btn btn-success" onclick="generarSolicitud()">Reservar</button>
+                            <button id="btnSolicitar" type="button" class="btn btn-success" onclick="validarReserva()">Reservar</button>
                         </div>
                     </div>
                     <div class="row">
@@ -172,11 +172,50 @@
         calendar.render();
     }
 
+    //Funcion para Validar Reserva
+    function validarReserva() {
+    finicio = $('#fecha_hora_inicio').val();
+    ffin = $('#fecha_hora_fin').val();
+    descripcion = $('#descripcion').val();
+    accion = "verificaReserva";
+        
+        $.ajax({
+            url: 'acciones_agendarSala',
+            type: 'POST',
+            dataType: 'json',
+            data:{ finicio, ffin, descripcion, accion},
+            success: function (response) {
+                if (response.success) {
+                    // Si no hay conflictos, genera la solicitud
+                    generarSolicitud();
+                } else {
+                    // Si hay un conflicto, muestra un mensaje de error
+                    Swal.fire({
+                        title: "",            
+                        text: "Ya existe una reserva en este horario.",              
+                        icon: "warning",
+                        draggable: true
+                    });
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {                    
+                Swal.fire({             
+                    title: "Error",
+                    text: "Error al verificar la reserva 2.",              
+                    icon: "error",
+                    draggable: true
+                });                    
+            }
+        });   
+    }
+
+    //Funcion para generar la solicitud de reserva
     function generarSolicitud() {
         finicio = $('#fecha_hora_inicio').val();
         ffin = $('#fecha_hora_fin').val();
         descripcion = $('#descripcion').val();
         accion = "agregaSolicitud";
+        
         $.ajax({
             url: 'acciones_agendarSala',
             type: 'POST',
