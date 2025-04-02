@@ -26,7 +26,7 @@ if($accion == 'login'){
     FROM reservas 
     JOIN salas ON reservas.id_sala = salas.id_sala
     JOIN usuarios ON reservas.id_usuario = usuarios.noEmpleado
-    WHERE DATE(reservas.fecha_hora_inicio) = CURDATE()";
+    WHERE reservas.estatus = 'Reservada' AND  DATE(reservas.fecha_hora_inicio) = CURDATE()";
     
     $result2 = $conn->query($Calendario_Login);
     $reservas = [];

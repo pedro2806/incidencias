@@ -36,7 +36,9 @@ if($accion == "agregaSolicitud") {
 
 if($accion == "eliminaSolicitud") {
     
-    $sqlBorrar = "DELETE FROM reservas WHERE id_reserva = $id";
+    $sqlBorrar = "UPDATE reservas
+                  SET estatus = 'Cancelada'
+                  WHERE id = $id";
     $resultadoElimina = $conn->query($sqlBorrar);
     
     echo json_encode($resultadoElimina);
@@ -45,8 +47,8 @@ if($accion == "eliminaSolicitud") {
 if($accion == "actualizaSolicitud") {
     
     $sqlActualiza = "UPDATE reservas 
-            SET fecha_hora_inicio='$finicio', fecha_hora_fin='$ffin', descripcion='$descripcion' 
-            WHERE id=$id";
+                     SET fecha_hora_inicio='$finicio', fecha_hora_fin='$ffin', descripcion='$descripcion' 
+                     WHERE id=$id";
     $resultadoActualiza = $conn->query($sqlActualiza);
     
     echo json_encode($resultadoActualiza);
@@ -71,5 +73,24 @@ if ($accion == "obtenerReserva") {
             'message' => 'No se encontró la reserva o no tienes permisos para verla.'
         ]);
     }
+}
+
+if ($accion == "obtenerReservas") {
+    $sqlObtenerReservas = "SELECT id, fecha_hora_inicio, fecha_hora_fin, descripcion 
+                           FROM reservas 
+                           WHERE id_usuario = $noEmpleado";
+    $resultadoObtenerReservas = $conn->query($sqlObtenerReservas);
+
+    $reservas = [];
+    if ($resultadoObtenerReservas->num_rows > 0) {
+        while ($row = $resultadoObtenerReservas->fetch_assoc()) {
+            $reservas[] = $row;
+        }
+    }
+
+    echo json_encode([
+        'success' => true,
+        'data' => $reservas
+    ]);
 }
 ?>

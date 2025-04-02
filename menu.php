@@ -2,7 +2,7 @@
     
     include 'conn.php';
     if($_COOKIE['noEmpleado'] == '' || $_COOKIE['noEmpleado'] == null){
-        echo '<script>window.location.assign("index")</script>';
+        echo '<script>window.location.assign("index")</script>';http://localhost/incidencias/saladejuntas/inicio
     }
 ?>
 <!-- Sidebar -->
@@ -97,18 +97,11 @@ if ($noEmp == 183 || $noEmp ==  276 || $noEmp == 403 || $noEmp ==  523){
 }            
 ?>
 <!-- Menú Sala De Juntas -->
-    <li class = "nav-item">
-        <a class = "nav-link collapsed" href = "#" data-toggle = "collapse" data-target = "#collapseUtilities2"
-            aria-expanded = "true" aria-controls = "collapseUtilities2">
+    <li class="nav-item">
+        <a class="nav-link" href="saladejuntas/">
             <i class="fas fa-fw fa-calendar-day"></i>
             <span>Sala de Juntas</span>
         </a>
-        <div id = "collapseUtilities2" class = "collapse" aria-labelledby = "headingUtilities"
-            data-parent = "#accordionSidebar">
-            <div class = "bg-white py-2 collapse-inner rounded">
-                <a class = "collapse-item" href = "saladejuntas">Apartar Sala de Juntas</a>
-            </div>
-        </div>
     </li>
 <!-- Boton Cambiar Contraseña -->
 <button type="button" class="nav-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop">

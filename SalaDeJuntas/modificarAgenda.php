@@ -40,33 +40,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php
-                                include '../conn.php';
-                                $noEmpleado = $_COOKIE['noEmpleado']; // Obtener el número de empleado desde la cookie
-
-                                // Consulta para obtener las reservaciones del usuario
-                                $sql = "SELECT id, fecha_hora_inicio, fecha_hora_fin, descripcion 
-                                        FROM reservas 
-                                        WHERE id_usuario = $noEmpleado";
-                                $result = $conn->query($sql);
-
-                                if ($result->num_rows > 0) {
-                                    while ($row = $result->fetch_assoc()) {
-                                        echo "<tr>";
-                                        echo "<td>" . $row['id'] . "</td>";
-                                        echo "<td>" . $row['fecha_hora_inicio'] . "</td>";
-                                        echo "<td>" . $row['fecha_hora_fin'] . "</td>";
-                                        echo "<td>" . $row['descripcion'] . "</td>";
-                                        echo "<td>
-                                                <button class='btn btn-warning btn-sm' onclick='editarReserva(" . $row['id'] . ")'>Editar</button>
-                                                <button class='btn btn-danger btn-sm' onclick='eliminarReserva(" . $row['id'] . ")'>Eliminar</button>
-                                              </td>";
-                                        echo "</tr>";
-                                    }
-                                } else {
-                                    echo "<tr><td colspan='5' class='text-center'>No tienes reservaciones registradas.</td></tr>";
-                                }
-                                ?>
+                                <!-- Las filas se llenarán mediante AJAX -->
                             </tbody>
                         </table>
                     </div>
@@ -122,94 +96,183 @@
         $(document).ready(function () {
             // Inicializar DataTables
             $('#tablaReservas').DataTable();
+            cargarReservas();
+        });
+        // Función para cargar las reservas
+        function cargarReservas() {
+            $.ajax({
+                url: 'acciones_agendarSala.php', // Archivo PHP que devuelve los datos
+                type: 'POST',
+                dataType: 'json',
+                data: { accion: 'obtenerReservas' }, // Acción específica para obtener las reservas
+                success: function (response) {
+                    if (response.success) {
+                        // Limpiar el tbody de la tabla
+                        const tbody = $('#tablaReservas tbody');
+                        tbody.empty();
 
-            // Función para editar una reserva
-            window.editarReserva = function (id) {
-                // Obtener los datos de la reserva mediante AJAX
-                $.ajax({
-                    url: 'acciones_agendarSala.php',
-                    type: 'POST',
-                    dataType: 'json',
-                    data: { accion: 'obtenerReserva', id: id },
-                    success: function (response) {
-                        if (response.success) {
-                            // Llenar el formulario del modal con los datos de la reserva
-                            $('#id').val(response.data.id);
-                            $('#fecha_hora_inicio').val(response.data.fecha_hora_inicio);
-                            $('#fecha_hora_fin').val(response.data.fecha_hora_fin);
-                            $('#descripcion').val(response.data.descripcion);
-
-                            // Mostrar el modal
-                            $('#modalEditarReserva').modal('show');
-                        } else {
-                            Swal.fire({
-                                title: "Error",
-                                text: response.message || "No se pudo obtener la información de la reserva.",
-                                icon: "error"
-                            });
-                        }
-                    },
-                    error: function () {
+                        // Agregar las filas a la tabla
+                        response.data.forEach(reserva => {
+                            const fila = `
+                                <tr>
+                                    <td>${reserva.id}</td>
+                                    <td>${reserva.fecha_hora_inicio}</td>
+                                    <td>${reserva.fecha_hora_fin}</td>
+                                    <td>${reserva.descripcion}</td>
+                                    <td>
+                                        <button class="btn btn-outline-warning btn-sm" onclick="editarReserva(${reserva.id})">
+                                            <i class="fas fa-pen"></i>
+                                        </button>
+                                        <button class="btn btn-outline-danger btn-sm" onclick="eliminarReserva(${reserva.id})">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                            tbody.append(fila);
+                        });
+                    } else {
                         Swal.fire({
                             title: "Error",
-                            text: "Error al procesar la solicitud.",
+                            text: response.message || "No se pudieron obtener las reservas.",
                             icon: "error"
                         });
                     }
-                });
-            };
-
-            // Función para guardar los cambios de la reserva
-            $('#btnGuardarCambios').click(function () {
-                const id = $('#id').val();
-                const finicio = $('#fecha_hora_inicio').val();
-                const ffin = $('#fecha_hora_fin').val();
-                const descripcion = $('#descripcion').val();
-
-                // Validar que los campos no estén vacíos
-                if (!finicio || !ffin || !descripcion) {
+                },
+                error: function () {
                     Swal.fire({
-                        title: "Espera",
-                        text: "Por favor, completa todos los campos.",
-                        icon: "warning"
+                        title: "Error",
+                        text: "Error al procesar la solicitud.",
+                        icon: "error"
                     });
-                    return;
                 }
+            });
+        }
 
-                // Enviar los datos actualizados mediante AJAX
-                $.ajax({
-                    url: 'acciones_agendarSala.php',
-                    type: 'POST',
-                    dataType: 'json',
-                    data: { accion: 'actualizaSolicitud', id, finicio, ffin, descripcion },
-                    success: function (response) {
-                        if (response.success) {
-                            Swal.fire({
-                                title: "Éxito",
-                                text: "Reserva actualizada con éxito.",
-                                icon: "success"
-                            }).then(() => {
-                                $('#modalEditarReserva').modal('hide');
-                                location.reload();
-                            });
-                        } else {
-                            Swal.fire({
-                                title: "Error",
-                                text: response.message || "No se pudo actualizar la reserva.",
-                                icon: "error"
-                            });
-                        }
-                    },
-                    error: function () {
+        // Función para editar una reserva
+        function editarReserva(id) {
+            $.ajax({
+                url: 'acciones_agendarSala',
+                type: 'POST',
+                dataType: 'json',
+                data: { accion: 'obtenerReserva', id: id },
+                success: function (response) {
+                    if (response.success) {
+                        // Llenar el formulario del modal con los datos de la reserva
+                        $('#id').val(response.data.id);
+                        $('#fecha_hora_inicio').val(response.data.fecha_hora_inicio);
+                        $('#fecha_hora_fin').val(response.data.fecha_hora_fin);
+                        $('#descripcion').val(response.data.descripcion);
+
+                        // Mostrar el modal
+                        $('#modalEditarReserva').modal('show');
+                    } else {
                         Swal.fire({
                             title: "Error",
-                            text: "Error al procesar la solicitud.",
+                            text: response.message || "No se pudo obtener la información de la reserva.",
                             icon: "error"
                         });
                     }
+                },
+                error: function () {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Error al procesar la solicitud.",
+                        icon: "error"
+                    });
+                }
+            });
+        };
+
+        // Función para guardar los cambios de la reserva
+        $('#btnGuardarCambios').click(function () {
+            const id = $('#id').val();
+            const finicio = $('#fecha_hora_inicio').val();
+            const ffin = $('#fecha_hora_fin').val();
+            const descripcion = $('#descripcion').val();
+
+            // Validar que los campos no estén vacíos
+            if (!finicio || !ffin || !descripcion) {
+                Swal.fire({
+                    title: "Espera",
+                    text: "Por favor, completa todos los campos.",
+                    icon: "warning"
                 });
+                return;
+            }
+
+            // Enviar los datos actualizados mediante AJAX
+            $.ajax({
+                url: 'acciones_agendarSala',
+                type: 'POST',
+                dataType: 'json',
+                data: { accion: 'actualizaSolicitud', id, finicio, ffin, descripcion },
+                success: function (response) {
+                    Swal.fire({
+                        title: "Éxito",
+                        text: "Reserva actualizada con éxito.",
+                        icon: "success"
+                    }).then(() => {
+                        $('#modalEditarReserva').modal('hide');
+                        location.reload();
+                    });
+                },
+                error: function () {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Error al procesar la solicitud.",
+                        icon: "error"
+                    });
+                }
             });
         });
+        
+        // Función para eliminar una reserva
+        function eliminarReserva(id) {
+            Swal.fire({
+                title: "¿Estás seguro?",
+                text: "Esta acción cancelará la reserva. ¿Deseas continuar?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Sí, cancelar",
+                cancelButtonText: "No, volver"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: 'acciones_agendarSala',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: { accion: 'eliminaSolicitud', id: id }, 
+                        success: function (response) {
+                            if (response) {
+                                Swal.fire({
+                                    title: "Éxito",
+                                    text: "Reserva cancelada con éxito.",
+                                    icon: "success"
+                                }).then(() => {
+                                    cargarReservas(); 
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: "Error",
+                                    text: "No se pudo cancelar la reserva. Inténtalo de nuevo.",
+                                    icon: "error"
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                title: "Error",
+                                text: "Error al procesar la solicitud.",
+                                icon: "error"
+                            });
+                        }
+                    });
+                }
+            });
+        }
     </script>
 </body>
 </html>

@@ -96,7 +96,8 @@
             let fechaSeleccionada = new Date(this.value);
             let hora = fechaSeleccionada.getHours();
 
-            if (hora < 7 || hora >= 19) {
+            if (hora  <7 && hora >20) {
+                alert (fechaSeleccionada+hora);
                 Swal.fire({
                     title: `Por favor, selecciona una hora válida.`,
                     text: `Debe estar entre las 7:00 y las 19:00.`,
@@ -109,9 +110,9 @@
             let fechaSeleccionada = new Date(this.value);
             let hora = fechaSeleccionada.getHours();
 
-            if (hora < 7 || hora >= 19) {
+            if (hora <=7 && hora  >=20) {
                 Swal.fire({
-                    title: `Por favor, selecciona una hora válida.`,
+                    title: `Por favor, selecciona una hora válida fin.`,
                     text: `Debe estar entre las 7:00 y las 19:00.`,
                     icon: "warning",
                 });
@@ -177,27 +178,26 @@
         descripcion = $('#descripcion').val();
         accion = "agregaSolicitud";
         $.ajax({
-                url: 'acciones_agendarSala.php',
-                type: 'POST',
-                dataType: 'json',
-                data:{ finicio, ffin, descripcion, accion},
-                success: function (response) {
-                    Swal.fire({
-                        title: "Reserva registrada con éxito!",
-                        icon: "success",
-                        draggable: true
-                    });
-                    verCalendario();
-                },
-                error: function (jqXHR, textStatus, errorThrown) {                    
-                    Swal.fire({
-                        title: "Hubo un problema al registrar la reserva. Inténtalo nuevamente.",
-                        icon: "error",
-                        draggable: true
-                    });                    
-                }
-            });
-            
+            url: 'acciones_agendarSala',
+            type: 'POST',
+            dataType: 'json',
+            data:{ finicio, ffin, descripcion, accion},
+            success: function (response) {
+                Swal.fire({
+                    title: "Reserva registrada con éxito!",
+                    icon: "success",
+                    draggable: true
+                });
+                verCalendario();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {                    
+                Swal.fire({
+                    title: "ya existe este horario en reserva. Inténta un nuevo horario.",
+                    icon: "error",
+                    draggable: true
+                });                    
+            }
+        });   
     }
     </script>
 </body>
