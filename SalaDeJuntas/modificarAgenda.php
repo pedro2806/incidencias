@@ -11,13 +11,12 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-    <link href="../css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="../css/sb-admin-2.min.css" rel="stylesheet">   
 </head>
 
 <body id="page-top">
     <div id="wrapper">
         <?php include 'menu.php'; ?>
-
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
                 <?php include '../encabezado.php'; ?>
@@ -27,22 +26,54 @@
                         <h1 class="h3 mb-0 text-gray-800">Mis Reservas</h1>
                     </div>
 
-                    <!-- Tabla para mostrar las reservaciones -->
-                    <div class="table-responsive">
-                        <table id="tablaReservas" class="table table-striped table-bordered" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Fecha Inicio</th>
-                                    <th>Fecha Fin</th>
-                                    <th>Descripción</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Las filas se llenarán mediante AJAX -->
-                            </tbody>
-                        </table>
+                    <div class="container-fluid">
+                        <ul class="nav nav-tabs" id="reservasTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active btn-outline-success" id="activas-tab" data-bs-toggle="tab" href="#activas" role="tab" aria-controls="activas" aria-selected="true">Activas</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link btn-outline-warning" id="canceladas-tab" data-bs-toggle="tab" href="#canceladas" role="tab" aria-controls="canceladas" aria-selected="false">Canceladas</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="reservasTabContent">
+                            <!-- Pestaña Activas -->
+                            <div class="tab-pane fade show active" id="activas" role="tabpanel" aria-labelledby="activas-tab">
+                                <div class="table-responsive">
+                                    <table id="tablaActivas" class="table table-striped table-bordered" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Fecha Inicio</th>
+                                                <th>Fecha Fin</th>
+                                                <th>Descripción</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Las filas se llenarán mediante AJAX -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- Pestaña Canceladas -->
+                            <div class="tab-pane fade" id="canceladas" role="tabpanel" aria-labelledby="canceladas-tab">
+                                <div class="table-responsive">
+                                    <table id="tablaCanceladas" class="table table-striped table-bordered" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Fecha Inicio</th>
+                                                <th>Fecha Fin</th>
+                                                <th>Descripción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Las filas se llenarán mediante AJAX -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -94,21 +125,89 @@
 
     <script>
         $(document).ready(function () {
-            // Inicializar DataTables
-            $('#tablaReservas').DataTable();
+            // Cargar las reservas activas al cargar la página
             cargarReservas();
+            // Cargar las reservas canceladas al cargar la página
+            cargarReservasCanceladas();
+            
+            //Tabla "Reservas Activas" en Español
+            $('#tablaActivas').DataTable({
+                "language": {
+                    "decimal": "",
+                    "emptyTable": "No hay información disponible",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                    "infoEmpty": "Mostrando 0 a 0 de 0 registros",
+                    "infoFiltered": "(Filtrado de _MAX_ registros totales)",
+                    "lengthMenu": "Mostrar _MENU_ registros",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar:",
+                    "zeroRecords": "No se encontraron resultados",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Último",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    },
+                    "aria": {
+                        "sortAscending": ": activar para ordenar la columna de manera ascendente",
+                        "sortDescending": ": activar para ordenar la columna de manera descendente"
+                    }
+                }
+            });
+
+            //Tabla "Reservas Canceladas" en Español
+            $('#tablaCanceladas').DataTable({
+                "language": {
+                    "decimal": "",
+                    "emptyTable": "No hay información disponible",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                    "infoEmpty": "Mostrando 0 a 0 de 0 registros",
+                    "infoFiltered": "(Filtrado de _MAX_ registros totales)",
+                    "lengthMenu": "Mostrar _MENU_ registros",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar:",
+                    "zeroRecords": "No se encontraron resultados",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Último",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    },
+                    "aria": {
+                        "sortAscending": ": activar para ordenar la columna de manera ascendente",
+                        "sortDescending": ": activar para ordenar la columna de manera descendente"
+                    }
+                }
+            });
+ 
+            // Inicializar DataTables
+            $('#tablaActivas').DataTable();
+            $('#tablaCanceladas').DataTable();
+
+            // Manejar el cambio de pestañas
+            $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+                const target = $(e.target).attr("href"); // ID de la pestaña activa
+                if (target === '#activas') {
+                    cargarReservas(); // Cargar reservas activas
+                } else if (target === '#canceladas') {
+                    cargarReservasCanceladas(); // Cargar reservas canceladas
+                }
+            });
         });
+
         // Función para cargar las reservas
         function cargarReservas() {
             $.ajax({
-                url: 'acciones_agendarSala.php', // Archivo PHP que devuelve los datos
+                url: 'acciones_agendarSala', // Archivo PHP que devuelve los datos
                 type: 'POST',
                 dataType: 'json',
                 data: { accion: 'obtenerReservas' }, // Acción específica para obtener las reservas
                 success: function (response) {
                     if (response.success) {
                         // Limpiar el tbody de la tabla
-                        const tbody = $('#tablaReservas tbody');
+                        const tbody = $('#tablaActivas tbody');
                         tbody.empty();
 
                         // Agregar las filas a la tabla
@@ -135,6 +234,48 @@
                         Swal.fire({
                             title: "Error",
                             text: response.message || "No se pudieron obtener las reservas.",
+                            icon: "error"
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Error al procesar la solicitud.",
+                        icon: "error"
+                    });
+                }
+            });
+        }
+
+        // Función para cargar las reservas canceladas
+        function cargarReservasCanceladas() {
+            $.ajax({
+                url: 'acciones_agendarSala', 
+                type: 'POST',
+                dataType: 'json',
+                data: { accion: 'VerReservasCanceladas' }, 
+                success: function (response) {
+                    if (response.success) {
+                        const tbody = $('#tablaCanceladas tbody');
+                        tbody.empty();
+
+                        // Agregar las filas a la tabla
+                        response.data.forEach(reserva => {
+                            const fila = `
+                                <tr>
+                                    <td>${reserva.id}</td>
+                                    <td>${reserva.fecha_hora_inicio}</td>
+                                    <td>${reserva.fecha_hora_fin}</td>
+                                    <td>${reserva.descripcion}</td>
+                                </tr>
+                            `;
+                            tbody.append(fila);
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Error",
+                            text: response.message || "No se pudieron obtener las reservas canceladas.",
                             icon: "error"
                         });
                     }
