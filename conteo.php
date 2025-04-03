@@ -83,7 +83,7 @@ include 'conn.php';
                                     $fechaPrev = $anio.$FechaIng;
                                     $fechaNext = $anioNext.$FechaIng;
                                     
-                                    $QdiasSol = "SELECT IFNULL(SUM(dias), '0') as diasSol FROM solicitudes WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext'";
+                                    $QdiasSol = "SELECT IFNULL(SUM(dias), '0') as diasSol FROM solicitudes WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext' AND tipo = 1";
                                     $resdiasSol= mysqli_query( $conn, $QdiasSol ) or die (mysqli_error($conn));
                                     
                                     While ($rowSol = mysqli_fetch_array($resdiasSol)){
@@ -147,7 +147,7 @@ include 'conn.php';
                                     $fechaPrev = $anio.$FechaIng;
                                     $fechaNext = $anioNext.$FechaIng;
                                     
-                                    $QdiasSol = "SELECT IFNULL(SUM(dias), '0') as diasSol FROM solicitudes WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext'";
+                                    $QdiasSol = "SELECT IFNULL(SUM(dias), '0') as diasSol FROM solicitudes WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext'  AND tipo = 1";
                                     $resdiasSol= mysqli_query( $conn, $QdiasSol ) or die (mysqli_error($conn));
                                     
                                     While ($rowSol = mysqli_fetch_array($resdiasSol)){
