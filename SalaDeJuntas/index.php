@@ -10,27 +10,21 @@
     <title>Sala de Juntas - Reservas</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
-
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.css' rel='stylesheet' />
-
     <link href="../css/sb-admin-2.min.css" rel="stylesheet">
 </head>
 
 <body id="page-top">
     <div id="wrapper">
         <?php include 'menu.php'; ?>
-
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
                 <?php include '../encabezado.php'; ?>
-
                 <div class="container-fluid">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Sala de Juntas</h1>
                     </div>
-
                     <div class="row">
                         <div class="col-xl-3 col-lg-3">
                             <label for="fecha_hora_inicio">Fecha y hora de inicio:</label>
@@ -67,20 +61,13 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
-
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
-
     <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
-
     <script src="../js/sb-admin-2.min.js"></script>
-
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.9/index.global.min.js'></script>
-
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
 
     <script>
     $(document).ready(function () {
@@ -121,11 +108,11 @@
         });
     });
 
+    //Funcion para mostrar el calendario
     function verCalendario() {
         var calendarEl = document.getElementById('calendar');
-
         var calendar = new FullCalendar.Calendar(calendarEl, {        
-            initialView: 'timeGridDay', // Cambiar a vista diaria
+            initialView: 'timeGrid', // Cambiar a vista diaria
             locale: 'es', // Configurar el idioma a español
             events: 'acciones_calendarioGral.php?opcion=rrhh', // Aquí llamas a tu PHP que devuelve las vacaciones en JSON
             editable: false,
@@ -147,7 +134,6 @@
                 var añoInicio = fechaInicio.getFullYear();
                 var horasInicio = fechaInicio.getHours();
                 var minutosInicio = fechaInicio.getMinutes().toString().padStart(2, '0'); // Asegurar que los minutos tengan dos dígitos
-
                 var fechaInicioFormateada = diaInicio + '/' + mesInicio + '/' + añoInicio + ' ' + horasInicio + ':' + minutosInicio;
 
                 // Si se tiene una fecha de fin, formatear también                
@@ -158,26 +144,23 @@
                     var añoFin = fechaFin.getFullYear();
                     var horasFin = fechaFin.getHours();
                     var minutosFin = fechaFin.getMinutes().toString().padStart(2, '0'); // Asegurar que los minutos tengan dos dígitos
-
                     fechaFinFormateada = '<br>Fin: ' + diaFin + '/' + mesFin + '/' + añoFin + ' ' + horasFin + ':' + minutosFin;
                 }
 
                 // Mostrar el nombre del empleado, la fecha y hora de inicio, y la fecha y hora de fin (si existe)
-                var displayText = nombreEmpleado + '<br>Inicio: ' + fechaInicioFormateada + fechaFinFormateada;
-
+                var displayText = nombreEmpleado + '- Inicio: ' + horasInicio + ':' + minutosInicio + ' - ' + '- Fin: ' + horasFin + ':' + minutosFin;
                 return { html: displayText };
             }
         });
-
         calendar.render();
     }
 
     //Funcion para Validar Reserva
     function validarReserva() {
-    finicio = $('#fecha_hora_inicio').val();
-    ffin = $('#fecha_hora_fin').val();
-    descripcion = $('#descripcion').val();
-    accion = "verificaReserva";
+        finicio = $('#fecha_hora_inicio').val();
+        ffin = $('#fecha_hora_fin').val();
+        descripcion = $('#descripcion').val();
+        accion = "verificaReserva";
         
         $.ajax({
             url: 'acciones_agendarSala',
@@ -185,17 +168,25 @@
             dataType: 'json',
             data:{ finicio, ffin, descripcion, accion},
             success: function (response) {
-                if (response.success) {
-                    // Si no hay conflictos, genera la solicitud
-                    generarSolicitud();
-                } else {
-                    // Si hay un conflicto, muestra un mensaje de error
+                if (response.success === false && finicio >= ffin) {
+                    // Alerta especial si la fecha de inicio es mayor o igual a la fecha de fin
                     Swal.fire({
-                        title: "",            
-                        text: "Ya existe una reserva en este horario.",              
+                        title: "Error en las fechas",
+                        text: "Revisa tus fechas y horas de reserva.",
+                        icon: "error",
+                        draggable: true
+                    });
+                } else if (response.success === false) {
+                    // Alerta si hay un conflicto de horarios
+                    Swal.fire({
+                        title: "Conflicto de horario",
+                        text: "Ya existe una reserva en este horario.",
                         icon: "warning",
                         draggable: true
                     });
+                } else {
+                    // Si no hay conflictos, genera la solicitud
+                    generarSolicitud();
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {                    
@@ -238,7 +229,34 @@
             }
         });   
     }
+
+    //Funcion para obtener el valor de la cookie
+    function getCookie(name) {
+        let value = "; " + document.cookie;
+        let parts = value.split("; " + name + "=");
+        if (parts.length === 2) return parts.pop().split(";").shift();
+    }
+
+    //Funcion para Enviar Notificacion
+    function enviaNotificacion() {
+        let solicita = getCookie('noEmpleado');
+        $.ajax({
+            url: 'enviaNotificacion.',
+            method: 'POST',
+            dataType: 'json',
+            data: {solicita},
+            success: function(data) {
+                
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                Swal.fire({
+                    title: "Error al notificar por correo!",
+                    icon: "error",
+                    draggable: true
+                });
+            }
+        });
+    }
     </script>
 </body>
-
 </html>
