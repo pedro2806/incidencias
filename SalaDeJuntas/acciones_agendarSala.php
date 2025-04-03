@@ -16,23 +16,27 @@ if($accion == "agregaSolicitud") {
                 VALUES ($noEmpleado, 1, '$finicio', '$ffin', 'Reservada', '$descripcion' )";
         $resultadoNuevaSolicitud = $conn->query($sql);
         
-        echo json_encode($resultadoNuevaSolicitud);
-    
+        echo json_encode($resultadoNuevaSolicitud);    
 }
 
 if ($accion == "verificaReserva"){
     
-    $sqlVerifica = "SELECT * FROM reservas 
-                    WHERE id_sala = 1 
-                    AND fecha_hora_inicio <= '$ffin' 
-                    AND fecha_hora_fin >= '$finicio'";
+    if ($finicio >= $ffin) {
+        echo json_encode(['success' => false]); 
+        exit;
+    }else{
+        $sqlVerifica = "SELECT * FROM reservas 
+                        WHERE id_sala = 1 
+                        AND fecha_hora_inicio < '$ffin' 
+                        AND fecha_hora_fin > '$finicio'";
 
-    $resultadoVerifica = $conn->query($sqlVerifica);
+        $resultadoVerifica = $conn->query($sqlVerifica);
 
-    if ($resultadoVerifica->num_rows > 0) {
-        echo json_encode(['success' => false]); // Hay conflicto
-    } else {
-        echo json_encode(['success' => true]); // No hay conflicto
+        if ($resultadoVerifica->num_rows > 0) {
+            echo json_encode(['success' => false]); // Hay conflicto
+        } else {
+            echo json_encode(['success' => true]); // No hay conflicto
+        }
     }
 }
 
@@ -58,10 +62,10 @@ if($accion == "actualizaSolicitud") {
 
 // Obtener información de la reserva para editar
 if ($accion == "obtenerReserva") {
-   
+
     $sqlObtenerInfo = "SELECT id, fecha_hora_inicio, fecha_hora_fin, descripcion 
-                   FROM reservas 
-                   WHERE id = $id AND id_usuario = $noEmpleado";
+                       FROM reservas 
+                       WHERE id = $id AND id_usuario = $noEmpleado";
     $resultadoObtenerInfo = $conn->query($sqlObtenerInfo);
 
     if ($resultadoObtenerInfo->num_rows > 0) {
@@ -98,8 +102,8 @@ if ($accion == "obtenerReservas") {
 }
 
 if ($accion == "VerReservasCanceladas"){
-    $sqlVerCanceladas = "SELECT reservas.id, reservas.fecha_hora_inicio, reservas.fecha_hora_fin, 
-                                usuarios.nombre AS nombre_usuario, reservas.descripcion 
+    $sqlVerCanceladas = "SELECT reservas.id, reservas.fecha_hora_inicio, reservas.fecha_hora_fin,  reservas.descripcion,
+                                usuarios.nombre AS nombre_usuario
                          FROM reservas  
                          JOIN usuarios ON reservas.id_usuario = usuarios.noEmpleado 
                          WHERE reservas.estatus = 'Cancelada'";
