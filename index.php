@@ -45,47 +45,43 @@
                         </div>      
                         <div class = "row">
                             <!--LOGIN-->
-                            <div class = "col-lg-6">
-                                <div class = "p-0">
-                                    <div class = "text-center">
-                                    <center>
-                                        <b>
-                                            RR HH<br>
-                                            Incidencias
-                                        </b>
-                                    </center>
-                                        <h1 class = "h4 text-gray-900 mb-4">Bienvenido</h1>
+                            <div class="col-lg-6 mx-auto mt-5">
+                                <div class="p-4">
+                                    <div class="text-center">
+                                        <center>
+                                            <b>
+                                                RR HH<br>
+                                                Incidencias
+                                            </b>
+                                        </center>
+                                        <h1 class="h4 text-gray-900 mb-4">Bienvenido</h1>
                                     </div>
-                                    <form class = "user" method = "POST">
-                                        <div class = "form-group">
-                                            <input type = "text" class = "form-control form-control-user" id = "InputEmail" name = "InputEmail" aria-describedby = "emailHelp" placeholder = "Usuario">
+                                    <form class="user" method="POST">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control form-control-user" id="InputEmail" name="InputEmail" aria-describedby="emailHelp" placeholder="Usuario">
                                             <span>@mess.com.mx</span>
                                         </div>
-                                        <div class = "form-group">
-                                            <input type = "password" class = "form-control form-control-user" id = "InputPassword" name = "InputPassword" placeholder = "Contraseña">
+                                        <div class="form-group">
+                                            <input type="password" class="form-control form-control-user" id="InputPassword" name="InputPassword" placeholder="Contraseña">
                                         </div>
-                                        <div class = "form-group">
-                                            <div class = "custom-control custom-checkbox small">
-                                                <input type = "checkbox" class = "custom-control-input" id = "customCheck">
-                                                <label class = "custom-control-label" for = "customCheck">Recordar usuario y contraseña</label>
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox small">
+                                                <input type="checkbox" class="custom-control-input" id="customCheck">
+                                                <label class="custom-control-label" for="customCheck">Recordar usuario y contraseña</label>
                                             </div>
                                         </div>
                                         <center>
-                                            <input class = "btn btn-primary" type = "submit" name = "btningresar" value = "   Acceder   "/>                                       
+                                            <input class="btn btn-primary" type="submit" name="btningresar" value="   Acceder   "/>
                                         </center>
-                                        <!--<a class = "small" href = "forgot-password">Olvide mi contraseña</a>--> 
-                                        <br>
-                                        <br>
-                                        <br>
-                                    </form>                      
+                                    </form>
                                 </div>
                             </div>
                             <!--AGENDA SALA DE JUNTAS-->
-                            <div class = "col-lg-6">
-                                <div class = "p-0">
-                                    <div class = "text-center" id='calendar'></div>                             
+                            <div class="col-lg-6 mx-auto mt-5">
+                                <div class="p-4">
+                                    <div class="text-center" id="calendar"></div>
                                 </div>
-                            </div>  
+                            </div>
                         </div>
                         <!--BARRA DE SOPORTE-->
                         <div class="row">  
