@@ -36,6 +36,8 @@ include 'conn.php';
             include 'menu.php';
         ?>
 
+        
+
         <!-- Content Wrapper -->
         <div id = "content-wrapper" class = "d-flex flex-column">
 
@@ -49,6 +51,7 @@ include 'conn.php';
                     include 'encabezado.php';
                 ?>
                 
+
                 <!-- Begin Page Content -->
                 <div class = "container-fluid">
 

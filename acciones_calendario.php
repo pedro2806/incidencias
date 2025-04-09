@@ -1,5 +1,5 @@
 <?php
-// Conexión a la base de datos
+// Conexi贸n a la base de datos
 include 'conn.php';
 mysqli_set_charset($conn, "utf8");
 $noEmpleado_cookie = isset($_COOKIE['noEmpleado']) ? $_COOKIE['noEmpleado'] : null;
@@ -32,8 +32,10 @@ if ($opcion == "rrhh") {
 }
 
 if ($opcion == "jefes") {
-
-    $sqlJefes = "SELECT s.empleado, s.fesolicitud, s.feinicio, s.fefin, u.nombre, u.jefe
+    if($noEmpleado_cookie = 177 || $noEmpleado_cookie = 489){
+        $noEmpleado_cookie = 45;
+    }
+    $sqlJefes = "SELECT s.empleado, s.fesolicitud, s.feinicio, DATE_ADD(s.fefin, INTERVAL 1 DAY) as fefin, u.nombre, u.jefe
                  FROM solicitudes s
                  INNER JOIN usuarios u ON s.empleado = u.noEmpleado
                  WHERE s.estatus = 2 AND s.autorizaRH = 2 AND u.jefe = $noEmpleado_cookie AND u.estatus = 1";
