@@ -2,7 +2,7 @@
     
     include 'conn.php';
     if($_COOKIE['noEmpleado'] == '' || $_COOKIE['noEmpleado'] == null){
-        echo '<script>window.location.assign("index")</script>';http://localhost/incidencias/saladejuntas/inicio
+        echo '<script>window.location.assign("index")</script>';
     }
 ?>
 <!-- Sidebar -->
@@ -36,7 +36,7 @@
     </span>
 </div>
 
-<!-- Menú Principal -->
+<!-- Nav Item - Pages Collapse Menu -->
 <li class = "nav-item">
     <a class = "nav-link collapsed" href = "#" data-toggle = "collapse" data-target = "#collapseTwo" aria-expanded = "true" aria-controls = "collapseTwo">
         <i class = "fas fa-fw fa-cog"></i>
@@ -66,11 +66,19 @@
                     echo '<a class = "collapse-item" href = "calendarioVacacionesJefes">Calendarios de Vacaciones</a>';
                 }
             }
+            if(($noEmp ==  177 || $noEmp ==  489 )){
+                    echo '<a class = "collapse-item" href = "calendarioVacacionesJefes">Calendarios de Vacaciones</a>';
+            }
         ?>
         </div>
     </div>
 </li>
-<!-- Menú ADMINISTRACION -->
+
+<button type="button" class="nav-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+    Cambiar Contrase帽a
+</button>
+<!-- Nav Item - Utilities Collapse Menu -->
 <?php
 $noEmp = $_COOKIE['noEmpleado'];
 if ($noEmp == 183 || $noEmp ==  276 || $noEmp == 403 || $noEmp ==  523){
@@ -79,7 +87,7 @@ if ($noEmp == 183 || $noEmp ==  276 || $noEmp == 403 || $noEmp ==  523){
         <a class = "nav-link collapsed" href = "#" data-toggle = "collapse" data-target = "#collapseUtilities"
             aria-expanded = "true" aria-controls = "collapseUtilities">
             <i class = "fas fa-fw fa-wrench"></i>
-            <span>Administración</span>
+            <span>Administraci贸n</span>
         </a>
         <div id = "collapseUtilities" class = "collapse" aria-labelledby = "headingUtilities"
             data-parent = "#accordionSidebar">
@@ -88,7 +96,7 @@ if ($noEmp == 183 || $noEmp ==  276 || $noEmp == 403 || $noEmp ==  523){
                 <a class = "collapse-item" href = "areaspuestos">Areas/Puestos/Regiones</a>            
                 <a class = "collapse-item" href = "listavacaciones">Lista de Vacaciones</a>
                 <a class = "collapse-item" href = "calendarioVacaciones">Calendario de Vacaciones</a>
-                <a class = "collapse-item" href = "mandarNomina">Control pagos nómina</a>
+                <a class = "collapse-item" href = "mandarNomina">Control pagos n贸mina</a>
                 
             </div>
         </div>
@@ -96,18 +104,6 @@ if ($noEmp == 183 || $noEmp ==  276 || $noEmp == 403 || $noEmp ==  523){
 <?php
 }            
 ?>
-<!-- Menú Sala De Juntas -->
-    <li class="nav-item">
-        <a class="nav-link" href="saladejuntas/">
-            <i class="fas fa-fw fa-calendar-day"></i>
-            <span>Sala de Juntas</span>
-        </a>
-    </li>
-<!-- Boton Cambiar Contraseña -->
-<button type="button" class="nav-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-    Cambiar Contraseña
-</button>
 <!-- Divider -->
 <hr class = "sidebar-divider d-none d-md-block">
 
