@@ -78,7 +78,7 @@ if ($opcion == "llenaTablaAutorizadas") {
             $fechaPrev = $anioPrev . $FechaIng;
             $fechaNext = $anio . $FechaIng;
 
-            $QdiasSol = "SELECT SUM(dias) as diasSol FROM solicitudes WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext'";
+            $QdiasSol = "SELECT SUM(dias) as diasSol FROM solicitudes WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext' AND tipo = 1";
             $resdiasSol = mysqli_query($conn, $QdiasSol) or die(mysqli_error($conn));
 
             while ($rowSol = mysqli_fetch_array($resdiasSol)) {
@@ -108,8 +108,10 @@ if ($opcion == "llenaTablaAutorizadas") {
     // Devolver los datos en formato JSON
     echo json_encode($registros);
 }
+
 if ($opcion == "llenaTablaPorAutorizar") {
-    $sql = "SELECT s.id, s.tipo, DATE_FORMAT(s.feinicio, '%d/%m/%Y') as feinicio, DATE_FORMAT(s.fefin, '%d/%m/%Y') as fefin, s.notasempleado, s.notajefe, s.comentarios, s.estatus, s.dias, s.autorizaRH, s.Dgozados, s.empleado as noEmp, u.nombre as empleado,s.fesolicitud,DATE_FORMAT(s.fesolicitud, '%Y-%m-%d') AS FechaBien,
+    $sql = "SELECT s.id, s.tipo, DATE_FORMAT(s.feinicio, '%d/%m/%Y') as feinicio, DATE_FORMAT(s.fefin, '%d/%m/%Y') as fefin, s.notasempleado, s.notajefe, s.comentarios, s.estatus, s.dias, s.autorizaRH, 
+                   s.Dgozados, s.empleado as noEmp, u.nombre as empleado,s.fesolicitud,DATE_FORMAT(s.fesolicitud, '%Y-%m-%d') AS FechaBien,
                 (SELECT dias FROM diasvacaciones WHERE anio =(TIMESTAMPDIFF(YEAR,u.fechaIngreso,CURDATE()) ) )AS diasD, u.fechaIngreso
                 FROM solicitudes s 
                 INNER JOIN usuarios u ON s.empleado = u.noEmpleado
@@ -141,7 +143,7 @@ if ($opcion == "llenaTablaPorAutorizar") {
             $fechaPrev = $anioPrev . $FechaIng;
             $fechaNext = $anio . $FechaIng;
 
-            $QdiasSol = "SELECT SUM(dias) as diasSol FROM solicitudes WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext'";
+            $QdiasSol = "SELECT SUM(dias) as diasSol FROM solicitudes WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext'  AND tipo = 1";
             $resdiasSol = mysqli_query($conn, $QdiasSol) or die(mysqli_error($conn));
 
             while ($rowSol = mysqli_fetch_array($resdiasSol)) {

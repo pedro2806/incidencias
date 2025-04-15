@@ -94,7 +94,7 @@ include 'conn.php';
                                     $fechaPrev = $anioPrev.$FechaIng;
                                     $fechaNext = $anio.$FechaIng;
                                     
-                                    $QdiasSol = "SELECT SUM(dias) as diasSol FROM solicitudes WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext'";
+                                    $QdiasSol = "SELECT SUM(dias) as diasSol FROM solicitudes WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext' AND tipo = 1";
                                     $resdiasSol= mysqli_query( $conn, $QdiasSol ) or die (mysqli_error($conn));
                                     
                                     While ($rowSol = mysqli_fetch_array($resdiasSol)){
