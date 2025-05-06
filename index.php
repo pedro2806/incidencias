@@ -39,17 +39,19 @@
         <div class = "row justify-content-center">
             <div class = "col-xl-10 col-lg-12 col-md-9">
                 <div class = "card o-hidden border-0 shadow-lg my-5">
-                    <div class = "card-body p-0">
-                        <div class = "row">
-                            <div class="d-lg-block bg-login-image"></div>
-                        </div>      
+                    <div class = "card-body p-0">                        
+                        <div class = "row justify-content-center">                                                        
+                            <div class = "p-0 text-center">                                    
+                                <img src = "img/MESS_05_Imagotipo.svg" alt = "Logo MESS" width = "350px">
+                            </div>                            
+                        </div>                         
                         <div class = "row">
                             <!--LOGIN-->
-                            <div class="col-lg-6 mx-auto mt-5">
+                            <div class="col-lg-6 mx-auto">
                                 <div class="p-4">
                                     <div class="text-center">
                                         <center>
-                                            <b>
+                                            <b class="h5 text-gray-900 mb-4">
                                                 RR HH<br>
                                                 Incidencias
                                             </b>
@@ -77,7 +79,10 @@
                                 </div>
                             </div>
                             <!--AGENDA SALA DE JUNTAS-->
-                            <div class="col-lg-6 mx-auto mt-5">
+                            <div class="col-lg-6 mx-auto">
+                                <div class="text-center">
+                                    <h1 class="h4 text-gray-900">Agenda Sala de Juntas</h1>
+                                </div>
                                 <div class="p-4">
                                     <div class="text-center" id="calendar"></div>
                                 </div>
