@@ -61,7 +61,7 @@
         
                 echo '<a class = "collapse-item" href = "solicitudempleado">Solicitudes para revisar</a>';
                 if ($noEmp ==  19) {  
-                     echo '<a class = "collapse-item" href = "calendarioVacaciones">Calendarios de Vacaciones</a>';
+                    echo '<a class = "collapse-item" href = "calendarioVacaciones">Calendarios de Vacaciones</a>';
                 }else{
                     echo '<a class = "collapse-item" href = "calendarioVacacionesJefes">Calendarios de Vacaciones</a>';
                 }
@@ -76,7 +76,7 @@
 
 <button type="button" class="nav-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-    Cambiar Contrase帽a
+    Cambiar Contraseña
 </button>
 <!-- Nav Item - Utilities Collapse Menu -->
 <?php
@@ -87,7 +87,7 @@ if ($noEmp == 183 || $noEmp ==  276 || $noEmp == 403 || $noEmp ==  523){
         <a class = "nav-link collapsed" href = "#" data-toggle = "collapse" data-target = "#collapseUtilities"
             aria-expanded = "true" aria-controls = "collapseUtilities">
             <i class = "fas fa-fw fa-wrench"></i>
-            <span>Administraci贸n</span>
+            <span>Administración</span>
         </a>
         <div id = "collapseUtilities" class = "collapse" aria-labelledby = "headingUtilities"
             data-parent = "#accordionSidebar">
@@ -96,13 +96,27 @@ if ($noEmp == 183 || $noEmp ==  276 || $noEmp == 403 || $noEmp ==  523){
                 <a class = "collapse-item" href = "areaspuestos">Areas/Puestos/Regiones</a>            
                 <a class = "collapse-item" href = "listavacaciones">Lista de Vacaciones</a>
                 <a class = "collapse-item" href = "calendarioVacaciones">Calendario de Vacaciones</a>
-                <a class = "collapse-item" href = "mandarNomina">Control pagos n贸mina</a>
+                <a class = "collapse-item" href = "mandarNomina">Control pagos nómina</a>
                 
             </div>
         </div>
     </li>
 <?php
 }            
+?>
+<?php
+    include 'conn.php';
+    $rol = $_COOKIE['rol'];
+    if($rol == 3){
+?>
+    <li class = "nav-item">
+        <a class = "nav-link" href = "SalaDeJuntas">
+            <i class = "fas fa-fw fa-table"></i>
+            <span>Sala de Juntas</span>
+        </a>
+    </li>
+<?php
+    }
 ?>
 <!-- Divider -->
 <hr class = "sidebar-divider d-none d-md-block">
