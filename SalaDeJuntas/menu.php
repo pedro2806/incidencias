@@ -17,7 +17,7 @@
 </a>
 <hr class="sidebar-divider my-0">
 <!-- Nav Item - Dashboard -->
-<li class="nav-item active">
+<li class="nav-item active btn-warning">
     <a class="nav-link" href="../inicio">
         <i class="fas fa-fw fa-home"></i>
         <span>Volver a Incidencias</span>

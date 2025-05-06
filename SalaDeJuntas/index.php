@@ -39,11 +39,22 @@
                             <textarea class="form-control" type="text-area" id="descripcion" name="descripcion" required></textarea><br><br>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-xl-3 col-lg-3">
-                            <button id="btnSolicitar" type="button" class="btn btn-success" onclick="validarReserva()">Reservar</button>
-                        </div>
-                    </div>
+                    <?php
+                        $rol = $_COOKIE['rol'];
+                        $noEmp = $_COOKIE['noEmpleado'];
+                        $Qrol = "SELECT rol FROM usuarios WHERE noEmpleado = $noEmp";
+                        $resRol = mysqli_query($conn, $Qrol) or die(mysqli_error($conn));
+                        while ($row = mysqli_fetch_array($resRol)) {
+                            $rol = utf8_encode($row["rol"]);
+                        }
+                        if ($rol == 3) {
+                            echo '<div class="row">
+                                    <div class="col-xl-3 col-lg-3">
+                                        <button id="btnSolicitar" type="button" class="btn btn-success" onclick="validarReserva()">Reservar</button>
+                                    </div>
+                                </div>';
+                        }
+                    ?>
                     <div class="row">
                         <div id="calendar"></div>
                     </div>
