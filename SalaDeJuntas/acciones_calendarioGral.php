@@ -26,7 +26,7 @@ if($accion == 'login'){
     FROM reservas 
     JOIN salas ON reservas.id_sala = salas.id_sala
     JOIN usuarios ON reservas.id_usuario = usuarios.noEmpleado
-    WHERE reservas.estatus = 'Reservada' AND  DATE(reservas.fecha_hora_inicio) = CURDATE()";
+    WHERE reservas.estatus = 'Reservada'";
     
     $result2 = $conn->query($Calendario_Login);
     $reservas = [];
@@ -35,7 +35,7 @@ if($accion == 'login'){
         'title' => $row['nombre_usuario'], // Mostrar el nombre el usuario
         'start' => $row['fecha_hora_inicio'],
         'end'   => $row['fecha_hora_fin'],
-        'descripcion' => $row['descripcion'] // Mostrar la descripción de la reserva      
+        'descripcion' => $row['descripcion'] // Mostrar la descripci贸n de la reserva      
         ];
     }
     echo json_encode($reservas);

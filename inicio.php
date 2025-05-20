@@ -71,16 +71,26 @@
                     <!-- Content Row -->
 
                     <div class = "row">
-                        <!-- Periodico mural -->
+                        <!-- Periodico mural 
                         <center>
                         <p class="alert alert-info">
                             Estimado Equipo Mess,  dentro de los próximos días estarán habiendo modificaciones dentro de esta plataforma puesto que estamos en periodo de actualizaciones.
                             Agradecemos su paciencia y compresión
-                        <p>
+                        <p>                            
                         </center>
-                        <div class = "col-xl-12 col-lg-12">
+                        -->
+                        <div class = "col-xl-7 col-lg-7">
                                 <embed id="vistaPrevia" src='https://www.mess.com.mx/wp-content/uploads/2025/03/Marzo-2024.pdf#zoom=80' type="application/pdf" width="100%" height="550">
                         </div>
+                        <!--AGENDA SALA DE JUNTAS-->
+                            <div class="col-lg-5 mx-auto">
+                                <div class="text-center">
+                                    <h1 class="h4 text-gray-900">Agenda Sala de Juntas</h1>
+                                </div>
+                                <div class="p-4">
+                                    <div class="text-center" id="calendar"></div>
+                                </div>
+                            </div>
                     </div>
 
                 </div>
@@ -127,7 +137,33 @@
     <!-- Page level custom scripts -->
     <script src = "js/demo/chart-area-demo.js"></script>
     <script src = "js/demo/chart-pie-demo.js"></script>
+    <script>
+    $(document).ready(function () {
+        verCalendarioLogin();
+    });
 
+        function verCalendarioLogin() {
+            var calendarEl = document.getElementById('calendar');
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {        
+                initialView: 'listWeek', // Cambiar a vista diaria
+                events: 'SalaDeJuntas/acciones_calendarioGral.php?opcion=login', // Aquí llamas a tu PHP que devuelve las vacaciones en JSON
+                editable: false,
+                locale: 'es',
+                eventContent: function(info) {
+                    // Personalizar el contenido del evento
+                    var nombreEmpleado = info.event.title;
+                    var fechaInicio = info.event.start;
+                    var fechaFin = info.event.end;
+                    var descripcion = info.event.extendedProps.descripcion || 'Sin descripción'; // Obtener la descripción del evento
+                    var displayText = nombreEmpleado + '<br>' + descripcion;
+
+                    return { html: displayText };
+                }
+            });
+            calendar.render();
+        } 
+    </script>
 </body>
 
 </html>
