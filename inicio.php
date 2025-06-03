@@ -133,7 +133,12 @@
 
     <!-- Page level plugins -->
     <script src = "vendor/chart.js/Chart.min.js"></script>
-
+    <?php
+        if ($_COOKIE['noEmpleado'] == '276' || $_COOKIE['noEmpleado'] == '215' || $_COOKIE['noEmpleado'] == '183' || $_COOKIE['noEmpleado'] == '523') {
+            // Mostrar el chat de Tidio solo para ciertos empleados
+            echo '<script src="//code.tidio.co/7gdtsrztipqfhk4odfaiekkqicwhsvxb.js" async></script>';
+        }
+    ?>
     <!-- Page level custom scripts -->
     <script src = "js/demo/chart-area-demo.js"></script>
     <script src = "js/demo/chart-pie-demo.js"></script>
