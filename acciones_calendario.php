@@ -32,13 +32,13 @@ if ($opcion == "rrhh") {
 }
 
 if ($opcion == "jefes") {
-    if($noEmpleado_cookie = 177 || $noEmpleado_cookie = 489){
+    if($noEmpleado_cookie == 177 || $noEmpleado_cookie == 489){
         $noEmpleado_cookie = 45;
     }
     $sqlJefes = "SELECT s.empleado, s.fesolicitud, s.feinicio, DATE_ADD(s.fefin, INTERVAL 1 DAY) as fefin, u.nombre, u.jefe
-                 FROM solicitudes s
-                 INNER JOIN usuarios u ON s.empleado = u.noEmpleado
-                 WHERE s.estatus = 2 AND s.autorizaRH = 2 AND u.jefe = $noEmpleado_cookie AND u.estatus = 1";
+                FROM solicitudes s
+                INNER JOIN usuarios u ON s.empleado = u.noEmpleado
+                WHERE s.estatus = 2 AND s.autorizaRH = 2 AND u.jefe = $noEmpleado_cookie AND u.estatus = 1";
     
     $resultJefes = $conn->query($sqlJefes);
     
