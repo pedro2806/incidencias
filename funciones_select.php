@@ -23,10 +23,15 @@ if ($opcion == "empleadoSolicita") {
         $QUmarcas = "SELECT * FROM usuarios";
     }
     if ($rol == 3) {
-        $QUmarcas = "(SELECT u.noEmpleado, u.nombre FROM usuarios u
-                        WHERE u.jefe = $usuario AND u.estatus = 1 order by u.nombre)
-                        UNION
-                        (SELECT noEmpleado, nombre FROM usuarios WHERE noEmpleado = $usuario)";
+        if ($usuario == 403) {
+            $QUmarcas = "SELECT * FROM usuarios order by nombre";
+        }
+        else{
+            $QUmarcas = "(SELECT u.noEmpleado, u.nombre FROM usuarios u
+                            WHERE u.jefe = $usuario AND u.estatus = 1 order by u.nombre)
+                            UNION
+                            (SELECT noEmpleado, nombre FROM usuarios WHERE noEmpleado = $usuario)";
+        }
     }
     $res2 = mysqli_query($conn, $QUmarcas) or die(mysqli_error($conn));
 
