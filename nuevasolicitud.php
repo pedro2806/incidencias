@@ -322,6 +322,7 @@
             empleadoSolicita();
             validaRol();
             validarAntiguedad();
+            validarDiasDisponibles();
             $('#solicita').select2();
         });
 
@@ -440,6 +441,16 @@
         }
 
         function generarSolicitud() {
+            diasDisp = $('#diasDisponibles').val();
+            if (diasDisp < 1) {
+                Swal.fire({
+                    title: "No tienes días disponibles para solicitar.",
+                    icon: "warning",
+                    draggable: true
+                });
+                return;
+            }
+
             opIncidencia = $('#opIncidencia').val();
             notas = $('#notas').val();
             comentarios = $('#comentarios').val();
@@ -515,17 +526,17 @@
                 },
                 success: function(data) {
                     /*Swal.fire({
-                      title: "Se notifico de tu solicitud",
-                      icon: "info",
-                      draggable: true
+                    title: "Se notifico de tu solicitud",
+                    icon: "info",
+                    draggable: true
                     });*/
                     //window.location.href = 'solicitudestatus';
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     /*Swal.fire({
-                      title: "Error al notificar la solicitud!",
-                      icon: "error",
-                      draggable: true
+                    title: "Error al notificar la solicitud!",
+                    icon: "error",
+                    draggable: true
                     });*/
 
                 }
@@ -570,6 +581,20 @@
             } else {
                 $("#btnSolicitar").prop("disabled", false);
                 $("#mensaje").text("MESS 2025");
+            }
+        }
+        function validarDiasDisponibles() {            
+                diasDisp = $('#diasDisponibles').val();
+            if (diasDisp < 1) {
+                $("#btnSolicitar").prop("disabled", true);
+                $("#btnSolicitar").hide();
+                $("#mensaje").text("No puedes solicitar vacaciones. * No tienes dias disponibles. *");
+                $("#mensaje").addClass("badge text-bg-warning");
+                $("#mensaje").css("font-size", "1.2rem");
+            } else {
+                $("#btnSolicitar").prop("disabled", false);
+                $("#mensaje").text("MESS 2025");
+                $("#mensaje").addClass("badge text-bg-primary");
             }
         }
 

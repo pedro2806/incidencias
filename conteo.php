@@ -111,6 +111,7 @@ include 'conn.php';
                         </div>
                         <div class = "h5 mb-0 font-weight-bold text-gray-800">
                             Días Disp: <?php echo $dias-$diasSol; ?>  días
+                            <input type="hidden" class="form-control" id="diasDisponibles" name="diasDisponibles" value="<?php echo $dias-$diasSol; ?>" readonly>
                         </div>
                     </div>
                 </div>
