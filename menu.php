@@ -118,6 +118,13 @@ if ($noEmp == 183 || $noEmp ==  276 || $noEmp == 403 || $noEmp ==  523){
 <?php
     }
 ?>
+
+<li class = "nav-item">
+    <a class = "nav-link" href = "verActividades">
+        <i class="fas fa-fw fa-calendar-alt"></i>
+        <span>Planeación semanal OTs</span>
+    </a>
+</li>
 <!-- Divider -->
 <hr class = "sidebar-divider d-none d-md-block">
 
