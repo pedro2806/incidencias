@@ -54,7 +54,8 @@ if ($opcion == "llenaTablaAutorizadas") {
             (SELECT dias FROM diasvacaciones WHERE anio =(TIMESTAMPDIFF(YEAR,u.fechaIngreso,CURDATE()) ) )AS diasD, u.fechaIngreso
                 FROM solicitudes s  
                 INNER JOIN usuarios u ON s.empleado = u.noEmpleado
-                WHERE s.estatus = 2 AND s.autorizaRH = 2
+                WHERE s.estatus = 2 AND s.autorizaRH = 2 
+                AND s.fesolicitud BETWEEN DATE_SUB(CURDATE(), INTERVAL 1 YEAR) AND CURDATE()
                 ORDER BY s.fesolicitud DESC";
 
     $res2 = mysqli_query($conn, $sql) or die(mysqli_error($conn));
@@ -116,7 +117,7 @@ if ($opcion == "llenaTablaAutorizadas") {
 
 if ($opcion == "llenaTablaPorAutorizar") {
     $sql = "SELECT s.id, s.tipo, DATE_FORMAT(s.feinicio, '%d/%m/%Y') as feinicio, DATE_FORMAT(s.fefin, '%d/%m/%Y') as fefin, s.notasempleado, s.notajefe, s.comentarios, s.estatus, s.dias, s.autorizaRH, 
-                   s.Dgozados, s.empleado as noEmp, u.nombre as empleado,s.fesolicitud,DATE_FORMAT(s.fesolicitud, '%Y-%m-%d') AS FechaBien,
+                    s.Dgozados, s.empleado as noEmp, u.nombre as empleado,s.fesolicitud,DATE_FORMAT(s.fesolicitud, '%Y-%m-%d') AS FechaBien,
                 (SELECT dias FROM diasvacaciones WHERE anio =(TIMESTAMPDIFF(YEAR,u.fechaIngreso,CURDATE()) ) )AS diasD, u.fechaIngreso
                 FROM solicitudes s 
                 INNER JOIN usuarios u ON s.empleado = u.noEmpleado

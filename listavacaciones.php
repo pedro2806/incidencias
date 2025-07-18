@@ -72,17 +72,17 @@ include 'conn.php';
                     <div class = "card shadow mb-2">
                         <div class = "card-body">
                             <div class = "row">
-                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                    	<li class="nav-item">
-                                    		<a class="nav-link active btn-outline-warning text-dark" type="button" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Por autorizar</a>
-                                    	</li>
-                                    	<li class="nav-item">
-                                    		<a class="nav-link btn-outline-success text-dark" id="autorizadas-tab" data-toggle="tab" href="#autorizadas" role="tab" aria-controls="autorizadas" aria-selected="false">Autorizadas</a>
-                                    	</li>
-                                    	<li class="nav-item">
-                                    		<a class="nav-link btn-outline-danger text-dark" id="canceladas-tab" data-toggle="tab" href="#canceladas" role="tab" aria-controls="canceladas" aria-selected="false">Canceladas</a>
-                                    	</li>
-                                    </ul><br>
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active btn-outline-warning text-dark" type="button" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Por autorizar</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link btn-outline-success text-dark" id="autorizadas-tab" data-toggle="tab" href="#autorizadas" role="tab" aria-controls="autorizadas" aria-selected="false" onclick="llenaTablaAutorizadas()">Autorizadas</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link btn-outline-danger text-dark" id="canceladas-tab" data-toggle="tab" href="#canceladas" role="tab" aria-controls="canceladas" aria-selected="false" onclick="llenaTablaCanceladas()">Canceladas</a>
+                                    </li>
+                                </ul><br>
                                     
                                     
                                     <div class="tab-content" id="myTabContent">
@@ -149,7 +149,6 @@ include 'conn.php';
                             
                         </div>
                     </div>
-                   
 
                 </div>
 
@@ -261,8 +260,8 @@ include 'conn.php';
     
         $(document).ready(function () {
             
-            llenaTablaAutorizadas();
-            llenaTablaCanceladas();
+            //llenaTablaAutorizadas();
+            //llenaTablaCanceladas();
             llenaTablaPorAutorizar();
             
             $('#TporAutorizar').DataTable({
@@ -288,6 +287,7 @@ include 'conn.php';
                         "sortDescending": ": activar para ordenar la columna de manera descendente"
                     }
                 },
+                pageLength: 100, 
                 columnDefs: [
                     {
                         targets: 2,  // Índice de la columna que tiene las fechas
