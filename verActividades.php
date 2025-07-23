@@ -27,6 +27,9 @@
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.css">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 </head>
 
@@ -60,9 +63,9 @@
                     <h1>Calendario de Actividades Planeadas</h1>
 
                     <div class="row mb-3">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label for="filtro-area" class="mr-2">Filtrar por Área:</label>
-                            <select id="filtro-area" class="form-select mr-3">
+                            <select id="filtro-area" class="form-select mr-3" multiple="multiple" name="areas[]">
                                 <option value="">Todas las áreas</option>                                
                                 <option value="PT">PT Servicios Par Torsional</option>
                                 <option value="FZ">FZ Servicios Fuerza</option>
@@ -163,7 +166,7 @@
     <a class = "scroll-to-top rounded" href = "#page-top">
         <i class = "fas fa-angle-up"></i>
     </a>
-     <!-- Bootstrap core JavaScript-->
+    <!-- Bootstrap core JavaScript-->
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- Core plugin JavaScript-->
@@ -184,10 +187,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/locales/es.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {            
             mostrarCalendarioActividadesPlaneadas();
-            
+            $('#filtro-area').select2({
+                placeholder: "Selecciona una o varias áreas", // Opcional: un texto de ayuda
+                allowClear: true // Opcional: permite deseleccionar todo
+            });
         });        
         
         function mostrarCalendarioActividadesPlaneadas() {
