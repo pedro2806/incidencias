@@ -55,7 +55,7 @@ if ($opcion == "llenaTablaAutorizadas") {
                 FROM solicitudes s  
                 INNER JOIN usuarios u ON s.empleado = u.noEmpleado
                 WHERE s.estatus = 2 AND s.autorizaRH = 2 
-                AND s.fesolicitud BETWEEN DATE_SUB(CURDATE(), INTERVAL 1 YEAR) AND CURDATE()
+                AND s.fesolicitud BETWEEN DATE_SUB(CURDATE(), INTERVAL 2 YEAR) AND CURDATE()
                 ORDER BY s.fesolicitud DESC";
 
     $res2 = mysqli_query($conn, $sql) or die(mysqli_error($conn));

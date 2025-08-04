@@ -62,18 +62,16 @@ $correo = $_POST["correo"];
     }
     
     if($accion == "ValidarOpciones"){
-        $sql = "SELECT *
-                FROM accesos                
-                WHERE noEmpleado = $noEmpleado";
+        $sql = "SELECT noEmpleado, sistema, estatus FROM accesos WHERE noEmpleado = $noEmpleado";
     
         $result = $conn->query($sql);
-    
+        //echo $sql;
         if ($result && $result->num_rows > 0) {
             $info= [];
             while ($row = $result->fetch_assoc()) {
                 $info[] = $row;
             }
-            echo json_encode(['status' => 'success', 'info' => $info]);
+            echo json_encode($info);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'No se encontraron coincidencias.']);
         }
