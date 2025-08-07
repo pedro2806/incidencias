@@ -501,7 +501,7 @@
                             icon: "success",
                             draggable: true
                         });
-                        //enviaNotificacion(solicita);
+                        enviaNotificacion(solicita);
                         window.location.href = 'solicitudestatus';
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
