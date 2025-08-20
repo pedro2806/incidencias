@@ -107,7 +107,7 @@ include 'conn.php';
                             ?>
                             
                             
-                             días
+                            días
                         </div>
                         <div class = "h5 mb-0 font-weight-bold text-gray-800">
                             Días Disp: <?php echo $dias-$diasSol; ?>  días
@@ -170,7 +170,7 @@ include 'conn.php';
 
                         </div>
                         <div class = "h5 mb-0 font-weight-bold text-gray-800">
-                            Fecha Renovación Vac: <?php echo $fechaNext; ?>
+                            Renovación Vac: <?php echo $fechaNext; ?>
                         </div>
                     </div>
                 </div>
