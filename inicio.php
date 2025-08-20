@@ -77,10 +77,12 @@
                             Estimado Equipo Mess,  dentro de los próximos días estarán habiendo modificaciones dentro de esta plataforma puesto que estamos en periodo de actualizaciones.
                             Agradecemos su paciencia y compresión
                         <p>                            
-                        </center>
+                        </center>encuesta_viaje
                         -->
                         <div class = "col-xl-7 col-lg-7">
+                            
                                 <embed id="vistaPrevia" src='https://www.mess.com.mx/wp-content/uploads/2025/03/Marzo-2024.pdf#zoom=80' type="application/pdf" width="100%" height="550">
+                                <embed id="vistaPrevia" src='https://www.messbook.com.mx/incidencias/encuesta_viaje?usuario=<?php echo $_COOKIE['noEmpleado']; ?>' type="application/pdf" width="100%" height="550">
                         </div>
                         <!--AGENDA SALA DE JUNTAS-->
                             <div class="col-lg-5 mx-auto">
