@@ -37,7 +37,7 @@ include 'conn.php';
                             Vac. por ley: <?php
                                 $antiguedad = $_COOKIE['antiguedad'];
                                 
-                                $Qdias = "SELECT * FROM diasvacaciones WHERE anio = $antiguedad";
+                                $Qdias = "SELECT * FROM webmess_rrhh.diasvacaciones WHERE anio = $antiguedad";
                                 $resdias= mysqli_query( $conn, $Qdias ) or die (mysqli_error($conn));
                                 
                                 While ($row3 = mysqli_fetch_array($resdias)){
@@ -83,7 +83,7 @@ include 'conn.php';
                                     $fechaPrev = $anio.$FechaIng;
                                     $fechaNext = $anioNext.$FechaIng;
                                     
-                                    $QdiasSol = "SELECT IFNULL(SUM(dias), '0') as diasSol FROM solicitudes WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext' AND tipo = 1";
+                                    $QdiasSol = "SELECT IFNULL(SUM(dias), '0') as diasSol FROM webmess_rrhh.solicitudes WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext' AND tipo = 1";
                                     $resdiasSol= mysqli_query( $conn, $QdiasSol ) or die (mysqli_error($conn));
                                     
                                     While ($rowSol = mysqli_fetch_array($resdiasSol)){
@@ -94,7 +94,7 @@ include 'conn.php';
                                     $fechaPrev = $anioPrev.$FechaIng;
                                     $fechaNext = $anio.$FechaIng;
                                     
-                                    $QdiasSol = "SELECT SUM(dias) as diasSol FROM solicitudes WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext' AND tipo = 1";
+                                    $QdiasSol = "SELECT SUM(dias) as diasSol FROM webmess_rrhh.solicitudes WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext' AND tipo = 1";
                                     $resdiasSol= mysqli_query( $conn, $QdiasSol ) or die (mysqli_error($conn));
                                     
                                     While ($rowSol = mysqli_fetch_array($resdiasSol)){
@@ -105,9 +105,7 @@ include 'conn.php';
                                 
                                 
                             ?>
-                            
-                            
-                             días
+                            días
                         </div>
                         <div class = "h5 mb-0 font-weight-bold text-gray-800">
                             Días Disp: <?php echo $dias-$diasSol; ?>  días
@@ -148,7 +146,7 @@ include 'conn.php';
                                     $fechaPrev = $anio.$FechaIng;
                                     $fechaNext = $anioNext.$FechaIng;
                                     
-                                    $QdiasSol = "SELECT IFNULL(SUM(dias), '0') as diasSol FROM solicitudes WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext'  AND tipo = 1";
+                                    $QdiasSol = "SELECT IFNULL(SUM(dias), '0') as diasSol FROM webmess_rrhh.solicitudes WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext'  AND tipo = 1";
                                     $resdiasSol= mysqli_query( $conn, $QdiasSol ) or die (mysqli_error($conn));
                                     
                                     While ($rowSol = mysqli_fetch_array($resdiasSol)){
@@ -159,7 +157,7 @@ include 'conn.php';
                                     $fechaPrev = $anioPrev.$FechaIng;
                                     $fechaNext = $anio.$FechaIng;
                                     
-                                    $QdiasSol = "SELECT SUM(dias) as diasSol FROM solicitudes WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext'";
+                                    $QdiasSol = "SELECT SUM(dias) as diasSol FROM webmess_rrhh.solicitudes WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext'";
                                     $resdiasSol= mysqli_query( $conn, $QdiasSol ) or die (mysqli_error($conn));
                                     
                                     While ($rowSol = mysqli_fetch_array($resdiasSol)){

@@ -19,13 +19,14 @@
 	
 $(document).ready(function() {
     //document.cookie = "antiguedad='.$antiguedad.';expires=" + new Date(Date.now() + 9600000).toUTCString() + ";SameSite=Lax;";
-    document.cookie = "antiguedad =00; expires=Thu, 01 Jan 1970 00:00:00 UTC";
-    document.cookie = "diasD =00; expires=Thu, 01 Jan 1970 00:00:00 UTC";
-    document.cookie = "noEmpleado =00; expires=Thu, 01 Jan 1970 00:00:00 UTC";
-    document.cookie = "nombredelusuario =00; expires=Thu, 01 Jan 1970 00:00:00 UTC";
-    document.cookie = "rol =00; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+    document.cookie = "antiguedad=00; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/LoginMaster;";
+    document.cookie = "diasD=00; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/LoginMaster;";
+    document.cookie = "noEmpleado=00; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/LoginMaster;";
+    document.cookie = "nombredelusuario=00; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/LoginMaster;";
+    document.cookie = "rol=00; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/LoginMaster;";
+	//"InicioSesion" = LoginMaster = Reedireccion LoginMaster sino reedireccion Incidencias
 
-    window.location.assign("https://www.messbook.com.mx/incidencias")        
+    window.location.assign("../loginMaster/inicio.php")        
 } );
 
 	</script>
