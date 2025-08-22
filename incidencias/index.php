@@ -28,25 +28,19 @@
     <!-- Page Wrapper -->
     <div id="wrapper">
         <?php
-            include '../menu.php';
+            include 'menu.php';
         ?>
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
-
             <!-- Main Content -->
             <div id="content">
-
                 <?php
-                    //session_start();
-                    //if(isset($_SESSION['nombredelusuario'])){}
                     include '../encabezado.php';
                 ?>
-
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     <!-- Content Row -->
                     <div class="row">
-
                         <!-- Area Chart -->
                         <div class="col-xl-12">
                             <div class="card shadow">
@@ -62,11 +56,10 @@
                                             </center>
                                         </div>
                                         <div class="col-xl-4" style="text-align: center">
-                                            <b>Fecha - </b>
+                                            <b>Fecha: </b>
                                             <b>
-                                                <?php 
-                                                    $hoy = date("d-m-Y");
-                                                    print_r($hoy); 
+                                                <?php
+                                                    print_r(date("d-m-Y")); 
                                                 ?>
                                             </b>
                                         </div>
@@ -111,9 +104,9 @@
                                         </div>
 
                                         <div class="row card-header border-left-primary">                                           
-                                            <div class="col-xl-6">
+                                            <div class="col-xl-12">
                                                 <div class="mb-0">
-                                                    <b for="exampleFormControlTextarea1" class="form-label">Comentarios</b>
+                                                    <label for="exampleFormControlTextarea1" class="form-label">Comentarios</label>
                                                     <textarea class="form-control" id="comentarios" name="comentarios" rows="3"></textarea>
                                                 </div>
                                             </div>
@@ -122,7 +115,7 @@
                                             <div class="col-xl-3"></div>
                                             <div class="col-xl-6">
                                                 <center>
-                                                    <button id="btnSolicitar" type="button" class="btn btn-success" onclick="generarSolicitud()">Solicitar</button><br>
+                                                    <button id="btnSolicitar" type="button" class="btn btn-success" onclick="generarSolicitud()">Registrar</button><br>
                                                     <p id="mensaje" class="badge text-bg-primary"></p>
                                                 </center>
                                             </div>
@@ -199,10 +192,7 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-
-            validaRol();
-            validarAntiguedad();
-            validarDiasDisponibles();            
+            
         });
 
         var tIncidencia = function(ti) {
@@ -295,21 +285,6 @@
                     // Error opcional
                 }
             });
-        }
-
-
-        function validaRol() {
-            let cookieRol = getCookie('rol');
-            let nombre = getCookie('nombredelusuario');
-            etiqueta.style.display = 'True';
-            etiqueta.innerHTML = nombre;
-
-            if (cookieRol == 1) {
-                let selectElement = document.getElementById('Divsolicita');
-                selectElement.style.display = 'none';
-                let selectElementM = document.getElementById('DivsolicitaMss');
-                selectElementM.style.display = 'none';
-            }
         }
 
         function getCookie(name) {
