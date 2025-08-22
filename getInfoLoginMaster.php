@@ -9,7 +9,7 @@ $correo = $_POST["correo"];
 
 //Validar Sistemas x Usuario
     if($accion == "ValidarOpciones"){
-        $sql = "SELECT * FROM webmess_rrhh.accesos WHERE noEmpleado = $noEmpleado";
+        $sql = "SELECT * FROM accesos WHERE noEmpleado = $noEmpleado";
 
         $result = $conn->query($sql);
         
@@ -30,7 +30,7 @@ $correo = $_POST["correo"];
         $sql = "SELECT TIMESTAMPDIFF(YEAR, u.fechaIngreso, CURDATE()) AS antiguedad, d.departamento, j.nombre AS jefe,
                 COALESCE((
                     SELECT dv.dias 
-                    FROM webmess_rrhh.diasvacaciones dv 
+                    FROM diasvacaciones dv 
                     WHERE dv.anio = TIMESTAMPDIFF(YEAR, u.fechaIngreso, CURDATE())
                     LIMIT 1
                 ), 0) AS diasdisponibles,
@@ -43,8 +43,8 @@ $correo = $_POST["correo"];
                 ), 0) AS diasSol
                 FROM usuarios u
                 INNER JOIN usuarios j ON u.jefe = j.noEmpleado
-                INNER JOIN webmess_rrhh.departamento d ON u.departamento = d.id
-                LEFT JOIN webmess_rrhh.solicitudes s 
+                INNER JOIN departamento d ON u.departamento = d.id
+                LEFT JOIN solicitudes s 
                     ON u.noEmpleado = s.empleado
                     AND s.fesolicitud BETWEEN 
                             (CASE

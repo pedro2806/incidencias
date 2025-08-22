@@ -1,3 +1,9 @@
+<?php
+session_start();
+session_unset();
+session_destroy();
+?>
+<!DOCTYPE html>
 <html>
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
@@ -18,15 +24,14 @@
 	<script type="text/javascript" class="init">
 	
 $(document).ready(function() {
-    //document.cookie = "antiguedad='.$antiguedad.';expires=" + new Date(Date.now() + 9600000).toUTCString() + ";SameSite=Lax;";
-    document.cookie = "antiguedad=00; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/LoginMaster;";
-    document.cookie = "diasD=00; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/LoginMaster;";
-    document.cookie = "noEmpleado=00; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/LoginMaster;";
-    document.cookie = "nombredelusuario=00; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/LoginMaster;";
-    document.cookie = "rol=00; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/LoginMaster;";
+	document.cookie = "antiguedad=00; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/incidencias;";
+	document.cookie = "diasD=00; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/incidencias;";
+	document.cookie = "noEmpleado=00; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/incidencias;";
+	document.cookie = "nombredelusuario=00; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/incidencias;";
+	document.cookie = "rol=00; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/incidencias;";
 	//"InicioSesion" = LoginMaster = Reedireccion LoginMaster sino reedireccion Incidencias
 
-    window.location.assign("../loginMaster/inicio.php")        
+	window.location.assign("../loginMaster/inicio.php")        
 } );
 
 	</script>

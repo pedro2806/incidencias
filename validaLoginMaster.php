@@ -4,6 +4,7 @@ include 'conn.php';
 $accion = isset($_POST['accion']) ? $_POST['accion'] : '';
 
 if ($accion == 'getPlaca') {
+    include '../ControlVehicular/conn.php';
     $noEmpleado = isset($_POST['noEmpleado']) ? $_POST['noEmpleado'] : '';
     if (empty($noEmpleado)) {
         echo json_encode(['success' => false, 'message' => 'noEmpleado no recibido.']);
@@ -33,6 +34,7 @@ if ($accion == 'getPlaca') {
         echo json_encode(['success' => false, 'message' => 'No se encontró id_usuario para este noEmpleado.']);
     }
     exit;
+    conn.close();
 }
 
 // Validación de usuario (otro caso)
@@ -61,22 +63,22 @@ if (empty($id_usuario) || empty($nombredelusuario) || empty($noEmpleado) || empt
 
     if($nr == 1){
         if (!isset($_COOKIE['antiguedad']) || $_COOKIE['antiguedad'] != $antiguedad) {
-            setcookie('antiguedad', $antiguedad, time() + 604800, "/", "", false, true);
+            setcookie('antiguedad', $antiguedad, time() + 604800, "/incidencias", "", false, true);
         }
         if (!isset($_COOKIE['nombredelusuario']) || $_COOKIE['nombredelusuario'] != $nombreEmpleado) {
-            setcookie('nombredelusuario', $nombreEmpleado, time() + 604800, "/", "", false, true);
+            setcookie('nombredelusuario', $nombreEmpleado, time() + 604800, "/incidencias", "", false, true);
         }
         if (!isset($_COOKIE['noEmpleado']) || $_COOKIE['noEmpleado'] != $noEmpleado) {
-            setcookie('noEmpleado', $noEmpleado, time() + 604800, "/", "", false, true);
+            setcookie('noEmpleado', $noEmpleado, time() + 604800, "/incidencias", "", false, true);
         }
         if (!isset($_COOKIE['diasD']) || $_COOKIE['diasD'] != $diasD) {
-            setcookie('diasD', $diasD, time() + 604800, "/", "", false, true);
+            setcookie('diasD', $diasD, time() + 604800, "/incidencias", "", false, true);
         }
         if (!isset($_COOKIE['rol']) || $_COOKIE['rol'] != $rol) {
-            setcookie('rol', $rol, time() + 604800, "/", "", false, true);
+            setcookie('rol', $rol, time() + 604800, "/incidencias", "", false, true);
         }
         if (!isset($_COOKIE['id_usuario']) || $_COOKIE['id_usuario'] != $id_usuario) {
-            setcookie('id_usuario', $id_usuario, time() + 604800, "/", "", false, true);
+            setcookie('id_usuario', $id_usuario, time() + 604800, "/incidencias", "", false, true);
         }
 
         session_start();
