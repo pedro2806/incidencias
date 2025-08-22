@@ -54,7 +54,7 @@
                                 <div class="card-body">
                                     <div class="row"> 
                                         <div class="col-xl-4" style="text-align: center">
-                                            <img class="sidebar-card-illustration" src="img/MESS_05_Imagotipo_1.png" width="160">
+                                            <img class="sidebar-card-illustration" src="../img/MESS_05_Imagotipo_1.png" width="160">
                                         </div>
                                         <div class="col-xl-4">
                                             <center>
@@ -62,7 +62,7 @@
                                             </center>
                                         </div>
                                         <div class="col-xl-4" style="text-align: center">
-                                            <b>Recursos Humanos - </b>
+                                            <b>Fecha - </b>
                                             <b>
                                                 <?php 
                                                     $hoy = date("d-m-Y");
@@ -74,78 +74,43 @@
                                     <form method="POST">
                                         <div class="row card-footer border-left-primary">
                                             <div class="col-sm-4 mb-0">
+                                                <label for="dirigida">Responsable</label>
+                                                <div id="Divsolicita" name="Divsolicita">
+                                                    <select id="slcRespoonsable" name="slcRespoonsable" class="form-select">
+                                                        <option value="">Selecciona...</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4 mb-0">
                                                 <label for="Tipo">Tipo</label>
                                                 <select id="TIncidencia" name="TIncidencia" class="form-select">
                                                     <option value="">Selecciona...</option>
                                                     <option value="Operaciones">Operaciónes</option>
                                                     <option value="Personal">Personal</option>
+                                                    <option value="Calidad">Calidad</option>
                                                 </select>
                                             </div>
                                             <div class="col-sm-4 mb-0">
-                                                <label for="Area">Area</label>
+                                                <label for="Area">Clasificación</label>
                                                 <select id="area" name="area" class="form-select">
                                                     <option value="">Selecciona...</option>
                                                 </select>
                                             </div>
-                                            <div class="col-sm-4 mb-0">
-                                                <label for="dirigida">Dirigida</label>
-                                                <div id="Divsolicita" name="Divsolicita">
-                                                    <select id="dirigida" name="dirigida" class="form-select">
-                                                        <option value="">Selecciona...</option>
-                                                    </select>
-                                                </div>
-                                            </div>
+                                            
                                         </div>
 
                                         <div class="row card-footer border-left-primary">
-                                            <div class="col-xl-12"><br>
-                                                <b>Favor de tomar nota de los días que el empleado estará fuera de Jornada Laboral (aplica para permiso sin goce, con goce y vacaciones):</b>
+                                            <div class="col-sm-4 mb-0">
+                                                <label for="dirigida">Fecha incidente</label>
+                                                <input type="date" class="form-control" id="fechaIncidente" name="fechaIncidente">
                                             </div>
-                                        </div>
-                                        <div class="row card-footer border-left-primary dynamic-row">
-                                            <div class="col-sm-10">
-                                                <div id="renglones-container">
-                                                    <!-- Renglón inicial que no se puede eliminar -->
-                                                    <div class="row" id="renglon-1">
-                                                        <div class="col-sm-1"></div>
-                                                        <div class="col-sm-4">
-                                                            <div class="mb-1">
-                                                                <label for="fechaInicial-1" class="form-label">Fecha de inicio</label>
-                                                                <input type="date" class="form-control" id="fechaInicial-1" name="fechaInicial[]" onchange="diasEntreFechas(1);" required>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <div class="mb-1">
-                                                                <label for="fechaFinal-1" class="form-label">Fecha de término</label>
-                                                                <input type="date" class="form-control" id="fechaFinal-1" name="fechaFinal[]" onchange="diasEntreFechas(1);" required>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-3">
-                                                            <div class="mb-1">
-                                                                <label for="noDias-1" class="form-label">No de días</label>
-                                                                <input type="number" class="form-control" id="noDias-1" name="noDias[]">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <div class="mb-1">
-                                                    <label class="form-label">Opciones</label><br>
-                                                    <button type="button" class="btn btn-success" onclick="agregarRenglon()"><i class="fas fa-plus"></i></button>
-                                                    <button type="button" class="btn btn-danger" onclick="eliminarUltimoRenglon()"><i class="fas fa-trash"></i></button>
-                                                </div>
-                                            </div>
-                                            <br>
+                                            <div class="col-sm-4 mb-0">
+                                                <label for="Tipo">Fecha de cierre</label>
+                                                <input type="date" class="form-control" id="fechaCierre" name="fechaCierre">
+                                            </div>                                            
                                         </div>
 
-                                        <div class="row card-header border-left-primary">
-                                            <div class="col-xl-6">
-                                                <div class="mb-0">
-                                                    <b for="exampleFormControlTextarea1" class="form-label">Indicar fechas cuando los días no sean un periodo corrido</b>
-                                                    <textarea class="form-control" id="notas" name="notas" rows="3"></textarea>
-                                                </div>
-                                            </div>
+                                        <div class="row card-header border-left-primary">                                           
                                             <div class="col-xl-6">
                                                 <div class="mb-0">
                                                     <b for="exampleFormControlTextarea1" class="form-label">Comentarios</b>
@@ -157,18 +122,6 @@
                                             <div class="col-xl-3"></div>
                                             <div class="col-xl-6">
                                                 <center>
-                                                    <?php
-                                                        $noEmp = $_COOKIE['noEmpleado'];
-                                                        $Qjefe = "SELECT us.nombre AS jefe 
-                                                                FROM usuarios a
-                                                                LEFT JOIN usuarios us ON a.jefe = us.noEmpleado
-                                                                WHERE a.noEmpleado = $noEmp";
-                                                        $resJefe = mysqli_query($conn, $Qjefe) or die(mysqli_error($conn));
-                                                        while ($row = mysqli_fetch_array($resJefe)) {
-                                                            $jefe = $row["jefe"];
-                                                        }
-                                                        echo '<h4 class ="text-success text-xl">Autoriza: ' . $jefe . '    </h4> <br>  ';
-                                                    ?>
                                                     <button id="btnSolicitar" type="button" class="btn btn-success" onclick="generarSolicitud()">Solicitar</button><br>
                                                     <p id="mensaje" class="badge text-bg-primary"></p>
                                                 </center>
@@ -246,112 +199,14 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-            empleadoSolicita();
+
             validaRol();
             validarAntiguedad();
-            validarDiasDisponibles();
-            $('#solicita').select2();
+            validarDiasDisponibles();            
         });
-
-        let renglonCounter = 1;
-
-        function agregarRenglon() {
-            renglonCounter++;
-
-            const nuevoRenglon = document.createElement('div');
-            nuevoRenglon.classList.add('row');
-            nuevoRenglon.id = `renglon-${renglonCounter}`;
-
-            nuevoRenglon.innerHTML = `
-                <div class="col-sm-1"></div>
-                <div class="col-sm-4">
-                    <div class="mb-1">
-                        <input type="date" class="form-control" id="fechaInicial-${renglonCounter}" name="fechaInicial[]" onchange="diasEntreFechas(${renglonCounter});" required>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="mb-1">
-                        <input type="date" class="form-control" id="fechaFinal-${renglonCounter}" name="fechaFinal[]" onchange="diasEntreFechas(${renglonCounter});" required>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="mb-1">
-                        <input type="number" class="form-control" id="noDias-${renglonCounter}" name="noDias[]">
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('renglones-container').appendChild(nuevoRenglon);
-        }
-
-        function eliminarUltimoRenglon() {
-            if (renglonCounter > 1) {
-                const ultimoRenglon = document.getElementById(`renglon-${renglonCounter}`);
-                if (ultimoRenglon) {
-                    ultimoRenglon.remove();
-                    renglonCounter--;
-                }
-            } else {
-                alert("Se tiene que capturar al menos un periodo.");
-            }
-        }
 
         var tIncidencia = function(ti) {
             $('#opIncidencia').val(ti);
-        }
-
-        var diasEntreFechas = function(idRenglon) {
-            var fechaInicial = $(`#fechaInicial-${idRenglon}`).val();
-            var fechaFinal = $(`#fechaFinal-${idRenglon}`).val();
-
-            if (!fechaInicial || !fechaFinal) {
-                return;
-            }
-
-            var fechaDesde = new Date(fechaInicial);
-            var fechaHasta = new Date(fechaFinal);
-            var contador = 0;
-
-            while (fechaDesde <= fechaHasta) {
-                var dia = fechaDesde.getDay();
-                if (dia != 0 && dia != 6) {
-                    contador++;
-                }
-                fechaDesde.setDate(fechaDesde.getDate() + 1);
-            }
-
-            $(`#noDias-${idRenglon}`).val(contador);
-        }
-
-        function empleadoSolicita() {
-            var opcion = "empleadoSolicita";
-            let cookieRol = getCookie('rol');
-            let cookieNoEmpleado = getCookie('noEmpleado');
-            $.ajax({
-                url: 'funciones_select.php',
-                method: 'GET',
-                dataType: 'json',
-                data: {
-                    opcion,
-                    cookieRol,
-                    cookieNoEmpleado
-                },
-                success: function(data) {
-                    var select = $('#solicita');
-                    data.forEach(function(usuarios) {
-                        var option = $('<option></option>').attr('value', usuarios.noEmpleado).text(usuarios.nombre);
-                        select.append(option);
-                    });
-                    seleccionaUsuario();
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    Swal.fire({
-                        title: "La solicitúd no se pudo procesar!",
-                        icon: "error",
-                        draggable: true
-                    });
-                }
-            });
         }
 
         function generarSolicitud() {
@@ -442,14 +297,6 @@
             });
         }
 
-        function seleccionaUsuario() {
-            let cookieValue = getCookie('noEmpleado');
-            if (cookieValue) {
-                let selectElement = document.getElementById('solicita');
-                selectElement.value = cookieValue;
-                selectElement.options[selectElement.selectedIndex].setAttribute('selected', true);
-            }
-        }
 
         function validaRol() {
             let cookieRol = getCookie('rol');
@@ -462,32 +309,6 @@
                 selectElement.style.display = 'none';
                 let selectElementM = document.getElementById('DivsolicitaMss');
                 selectElementM.style.display = 'none';
-            }
-        }
-
-        function validarAntiguedad() {
-            let antiguedad = getCookie('antiguedad');
-            if (antiguedad < 1) {
-                $("#btnSolicitar").prop("disabled", true);
-                $("#mensaje").text("No puedes solicitar vacaciones hasta tener un año de antigüedad.");
-            } else {
-                $("#btnSolicitar").prop("disabled", false);
-                $("#mensaje").text("MESS 2025");
-            }
-        }
-
-        function validarDiasDisponibles() {
-            diasDisp = $('#diasDisponibles').val();
-            if (diasDisp < 1) {
-                $("#btnSolicitar").prop("disabled", true);
-                $("#btnSolicitar").hide();
-                $("#mensaje").text("No puedes solicitar vacaciones. * No tienes dias disponibles. *");
-                $("#mensaje").addClass("badge text-bg-warning");
-                $("#mensaje").css("font-size", "1.2rem");
-            } else {
-                $("#btnSolicitar").prop("disabled", false);
-                $("#mensaje").text("MESS 2025");
-                $("#mensaje").addClass("badge text-bg-primary");
             }
         }
 
