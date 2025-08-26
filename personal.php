@@ -262,14 +262,13 @@
     
     </body>
     <!-- Bootstrap core JavaScript-->
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js" defer="defer"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>    
     <!--<script src = "vendor/jquery/jquery.min.js"></script>-->
     <script src = "vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
     <script src = "vendor/jquery-easing/jquery.easing.min.js"></script>
-
+    <script src="https://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js" defer="defer"></script>
     <!-- Custom scripts for all pages-->
     <script src = "js/sb-admin-2.min.js"></script>
     <script type="text/javascript">
