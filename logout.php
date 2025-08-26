@@ -24,15 +24,43 @@ session_destroy();
 	<script type="text/javascript" class="init">
 	
 $(document).ready(function() {
-	document.cookie = "antiguedad=00; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/incidencias;";
-	document.cookie = "diasD=00; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/incidencias;";
-	document.cookie = "noEmpleado=00; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/incidencias;";
-	document.cookie = "nombredelusuario=00; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/incidencias;";
-	document.cookie = "rol=00; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/incidencias;";
-	//"InicioSesion" = LoginMaster = Reedireccion LoginMaster sino reedireccion Incidencias
+	// List of cookies to delete
+	var cookies = [
+		"antiguedad",
+		"diasD",
+		"noEmpleado",
+		"nombredelusuario",
+		"rol"
+	];
 
-	window.location.assign("../loginMaster/inicio.php")        
-} );
+	// Delete cookies
+	cookies.forEach(function(cookie) {
+		document.cookie = cookie + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/incidencias;";
+	});
+
+	// Function to check if cookies are deleted
+	function areCookiesDeleted() {
+		var allDeleted = true;
+		cookies.forEach(function(cookie) {
+			if (document.cookie.split('; ').find(row => row.startsWith(cookie + '='))) {
+				allDeleted = false;
+			}
+		});
+		return allDeleted;
+	}
+
+	// Wait until cookies are deleted, then redirect
+	function tryRedirect() {
+		if (areCookiesDeleted()) {
+			window.location.assign("../loginMaster/inicio.php");
+		} else {
+			setTimeout(tryRedirect, 100);
+		}
+	}
+
+	tryRedirect();
+});
+
 
 	</script>
 

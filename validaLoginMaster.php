@@ -34,7 +34,7 @@ if ($accion == 'getPlaca') {
         echo json_encode(['success' => false, 'message' => 'No se encontró id_usuario para este noEmpleado.']);
     }
     exit;
-    conn.close();
+    mysqli_close($conn);
 }
 
 // Validación de usuario (otro caso)
