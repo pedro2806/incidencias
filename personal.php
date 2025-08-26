@@ -137,7 +137,7 @@
                                                                                         
                                                             $nombre = $row2["nombre"];
                                                             $correo = $row2["correo"];
-                                                            $puesto = utf8_encode($row2["puesto"]);
+                                                            $puesto = mb_convert_encoding($row2["puesto"], 'UTF-8', 'auto');
                                                             $region = $row2["region"];
                                                             $fechaIngreso = $row2["fechaIngreso"];
                                                             $departamento = $row2["departamento"];
@@ -169,7 +169,7 @@
                                                                     <td>';
                                                                     ?>
                                                                         <form action="modificarempleado" method="post">
-                                                                            <input type="hidden" id = "id_empleado" name="id_empleado" value="<?php echo $id; ?>">
+                                                                            <input type="hidden" name="id_empleado" value="<?php echo $id; ?>">
                                                                             <button type="submit" class="btn btn-warning btn-circle btn-sm"><i class="fas fa-edit"></i></button>
                                                                         </form>
                                                                     </td>
