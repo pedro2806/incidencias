@@ -14,6 +14,46 @@
     <!-- Custom styles for this template-->
     <link href = "css/sb-admin-2.min.css" rel = "stylesheet">
     <link href="https://cdn.datatables.net/1.13.2/css/jquery.dataTables.min.css" rel="stylesheet" crossorigin="anonymous">
+
+        <!-- Bootstrap core JavaScript-->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>    
+    <!--<script src = "vendor/jquery/jquery.min.js"></script>-->
+    <script src = "vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src = "vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js" defer="defer"></script>
+    <!-- Custom scripts for all pages-->
+    <script src = "js/sb-admin-2.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#Tusuarios').DataTable({
+            "language": {
+                "decimal": "",
+                "emptyTable": "No hay información disponible",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                "infoEmpty": "Mostrando 0 a 0 de 0 registros",
+                "infoFiltered": "(Filtrado de _MAX_ registros totales)",
+                "lengthMenu": "Mostrar _MENU_ registros",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "No se encontraron resultados",
+                "paginate": {
+                "first": "Primero",
+                "last": "Último",
+                "next": "Siguiente",
+                "previous": "Anterior"
+                },
+                "aria": {
+                "sortAscending": ": activar para ordenar la columna de manera ascendente",
+                "sortDescending": ": activar para ordenar la columna de manera descendente"
+                }
+            }
+            });
+        });
+
+    </script>       
 </head>
 
 <body id = "page-top">
@@ -262,44 +302,10 @@
     </div>
     
     </body>
-    <!-- Bootstrap core JavaScript-->
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>    
-    <!--<script src = "vendor/jquery/jquery.min.js"></script>-->
-    <script src = "vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Core plugin JavaScript-->
-    <script src = "vendor/jquery-easing/jquery.easing.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js" defer="defer"></script>
-    <!-- Custom scripts for all pages-->
-    <script src = "js/sb-admin-2.min.js"></script>
     <script type="text/javascript">
     
-        $(document).ready(function () {
-            $('#Tusuarios').DataTable({
-            "language": {
-                "decimal": "",
-                "emptyTable": "No hay información disponible",
-                "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
-                "infoEmpty": "Mostrando 0 a 0 de 0 registros",
-                "infoFiltered": "(Filtrado de _MAX_ registros totales)",
-                "lengthMenu": "Mostrar _MENU_ registros",
-                "loadingRecords": "Cargando...",
-                "processing": "Procesando...",
-                "search": "Buscar:",
-                "zeroRecords": "No se encontraron resultados",
-                "paginate": {
-                "first": "Primero",
-                "last": "Último",
-                "next": "Siguiente",
-                "previous": "Anterior"
-                },
-                "aria": {
-                "sortAscending": ": activar para ordenar la columna de manera ascendente",
-                "sortDescending": ": activar para ordenar la columna de manera descendente"
-                }
-            }
-            });
-        });
+        
         
         function bajaUs(boton) {
             var idEmpleado = boton.getAttribute('data-id');
