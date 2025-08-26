@@ -114,6 +114,7 @@
                             </input>
                         </div>
                         <div class="col-sm-1">
+                            <input type="hidden" name="username" value="<?php echo $_COOKIE['nombredelusuario']?>">
                             <input type="hidden" id="noEmpleado" name="noEmpleado"> </input>
                         </div>
                     </div>
