@@ -96,11 +96,11 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <label>Contraseña Nueva:</label>
-                            <input id="nuevapass" name="nuevapass" class="form-control" type="password" required>
+                            <input id="nuevapass" name="nuevapass" class="form-control" type="password" required autocomplete="new-password">
                         </div>
                         <div class="col-sm-6">
                             <label>Confirmar Contraseña:</label>
-                            <input id="confirmapass" name="confirmapass" class="form-control" type="password" required>
+                            <input id="confirmapass" name="confirmapass" class="form-control" type="password" required autocomplete="new-password">
                             <label id="msgPassword" name="msgPassword"></label>
                         </div>
                     </div>
