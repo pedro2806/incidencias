@@ -106,6 +106,7 @@
                                                             $fechaCompara = $anio.$FechaIng;
                                                             $hoy = date("Y-m-d");
                                                             $noEmp = $row2["noEmp"];
+                                                            $diasSol = 0; // Initialize to avoid undefined variable warning
                                                             if ($fechaCompara <= $hoy){
                                                                 $anioNext = $anio + 1;
                                                                 $fechaPrev = $anio.$FechaIng;
@@ -145,7 +146,7 @@
                                                             $antiguedad = $row2["antiguedad"];
                                                             $tipoContrato = $row2["tipoContrato"];
                                                             $jefe = $row2["jefe"];
-                                                            
+                                                            $dias = 0; // Initialize to avoid undefined variable warning
                                                             $Qdias = "SELECT * FROM diasvacaciones WHERE anio = $antiguedad";
                                                             $resdias= mysqli_query( $conn, $Qdias ) or die (mysqli_error($conn));
                                                             
