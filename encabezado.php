@@ -49,7 +49,7 @@
                     strpos($currentURL, "/incidencias/inicio") !== false) {
                     echo '<img class="img-profile rounded-circle" 
                         src="/incidencias/img/undraw_profile.svg" 
-                        tyle="width: 100%;">';
+                        style="width: 100%;">';
                 } else {
                     echo '<img class="img-profile rounded-circle" 
                         src="/incidencias/img/undraw_profile.svg"  
@@ -74,7 +74,7 @@
                     Activity Log
                 </a>-->
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModalN">
+                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModalN">
                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                     Salir
                 </a>
@@ -111,12 +111,11 @@
                             <label class="form-check-label" for="showPassword">
                                 Ver Contraseña
                             </label>
-                            </input>
                         </div>
                         <div class="col-sm-1">
                             <input type="hidden" name="username" value="<?php echo $_COOKIE['nombredelusuario']?>">
-                            <input type="hidden" id="noEmpleado" name="noEmpleado"> </input>
-                        </div>
+                            <input type="hidden" name="username" value="<?php echo $_COOKIE['nombredelusuario']?>">
+                            <input type="hidden" id="noEmpleado" name="noEmpleado">
                     </div>
                     </form>
                 </div>
@@ -135,16 +134,16 @@
                 <div class="modal-header">
                     <h4 class="modal-title" id="exampleModalLabel">Cerrar sesión</h4>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">X</span>
                     </button>
-                </div>
                 <div class="modal-body">
                     <h5><b>¿Estas seguro?</b></h5>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-warning" type="button" data-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-warning" type="button" data-bs-dismiss="modal">Cancelar</button>
                     <a class="btn btn-danger" href="logout">Salir</a>
-                </div>
             </div>
         </div>
     </div>
