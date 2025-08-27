@@ -27,7 +27,7 @@
 			document.cookie = "rol=00; expires=Thu, 01 Jan 1970 00:00:00 UTC";
 			
 			let cookieSesion = getCookie("SesionLogin");
-			alert("Cerrando sesión..." + cookieSesion);
+			//alert("Cerrando sesión..." + cookieSesion);
 			if (cookieSesion === "LoginMaster") {
 				window.location.assign("../loginMaster/inicio");
 			} else {
