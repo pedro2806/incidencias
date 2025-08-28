@@ -62,25 +62,13 @@ if (empty($id_usuario) || empty($noEmpleado)) {
     }
 
     if($nr == 1){
-        if (!isset($_COOKIE['antiguedad']) || $_COOKIE['antiguedad'] != $antiguedad) {
-            setcookie('antiguedad', $antiguedad, time() + 604800, "/", "", false, true);
-        }
-        if (!isset($_COOKIE['nombredelusuario']) || $_COOKIE['nombredelusuario'] != $nombreEmpleado) {
-            setcookie('nombredelusuario', $nombreEmpleado, time() + 604800, "/", "", false, true);
-        }
-        if (!isset($_COOKIE['noEmpleado']) || $_COOKIE['noEmpleado'] != $noEmpleado) {
-            setcookie('noEmpleado', $noEmpleado, time() + 604800, "/", "", false, true);
-        }
-        if (!isset($_COOKIE['diasD']) || $_COOKIE['diasD'] != $diasD) {
-            setcookie('diasD', $diasD, time() + 604800, "/", "", false, true);
-        }
-        if (!isset($_COOKIE['rol']) || $_COOKIE['rol'] != $rol) {
-            setcookie('rol', $rol, time() + 604800, "/", "", false, true);
-        }
-        if (!isset($_COOKIE['id_usuario']) || $_COOKIE['id_usuario'] != $id_usuario) {
-            setcookie('id_usuario', $id_usuario, time() + 604800, "/", "", false, true);
-        }
-        setcookie('SesionLogin', 'LoginMaster', time() + 604800, "/", "", false, true);
+        echo '<script>document.cookie = "antiguedad='.$antiguedad.';expires=" + new Date(Date.now() + 86400000).toUTCString() + ";SameSite=Lax;";</script>';
+        echo '<script>document.cookie = "nombredelusuario='.$nombreEmpleado.';expires=" + new Date(Date.now() + 86400000).toUTCString() + ";SameSite=Lax;";</script>';
+        echo '<script>document.cookie = "noEmpleado='.$noEmpleado.';expires=" + new Date(Date.now() + 86400000).toUTCString() + ";SameSite=Lax;";</script>';
+        echo '<script>document.cookie = "diasD='.$diasD.';expires=" + new Date(Date.now() + 86400000).toUTCString() + ";SameSite=Lax;";</script>';
+        echo '<script>document.cookie = "rol='.$rol.';expires=" + new Date(Date.now() + 86400000).toUTCString() + ";SameSite=Lax;";</script>';
+        echo '<script>document.cookie = "SesionLogin=LoginMaster; expires=" + new Date(Date.now() + 99999000).toUTCString() + ";SameSite=Lax;";</script>';
+        echo '<script>window.location.assign("inicio")</script>';                
 
         session_start();
         $_SESSION['nombredelusuario'] = $nombreEmpleado;
@@ -89,7 +77,7 @@ if (empty($id_usuario) || empty($noEmpleado)) {
         $_SESSION['correo'] = $usuario;
         $_SESSION['id_usuario'] = $id_usuario;
 
-        echo json_encode(['success' => true]);
+        echo json_encode(['success' => true]);        
         exit;
     }
     // Si no hay usuario válido
