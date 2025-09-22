@@ -115,27 +115,68 @@ $noEmpleadoInc = $_POST["noEmpleadoInc"];
 
 //FUNCION PARA MOSTRAR LAS SOLICITUDES ABIERTAS 403 fer 521 hugo
     if($opcion == "solicitudesAbiertas"){
-        $sql = "SELECT isol.*, u.nombre AS nombre_usuario, ur.nombre AS responsable, ic.clasificacion AS detalle_incidencia,
-                CASE
-                    WHEN isol.solicita = $noEmpleado_cookie THEN 'Yosolicito'
-                    WHEN u.jefe = $noEmpleado_cookie THEN 'SolicitaMiPersonal'
-                    WHEN ur.jefe = $noEmpleado_cookie THEN 'ResponsableMiPersonal'
-                    WHEN isol.responsable = $noEmpleado_cookie THEN 'SoyResponsable'
-                    ELSE 'otro'
-                END AS solicita
-                FROM incidencias_solicitudes isol
-                INNER JOIN usuarios u ON isol.solicita = u.noEmpleado
-                INNER JOIN usuarios ur ON isol.responsable = ur.noEmpleado
-                INNER JOIN incidencias_clasificacion ic ON isol.clasificacion = ic.id
-                WHERE isol.estatus = 'Abierta'
-                    AND (
-                        isol.solicita = $noEmpleado_cookie 
-                        OR u.jefe = $noEmpleado_cookie
-                        OR ur.jefe = $noEmpleado_cookie
-                        OR isol.responsable = $noEmpleado_cookie
-                    )
-                ORDER BY
-                    isol.fecha_solicitud DESC";
+        if($noEmpleado_cookie == 403){
+            $sql = "SELECT isol.*, u.nombre AS nombre_usuario, ur.nombre AS responsable, ic.clasificacion AS detalle_incidencia,
+                    CASE
+                        WHEN isol.solicita = $noEmpleado_cookie THEN 'Yosolicito'
+                        WHEN u.jefe = $noEmpleado_cookie THEN 'SolicitaMiPersonal'
+                        WHEN ur.jefe = $noEmpleado_cookie THEN 'ResponsableMiPersonal'
+                        WHEN isol.responsable = $noEmpleado_cookie THEN 'SoyResponsable'
+                        ELSE 'otro'
+                    END AS solicita
+                    FROM incidencias_solicitudes isol
+                    INNER JOIN usuarios u ON isol.solicita = u.noEmpleado
+                    INNER JOIN usuarios ur ON isol.responsable = ur.noEmpleado
+                    INNER JOIN incidencias_clasificacion ic ON isol.clasificacion = ic.id
+                    WHERE isol.estatus = 'Abierta' AND isol.tipo = 'Personal'                        
+                    ORDER BY
+                        isol.fecha_solicitud DESC"; 
+        }else if($noEmpleado_cookie == 521){
+            $sql = "SELECT isol.*, u.nombre AS nombre_usuario, ur.nombre AS responsable, ic.clasificacion AS detalle_incidencia,
+                    CASE
+                        WHEN isol.solicita = $noEmpleado_cookie THEN 'Yosolicito'
+                        WHEN u.jefe = $noEmpleado_cookie THEN 'SolicitaMiPersonal'
+                        WHEN ur.jefe = $noEmpleado_cookie THEN 'ResponsableMiPersonal'
+                        WHEN isol.responsable = $noEmpleado_cookie THEN 'SoyResponsable'
+                        ELSE 'otro'
+                    END AS solicita
+                    FROM incidencias_solicitudes isol
+                    INNER JOIN usuarios u ON isol.solicita = u.noEmpleado
+                    INNER JOIN usuarios ur ON isol.responsable = ur.noEmpleado
+                    INNER JOIN incidencias_clasificacion ic ON isol.clasificacion = ic.id
+                    WHERE isol.estatus = 'Abierta'
+                        AND (
+                            isol.solicita = $noEmpleado_cookie 
+                            OR u.jefe = $noEmpleado_cookie
+                            OR ur.jefe = $noEmpleado_cookie
+                            OR isol.responsable = $noEmpleado_cookie
+                        )
+                    ORDER BY
+                        isol.fecha_solicitud DESC";
+        }else{
+            $sql = "SELECT isol.*, u.nombre AS nombre_usuario, ur.nombre AS responsable,
+                    CASE
+                        WHEN isol.solicita = $noEmpleado_cookie THEN 'Yosolicito'
+                        WHEN u.jefe = $noEmpleado_cookie THEN 'SolicitaMiPersonal'
+                        WHEN ur.jefe = $noEmpleado_cookie THEN 'ResponsableMiPersonal'
+                        WHEN isol.responsable = $noEmpleado_cookie THEN 'SoyResponsable'
+                        ELSE 'otro'
+                    END AS solicita,
+                    ic.clasificacion AS detalle_incidencia 
+                    FROM incidencias_solicitudes isol 
+                    INNER JOIN usuarios u ON isol.solicita = u.noEmpleado
+                    INNER JOIN usuarios ur ON isol.responsable = ur.noEmpleado
+                    INNER JOIN incidencias_clasificacion ic ON isol.clasificacion = ic.id 
+                    WHERE isol.estatus = 'Abierta' 
+                        AND (
+                            isol.solicita = $noEmpleado_cookie 
+                            OR u.jefe = $noEmpleado_cookie
+                            OR ur.jefe = $noEmpleado_cookie
+                            OR isol.responsable = $noEmpleado_cookie
+                        )
+                    ORDER BY isol.fecha_solicitud DESC";
+        }
+
         //echo $sql;
         $result = $conn->query($sql);
         
