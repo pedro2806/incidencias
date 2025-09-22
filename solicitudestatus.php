@@ -67,15 +67,15 @@
                                 <div class = "col-xl-1"></div>
                                 <div class = "col-xl-10">
                                     <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                    	<li class="nav-item">
-                                    		<a class="nav-link active btn-outline-warning" type="button" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Por autorizar</a>
-                                    	</li>
-                                    	<li class="nav-item">
-                                    		<a class="nav-link btn-outline-success" id="autorizadas-tab" data-toggle="tab" href="#autorizadas" role="tab" aria-controls="autorizadas" aria-selected="false">Autorizadas</a>
-                                    	</li>
-                                    	<li class="nav-item">
-                                    		<a class="nav-link btn-outline-danger" id="canceladas-tab" data-toggle="tab" href="#canceladas" role="tab" aria-controls="canceladas" aria-selected="false">Canceladas</a>
-                                    	</li>
+                                        <li class="nav-item">
+                                            <a class="nav-link active btn-outline-warning" type="button" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Por autorizar</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link btn-outline-success" id="autorizadas-tab" data-toggle="tab" href="#autorizadas" role="tab" aria-controls="autorizadas" aria-selected="false">Autorizadas</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link btn-outline-danger" id="canceladas-tab" data-toggle="tab" href="#canceladas" role="tab" aria-controls="canceladas" aria-selected="false">Canceladas</a>
+                                        </li>
                                     </ul><br>
                                     <div class="tab-content" id="myTabContent">
                                     <!-- POR AUTORIZAR -->

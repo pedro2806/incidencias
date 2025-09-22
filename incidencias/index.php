@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html>
 
+<html>
 <head>
 
     <meta charset="utf-8">
@@ -12,8 +12,7 @@
     <title>RR HH</title>
 
     <!-- Custom fonts for this template-->
-    <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family = Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">    
 
     <!-- Custom styles for this template-->
     <link href="../css/sb-admin-2.min.css" rel="stylesheet">
@@ -21,6 +20,15 @@
     <!-- Select2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
+<?php
+    $usuariosRegistran = array(212, 14, 42, 161, 403, 183, 521, 276);
+
+    if (in_array($_COOKIE['noEmpleado'], $usuariosRegistran)) {
+        // El usuario tiene permiso para ver la página
+    } else {
+        header("Location: seguimiento_incidencias");        
+    }
+?>
 </head>
 
 <body id="page-top">
@@ -64,28 +72,28 @@
                                             </b>
                                         </div>
                                     </div>
-                                    <form method="POST">
+                                    <form id="formIncidencias" name="formIncidencias">
                                         <div class="row card-footer border-left-primary">
                                             <div class="col-sm-4 mb-0">
-                                                <label for="dirigida">Responsable</label>
+                                                <label>Responsable</label>
                                                 <div id="Divsolicita" name="Divsolicita">
-                                                    <select id="slcRespoonsable" name="slcRespoonsable" class="form-select">
+                                                    <select id="slcRespoonsable" name="slcRespoonsable" class="form-select" onchange="getAreaRegion(this.value);">
                                                         <option value="">Selecciona...</option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4 mb-0">
-                                                <label for="Tipo">Tipo</label>
-                                                <select id="TIncidencia" name="TIncidencia" class="form-select">
+                                                <label>Tipo</label>
+                                                <select id="slcTIncidencia" name="slcTIncidencia" class="form-select" onchange="tIncidencia(this.value);">
                                                     <option value="">Selecciona...</option>
-                                                    <option value="Operaciones">Operaciónes</option>
+                                                    <option value="Operación">Operaciónes</option>
                                                     <option value="Personal">Personal</option>
                                                     <option value="Calidad">Calidad</option>
                                                 </select>
                                             </div>
                                             <div class="col-sm-4 mb-0">
-                                                <label for="Area">Clasificación</label>
-                                                <select id="area" name="area" class="form-select">
+                                                <label>Clasificación</label>
+                                                <select id="slcClasificacion" name="slcClasificacion" class="form-select">
                                                     <option value="">Selecciona...</option>
                                                 </select>
                                             </div>
@@ -94,11 +102,15 @@
 
                                         <div class="row card-footer border-left-primary">
                                             <div class="col-sm-4 mb-0">
-                                                <label for="dirigida">Fecha incidente</label>
+                                                <h6>Area: <span class="badge text-bg-primary" id="lblArea"></span></h6>
+                                                <h6>Región: <span class="badge text-bg-primary" id="lblRegion"></span></h6>
+                                            </div>
+                                            <div class="col-sm-4 mb-0">
+                                                <label>Fecha incidente</label>
                                                 <input type="date" class="form-control" id="fechaIncidente" name="fechaIncidente">
                                             </div>
                                             <div class="col-sm-4 mb-0">
-                                                <label for="Tipo">Fecha de cierre</label>
+                                                <label>Fecha planeada de cierre</label>
                                                 <input type="date" class="form-control" id="fechaCierre" name="fechaCierre">
                                             </div>                                            
                                         </div>
@@ -106,7 +118,7 @@
                                         <div class="row card-header border-left-primary">                                           
                                             <div class="col-xl-12">
                                                 <div class="mb-0">
-                                                    <label for="exampleFormControlTextarea1" class="form-label">Comentarios</label>
+                                                    <label class="form-label">Detalle</label>
                                                     <textarea class="form-control" id="comentarios" name="comentarios" rows="3"></textarea>
                                                 </div>
                                             </div>
@@ -176,15 +188,16 @@
     <!-- Bootstrap core JavaScript
     <script src = "vendor/jquery/jquery.min.js"></script>-->
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
+    <script src="../js/sb-admin-2.min.js"></script>
 
     <script src="https://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js" defer="defer"></script>
+    
     <!-- Select2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
@@ -192,72 +205,66 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-            
+            empleadoSolicita();
+            // Inicializa Select2 en el campo de responsable
+            $('#slcRespoonsable').select2({            
+                placeholder: "Seleccione...",
+                width: '100%'
+            });
         });
 
         var tIncidencia = function(ti) {
-            $('#opIncidencia').val(ti);
+            opcion = "clasficacion";
+            tipo = ti;
+            $('#slcClasificacion').empty().append('<option value="">Selecciona...</option>');
+            $.ajax({
+                url: 'acciones_solicitud.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {opcion, tipo},
+                success: function(data) {
+                    var select = $('#slcClasificacion');
+                    data.forEach(function(usuarios) {
+                        var option = $('<option></option>').attr('value', usuarios.id).text(usuarios.clasificacion);
+                        select.append(option);
+                    });
+
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    Swal.fire({
+                        title: "La solicitúd no se pudo procesar!",
+                        icon: "error",
+                        draggable: true
+                    });
+
+                }
+            });
         }
 
         function generarSolicitud() {
-            diasDisp = $('#diasDisponibles').val();
-            if (diasDisp < 1) {
-                Swal.fire({
-                    title: "No tienes días disponibles para solicitar.",
-                    icon: "warning",
-                    draggable: true
-                });
-                return;
-            }
-
-            opIncidencia = $('#opIncidencia').val();
-            notas = $('#notas').val();
-            comentarios = $('#comentarios').val();
-            solicita = $('#solicita').val();
-            cuantos = renglonCounter;
-            accion = 'agregaSolicitud';
-            var periodos = [];
-
-            $('.dynamic-row .row').each(function(index, row) {
-                var fechaInicial = $(row).find('input[name="fechaInicial[]"]').val();
-                var fechaFinal = $(row).find('input[name="fechaFinal[]"]').val();
-                var noDias = $(row).find('input[name="noDias[]"]').val();
-
-                periodos.push({
-                    fechaInicial: fechaInicial,
-                    fechaFinal: fechaFinal,
-                    noDias: noDias
-                });
-            });
-
-            if (opIncidencia == '' || opIncidencia == null) {
-                Swal.fire({
-                    title: "Es necesario seleccionar el tipo de incidencia!",
-                    icon: "warning",
-                    draggable: true
-                });
-            } else {
+            var opcion = "generarSolicitud";
+            
+            var formData = getFormData('formIncidencias');
+            var responsable = formData["slcRespoonsable"];
+            var tipo = formData["slcTIncidencia"];
+            var clasificacion = formData["slcClasificacion"];
+            var fechaIncidente = formData["fechaIncidente"];
+            var fechaCierre = formData["fechaCierre"];
+            var comentarios = formData["comentarios"];
+                        
                 $.ajax({
-                    url: 'procesar_solicitud.php',
+                    url: 'acciones_solicitud.php',
                     method: 'POST',
                     dataType: 'json',
-                    data: {
-                        opIncidencia,
-                        notas,
-                        comentarios,
-                        solicita,
-                        cuantos,
-                        accion,
-                        periodos
-                    },
+                    data: {opcion, responsable, tipo, clasificacion, fechaIncidente, fechaCierre, comentarios},
                     success: function(data) {
                         Swal.fire({
-                            title: "La solicitúd se proceso son éxito!",
+                            title: "La solicitúd se proceso con éxito!",
                             icon: "success",
                             draggable: true
                         });
-                        enviaNotificacion(solicita);
-                        window.location.href = 'solicitudestatus';
+                        enviaNotificacion(responsable, tipo);
+                        window.location.href = 'seguimiento_incidencias';
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         Swal.fire({
@@ -267,16 +274,54 @@
                         });
                     }
                 });
-            }
+            
         }
 
-        function enviaNotificacion() {
+        function getFormData(formId) {
+            var formArray = $('#' + formId).serializeArray();
+            var formData = {};
+            formArray.forEach(function(item) {
+                formData[item.name] = item.value;
+            });
+            return formData;
+        }
+        
+        function getAreaRegion(noEmpleadoInc) {
+            var opcion = "areaRegion";
             $.ajax({
-                url: 'enviaNotificacion.php',
+                url: 'acciones_solicitud.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {opcion, noEmpleadoInc},
+                success: function(data) {
+                    $('#lblArea').text(data.area);
+                    $('#lblRegion').text(data.region);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    Swal.fire({
+                        title: "No se pudo obtener el área y región!",
+                        icon: "error",
+                        draggable: true
+                    });
+                }
+            });
+        }
+
+        function enviaNotificacion(responsable, tipo) {
+
+            urlNotificacion = '';
+            if(tipo === "Personal") {
+                urlNotificacion = 'enviaNotificacionPersonal.php';
+            }else{
+                urlNotificacion = 'enviaNotificacionCalidadOp.php';
+            }
+            
+            $.ajax({
+                url: urlNotificacion,
                 method: 'POST',
                 dataType: 'json',
                 data: {
-                    solicita
+                    responsable,tipo
                 },
                 success: function(data) {
                     // Notificación opcional
@@ -285,6 +330,33 @@
                     // Error opcional
                 }
             });
+        }
+
+        function empleadoSolicita() {
+            opcion = "empleados";
+            $.ajax({
+                url: 'acciones_solicitud.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {opcion},
+                success: function(data) {
+                    var select = $('#slcRespoonsable');
+                    data.forEach(function(usuarios) {
+                        var option = $('<option></option>').attr('value', usuarios.noEmpleado).text(usuarios.nombre);
+                        select.append(option);
+                    });
+
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    Swal.fire({
+                        title: "La solicitúd no se pudo procesar!",
+                        icon: "error",
+                        draggable: true
+                    });
+
+                }
+            });
+
         }
 
         function getCookie(name) {
