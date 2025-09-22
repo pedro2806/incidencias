@@ -4,7 +4,7 @@ include '../conn.php';
 mysqli_set_charset($conn, "utf8");
 $noEmpleado_cookie = isset($_COOKIE['noEmpleado']) ? $_COOKIE['noEmpleado'] : null;
 $opcion = $_POST["opcion"];
-$noEmpleadoInc = $_POST["noEmpleadoInc"];
+$noEmpleadoInc = isset($_POST["noEmpleadoInc"]) ? $_POST["noEmpleadoInc"] : $noEmpleado_cookie;
 //FUNCION PARA MOSTRAR LOS EMPLEADOS
     if ($opcion == "empleados") {
         
@@ -21,7 +21,7 @@ $noEmpleadoInc = $_POST["noEmpleadoInc"];
         }
         
         // Devolver los eventos en formato JSON
-        header('Content-Type: application/json');
+        
         echo json_encode($usuarios);
     }
 
