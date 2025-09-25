@@ -30,7 +30,7 @@
             <!-- Main Content -->
             <div id="content">
                 <?php
-                    include '../encabezado.php';
+                    include 'encabezado.php';
                 ?>
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
