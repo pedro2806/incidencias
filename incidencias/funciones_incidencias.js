@@ -205,7 +205,7 @@ function renderizarTabla(selectorTabla, data) {
         }
 
         // Reemplaza el ID en el HTML del botón si aplica
-        const botonFinal = accion.boton.replace('this.dataset.id', solicitud.id_solicitud);
+        const botonFinal = accion.boton.replace('this.dataset.id', solicitud.id);
 
         const fila = `
             <tr class="table-${accion.estilo}">
