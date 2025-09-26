@@ -155,8 +155,8 @@ function renderizarTabla(selectorTabla, data) {
             };
         } else if (selectorTabla === "#TSolEnProceso tbody") {
             return {
-                'Yosolicito': { estilo: 'warning', boton: '<span class="badge text-bg-warning">En proceso</span>' },
-                'SoyResponsable': { estilo: 'warning', boton: '<span class="badge text-bg-warning">En proceso</span>' },
+                'Yosolicito': { estilo: 'warning', boton: '<button class="btn btn-outline-primary btn-sm" onclick="abrirModalResponder(this.dataset.id,\'aceptada\')" data-id="idSol"><i class="fas fa-reply"></i> Responder</button>' },
+                'SoyResponsable': { estilo: 'warning', boton: '<button class="btn btn-outline-primary btn-sm" onclick="abrirModalResponder(this.dataset.id,\'aceptada\')" data-id="idSol"><i class="fas fa-reply"></i> Responder</button>' },
                 'ResponsableMiPersonal': { estilo: 'light', boton: '<span class="badge text-bg-primary">En espera de respuesta</span>' },
                 'SolicitaMiPersonal': { estilo: 'light', boton: '<span class="badge text-bg-primary">En espera de respuesta</span>' },
             };
@@ -170,7 +170,7 @@ function renderizarTabla(selectorTabla, data) {
         } else if (selectorTabla === "#TSolRechazadas tbody") {
             return {
                 'Yosolicito': { estilo: 'danger', boton: '<span class="badge text-bg-danger">Rechazada</span>' },
-                'SoyResponsable': { estilo: 'danger', boton: '<span class="badge text-bg-danger">Rechazada</span>' },
+                'SoyResponsable': { estilo: 'danger', boton: '<button class="btn btn-outline-primary btn-sm" onclick="abrirModalResponder(this.dataset.id,\'aceptada\')" data-id="idSol"><i class="fas fa-reply"></i> Responder</button>' },
                 'ResponsableMiPersonal': { estilo: 'light', boton: '<span class="badge text-bg-primary">En espera de respuesta</span>' },
                 'SolicitaMiPersonal': { estilo: 'light', boton: '<span class="badge text-bg-primary">En espera de respuesta</span>' },
             };
