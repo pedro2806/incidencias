@@ -155,8 +155,8 @@ function renderizarTabla(selectorTabla, data) {
             };
         } else if (selectorTabla === "#TSolEnProceso tbody") {
             return {
-                'Yosolicito': { estilo: 'warning', boton: '<button class="btn btn-outline-primary btn-sm" onclick="abrirModalResponder(this.dataset.id,\'aceptada\')" data-id="idSol"><i class="fas fa-reply"></i> Responder</button>' },
-                'SoyResponsable': { estilo: 'warning', boton: '<button class="btn btn-outline-primary btn-sm" onclick="abrirModalResponder(this.dataset.id,\'aceptada\')" data-id="idSol"><i class="fas fa-reply"></i> Responder</button>' },
+                'Yosolicito': { estilo: 'secondary', boton: '<button class="btn btn-outline-primary btn-sm" onclick="abrirModalResponder(this.dataset.id,\'aceptada\')" data-id="idSol"><i class="fas fa-reply"></i> Responder</button>' },
+                'SoyResponsable': { estilo: 'light', boton: '<button class="btn btn-outline-primary btn-sm" onclick="abrirModalResponder(this.dataset.id,\'aceptada\')" data-id="idSol"><i class="fas fa-reply"></i> Responder</button>' },
                 'ResponsableMiPersonal': { estilo: 'light', boton: '<span class="badge text-bg-primary">En espera de respuesta</span>' },
                 'SolicitaMiPersonal': { estilo: 'light', boton: '<span class="badge text-bg-primary">En espera de respuesta</span>' },
             };
@@ -205,7 +205,7 @@ function renderizarTabla(selectorTabla, data) {
         }
 
         // Reemplaza el ID en el HTML del botón si aplica
-        const botonFinal = accion.boton.replace('this.dataset.id', solicitud.id);
+        const botonFinal = accion.boton.replace('this.dataset.id', solicitud.id_solicitud);
 
         const fila = `
             <tr class="table-${accion.estilo}">
