@@ -38,11 +38,12 @@ if ($accion == 'getPlaca') {
 }
 
 // Validación de usuario (otro caso)
-$id_usuario = isset($_POST['id_usuario']) ? $_POST['id_usuario'] : '';
-$nombredelusuario = isset($_POST['nombredelusuario']) ? $_POST['nombredelusuario'] : '';
-$noEmpleado = isset($_POST['noEmpleado']) ? $_POST['noEmpleado'] : '';
-$rol = isset($_POST['rol']) ? $_POST['rol'] : '';
-$usuario = isset($_POST['correo']) ? $_POST['correo'] : '';
+$id_usuario = isset($_POST['id_usuario']) ? $_POST['id_usuario'] : (isset($_POST['id_usuarioSJ']) ? $_POST['id_usuarioSJ'] : '');
+$nombredelusuario = isset($_POST['nombredelusuario']) ? $_POST['nombredelusuario'] : (isset($_POST['nombredelusuarioSJ']) ? $_POST['nombredelusuarioSJ'] : '');
+$noEmpleado = isset($_POST['noEmpleado']) ? $_POST['noEmpleado'] : (isset($_POST['noEmpleadoSJ']) ? $_POST['noEmpleadoSJ'] : '');
+//$rol = isset($_POST['rol']) ? $_POST['rol'] : (isset($_POST['rolSJ']) ? $_POST['rolSJ'] : '');
+$usuario = isset($_POST['correo']) ? $_POST['correo'] : ( isset($_POST['correoSJ']) ? $_POST['correoSJ'] : '');
+$sistema = isset($_POST['sistema']) ? $_POST['sistema'] : (isset($_POST['sistemaSJ']) ? $_POST['sistemaSJ'] : '');
 
 if (empty($id_usuario) || empty($noEmpleado)) {
     http_response_code(400);
@@ -68,8 +69,11 @@ if (empty($id_usuario) || empty($noEmpleado)) {
         echo '<script>document.cookie = "diasD='.$diasD.';expires=" + new Date(Date.now() + 86400000).toUTCString() + ";SameSite=Lax;";</script>';
         echo '<script>document.cookie = "rol='.$rol.';expires=" + new Date(Date.now() + 86400000).toUTCString() + ";SameSite=Lax;";</script>';
         echo '<script>document.cookie = "SesionLogin=LoginMaster; expires=" + new Date(Date.now() + 99999000).toUTCString() + ";SameSite=Lax;";</script>';
-        echo '<script>window.location.assign("inicio")</script>';                
-
+        if($sistema == "saladeJuntas"){ 
+            echo '<script>window.location.assign("SalaDeJuntas/")</script>';                
+        } else{
+            echo '<script>window.location.assign("inicio")</script>';                
+        }
         session_start();
         $_SESSION['nombredelusuario'] = $nombreEmpleado;
         $_SESSION['noEmpleado'] = $noEmpleado;
