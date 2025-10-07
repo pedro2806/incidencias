@@ -206,12 +206,11 @@ function renderizarTabla(selectorTabla, data) {
 
         // Reemplaza el ID en el HTML del botón si aplica
         const botonFinal = accion.boton.replace('this.dataset.id', solicitud.id_solicitud);
-
+        //<td>${solicitud.fecha_solicitud}</td>
         const fila = `
             <tr class="table-${accion.estilo}">
-                <td>${solicitud.nombre_usuario+'--'+solicitud.solicita}</td>
-                <td>${solicitud.responsable}</td>
-                <td>${solicitud.fecha_solicitud}</td>
+                <td>${solicitud.nombre_usuario}</td>
+                <td>${solicitud.responsable}</td>                
                 <td>${solicitud.fecha_incidente}</td>
                 <td>${solicitud.fecha_cierre}</td>
                 <td>${solicitud.tipo}</td>
@@ -273,31 +272,36 @@ function getCookie(name) {
 function aplicarEstiloDataTable(tablaId, ordenColumna) {
     
         $(tablaId).DataTable({
-            order: [ordenColumna, 'desc'],
-            responsive: true,
-            language: {
-                decimal: ",",
-                thousands: ".",
-                processing: "Procesando...",
-                loadingRecords: "Cargando...",
-                zeroRecords: "No se encontraron resultados",
-                emptyTable: "No hay datos disponibles en la tabla",
-                info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
-                infoEmpty: "Mostrando 0 a 0 de 0 registros",
-                infoFiltered: "(filtrado de _MAX_ registros totales)",
-                search: "Buscar:",
-                paginate: {
-                    first: "Primero",
-                    last: "Último",
-                    next: "Siguiente",
-                    previous: "Anterior"
+                "responsive": true,
+                "language": {
+                    //"url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+                    "sProcessing":     "Procesando...",
+                    "sLengthMenu":     "Mostrar _MENU_ registros",
+                    "sZeroRecords":    "No se encontraron resultados",
+                    "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix":    "",
+                    "sSearch":         "Buscar:",
+                    "sUrl":            "",
+                    "sInfoThousands":  ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":     "Último",
+                        "sNext":     "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    }
                 },
-                lengthMenu: "Mostrar _MENU_ registros",
-                aria: {
-                    sortAscending: ": activar para ordenar la columna de manera ascendente",
-                    sortDescending: ": activar para ordenar la columna de manera descendente"
-                }
-            }
+                "order": false,
+                "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                "pageLength": 10,                
+                "searching": false
         });
     
 }
