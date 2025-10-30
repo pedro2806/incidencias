@@ -169,8 +169,8 @@ function renderizarTabla(selectorTabla, data) {
             };
         } else if (selectorTabla === "#TSolRechazadas tbody") {
             return {
-                'Yosolicito': { estilo: 'danger', boton: '<span class="badge text-bg-danger">Rechazada</span>' },
-                'SoyResponsable': { estilo: 'danger', boton: '<button class="btn btn-outline-primary btn-sm" onclick="abrirModalResponder(this.dataset.id,\'aceptada\')" data-id="idSol"><i class="fas fa-reply"></i> Responder</button>' },
+                'SoyResponsable': { estilo: 'danger', boton: '<span class="badge text-bg-danger">Rechazada</span>' },
+                'Yosolicito': { estilo: 'danger', boton: '<button class="btn btn-outline-primary btn-sm" onclick="abrirModalResponder(this.dataset.id,\'aceptada\')" data-id="idSol"><i class="fas fa-reply"></i> Responder</button>' },
                 'ResponsableMiPersonal': { estilo: 'light', boton: '<span class="badge text-bg-primary">En espera de respuesta</span>' },
                 'SolicitaMiPersonal': { estilo: 'light', boton: '<span class="badge text-bg-primary">En espera de respuesta</span>' },
             };
