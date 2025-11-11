@@ -19,7 +19,7 @@
 <!-- Nav Item - Dashboard -->
 <li class="nav-item active btn-warning">
     <a class="nav-link" href="../logout.php?sesion=LM"">
-        <i class="fas fa-fw fa-home"></i>
+        <i class="fas fa-fw fa-backward"></i>
         <span>Volver</span>
     </a>
 </li>
@@ -31,13 +31,13 @@
 </div>
 <!-- Nav Item - Pages Collapse Menu -->
 <?php
-$usuariosRegistran = array(212, 14, 42, 161, 403, 183, 521, 276);
+$usuariosRegistran = array(212, 14, 42, 161, 403, 183, 521, 276, 523);
 
 if (in_array($_COOKIE['noEmpleado'], $usuariosRegistran)) {
 ?>
     <li class="nav-item">
     <a class="nav-link" href="index">
-        <i class="fas fa-fw fa-home"></i>
+        <i class="fas fa-fw fa-edit"></i>
         <span>Registrar Incidencias</span>
     </a>
 </li>
@@ -45,13 +45,34 @@ if (in_array($_COOKIE['noEmpleado'], $usuariosRegistran)) {
 }
 ?>
 
-
 <li class="nav-item">
     <a class="nav-link" href="seguimiento_incidencias">
-        <i class="fas fa-fw fa-home"></i>
+        <i class="fas fa-fw fa-location-arrow"></i>
         <span>Seguimiento incidencias</span>
     </a>
 </li>
+
+<?php
+$usuariosRegistran = array(212, 14, 42, 161, 403, 183, 521, 276, 523);
+    if (in_array($_COOKIE['noEmpleado'], $usuariosRegistran)) {
+?>   
+    <li class="nav-item">
+        <a class="nav-link" href="grafica_incidencias">
+            <i class="fas fa-fw fa-chart-bar"></i>
+            <span>Resumen de los Registros</span>
+        </a>
+    </li>
+<?php
+    }
+?>
+
+<li class = "nav-item">
+    <a class = "nav-link" href = "#" data-toggle = "modal" data-target = "#logoutModalN">
+        <i class = "fas fa-sign-out-alt text-gray-100"></i>
+        Salir
+    </a>
+</li>
+
 <hr class="sidebar-divider d-none d-md-block">
 </ul>
 <div class="text-center d-none d-md-inline">
