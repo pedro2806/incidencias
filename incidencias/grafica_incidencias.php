@@ -50,11 +50,11 @@
                                         <div class="col-xl-4" style="text-align: center">
                                             <img class="sidebar-card-illustration" src="../img/MESS_05_Imagotipo_1.png" width="160">
                                         </div>
-                                        <!-- <div class="col-xl-4">
+                                        <div class="col-xl-4">
                                             <center>
-                                                <p class="fs-4"><b>GRAFICA PBI DE INCIDENCIAS</b></p>
+                                                <p class="fs-4"><b>RESUMEN DE LOS REGISTROS</b></p>
                                             </center>
-                                        </div> -->
+                                        </div>
                                     </div>
                                     <hr>
                                     <iframe class="quitarbarra" title="Capacitacion" width="100%" height="1200" src="https://app.powerbi.com/view?r=eyJrIjoiNjY3NWJiOGEtNGE3Yy00YjZjLWE2NzEtOTZhMmViMzA5ZGY1IiwidCI6ImZlMGNmZmU4LTkxMjYtNGRmYS1iNjE2LTU3MGM2YWViYTdiNiJ9&pageName=adba6a3c556183c7edbf" frameborder="0" allowFullScreen="true"></iframe>
