@@ -9,7 +9,7 @@
 <ul class = "navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id = "accordionSidebar">
 
 <!-- Sidebar - Brand -->
-<a class = "sidebar-brand d-flex align-items-center justify-content-center" href = "inicio">
+<a class = "sidebar-brand d-flex align-items-center justify-content-center" href = "../logout.php?sesion=LM"">
     <div class = "sidebar-brand-icon rotate-n-1">
         <img class = "sidebar-card-illustration mb-2" src = "img/MESS_07_CuboMess_2.png" width = "40">
     </div>
