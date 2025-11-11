@@ -21,7 +21,7 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 <?php
-    $usuariosRegistran = array(212, 14, 42, 161, 403, 183, 521, 276);
+    $usuariosRegistran = array(212, 14, 42, 161, 403, 183, 521, 276, 523);
 
     if (in_array($_COOKIE['noEmpleado'], $usuariosRegistran)) {
         // El usuario tiene permiso para ver la página
