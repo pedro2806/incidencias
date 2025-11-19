@@ -74,10 +74,6 @@
     </div>
 </li>
 
-<button type="button" class="nav-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-    Cambiar Contraseña
-</button>
 <!-- Nav Item - Utilities Collapse Menu -->
 <?php
 $noEmp = $_COOKIE['noEmpleado'];
@@ -126,8 +122,18 @@ if ($noEmp == 183 || $noEmp ==  276 || $noEmp == 403 || $noEmp ==  523){
     </a>
 </li>
 <!-- Divider -->
-<hr class = "sidebar-divider d-none d-md-block">
+<hr class = "sidebar-divider my-2 alert-light">
+<li class = "nav-item">
+    <a class = "nav-link" href = "#" data-toggle = "modal" data-target = "#logoutModalN">
+        <i class = "fas fa-sign-out-alt fa-sm fa-fw mr-2"></i>
+        Salir
+    </a>
+</li>
 
+<button type="button" class="nav-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    <i class="fas fa-key fa-sm fa-fw mr-2 text-gray-800"></i>
+    Cambiar Contraseña
+</button>
 <!-- Sidebar Toggler (Sidebar) -->
 <div class = "text-center d-none d-md-inline">
     <button class = "rounded-circle border-0" id = "sidebarToggle"></button>

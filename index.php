@@ -164,6 +164,7 @@
     <script>
     $(document).ready(function () {
         verCalendarioLogin();
+        window.location.assign('../loginMaster');
     });
 
         function verCalendarioLogin() {
