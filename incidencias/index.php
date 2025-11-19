@@ -19,6 +19,39 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <!-- Select2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        /* Estilos para el contenedor de la pregunta */
+        .pregunta-con-nota {
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+        }
+
+        /* Regla clave para poner los elementos en la misma línea */
+        .d-flex {
+            display: flex;
+        }
+        .justify-content-between {
+            justify-content: space-between; /* Mueve la pregunta a un extremo y las opciones al otro */
+        }
+        .align-items-center {
+            align-items: center; /* Alinea verticalmente los checks y el texto */
+        }
+
+        /* Estilo para la nota de aclaración (ul) */
+        .aclaracion-riesgo {
+            margin-top: 5px;
+            padding-left: 15px;
+            border-left: 3px solid #dc3545; /* Línea de color rojo a la izquierda */
+        }
+        .aclaracion-riesgo ul {
+            list-style: none; /* Quita la viñeta de la lista */
+            padding-left: 0;
+            margin-bottom: 0;
+            font-size: 0.9em;
+            font-style: italic;
+            color: #dc3545; /* Hace la nota de riesgo roja */
+        }
+    </style>
 
 <?php
     $usuariosRegistran = array(212, 14, 42, 161, 403, 183, 521, 276, 523);
@@ -56,11 +89,11 @@
                                 <div class="card-body">
                                     <div class="row"> 
                                         <div class="col-xl-4" style="text-align: center">
-                                            <img class="sidebar-card-illustration" src="../img/MESS_05_Imagotipo_1.png" width="160">
+                                            <img class="sidebar-card-illustration" src="../img/MESS_05_Imagotipo_1.png" width="140">
                                         </div>
                                         <div class="col-xl-4">
                                             <center>
-                                                <p class="fs-4"><b>REGISTRO DE INCIDENCIAS</b></p>
+                                                <p class="fs-5"><b>REGISTRO DE INCIDENCIAS</b></p>
                                             </center>
                                         </div>
                                         <div class="col-xl-4" style="text-align: center">
@@ -72,7 +105,135 @@
                                             </b>
                                         </div>
                                     </div>
-                                    <form id="formIncidencias" name="formIncidencias">
+                                    <hr>                                    
+                                    <div class="row card-footer border-left-success">
+                                        <div class="col-sm-4 mb-0"></div>
+                                        <div class="col-sm-4 mb-0">
+                                            <label><b>Tipo de incidencia</b></label>
+                                            <select id="slcTIncidencia" name="slcTIncidencia" class="form-select" onchange="tIncidencia(this.value);">
+                                                <option value="">Selecciona...</option>
+                                                <option value="Operación">Operaciónes</option>
+                                                <option value="Personal">Personal</option>
+                                                <option value="Calidad">Calidad</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row card-footer border-left-success"  id="formFiltro" name="formFiltro" style="display: none;">
+                                        <h4>Impacto de la Incidencia</h4>
+                                        
+                                        <div class="col-sm-12 mb-0">                                            
+                                            <div class="form-check pregunta-con-nota p-3 border rounded mb-1">
+                                                <div class="d-flex justify-content-between align-items-start mb-1">
+                                                    
+                                                    <label class="form-label fw-bold me-4 w-75" for="economico-si">
+                                                        1. ¿Tiene un impacto económico (reprogramación de servicio, pago de viáticos)?
+                                                    </label>
+                                                    
+                                                    <div class="d-flex gap-4">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="economico" id="economico-si" value="si"> 
+                                                            <label class="form-check-label" for="economico-si">Sí</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="economico" id="economico-no" value="no"> 
+                                                            <label class="form-check-label" for="economico-no">No</label>
+                                                        </div>
+                                                    </div>
+                                                </div>                                                
+                                                <div class="aclaracion-riesgo ps-3 border-start border-secondary">
+                                                    <ul class="mb-0 small fst-italic text-muted">
+                                                        <li>Cualquier costo o gasto adicional generado de la ejecución del servicio incluyendo el proceso administrativo.</li>
+                                                        <li>(ejemplos: Viáticos sin justificación, tiempo de operación excedido, cambios fuera de tiempo en la documentación)</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-check pregunta-con-nota p-3 border rounded mb-1">                                                
+                                                <div class="d-flex justify-content-between align-items-start mb-1">
+                                                    
+                                                    <label class="form-label fw-bold me-4 w-75" for="repetitiva-si">
+                                                        2. ¿Es una incidencia repetitiva?
+                                                    </label>
+                                                    
+                                                    <div class="d-flex gap-4">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="repetitiva" id="repetitiva-si" value="si"> 
+                                                            <label class="form-check-label" for="repetitiva-si">Sí</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="repetitiva" id="repetitiva-no" value="no"> 
+                                                            <label class="form-check-label" for="repetitiva-no">No</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="aclaracion-riesgo ps-3 border-start border-secondary">
+                                                    <ul class="mb-0 small fst-italic text-muted">
+                                                        <li>Problemas en la ejecución de los servicios que se han presentado mas de 2 ocasiones aun cuando estos incidentes no hayan sido reportados, puede ser por el tipo de problema o la persona que ejecuta</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-check pregunta-con-nota p-3 border rounded mb-1">                                                
+                                                <div class="d-flex justify-content-between align-items-start mb-1">
+                                                    
+                                                    <label class="form-label fw-bold me-4 w-75" for="cliente-si">
+                                                        3. ¿Afecta la relación con el cliente?
+                                                    </label>
+                                                    
+                                                    <div class="d-flex gap-4">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="cliente" id="cliente-si" value="si"> 
+                                                            <label class="form-check-label" for="cliente-si">Sí</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="cliente" id="cliente-no" value="no"> 
+                                                            <label class="form-check-label" for="cliente-no">No</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="aclaracion-riesgo ps-3 border-start border-secondary">
+                                                    <ul class="mb-0 small fst-italic text-muted">
+                                                        <li>La ejecución o no ejecución del servicio traerá consecuencias negativas en la relación con el cliente</li>
+                                                        <li>(ejemplos: pérdida de negocios, cancelación de servicio, evaluación insatisfactoria)</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-check pregunta-con-nota p-3 border rounded mb-1"> 
+    
+                                                <div class="d-flex justify-content-between align-items-start mb-1">
+                                                    
+                                                    <label class="form-label fw-bold me-4 w-75" for="acreditacion-si">
+                                                        4. ¿Podría afectar para mantener alguna acreditación?
+                                                    </label>
+                                                    
+                                                    <div class="d-flex gap-4"> 
+                                                        
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="acreditacion" id="acreditacion-si" value="si" required> 
+                                                            <label class="form-check-label" for="acreditacion-si">Sí</label>
+                                                        </div>
+                                                        
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="acreditacion" id="acreditacion-no" value="no"> 
+                                                            <label class="form-check-label" for="acreditacion-no">No</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="aclaracion-riesgo ps-3 border-start border-secondary">
+                                                    <ul class="mb-0 small fst-italic text-muted">
+                                                        <li>Problemas que ponen en riesgo el sistema de gestión de calidad o las acreditaciones de mess</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                            <button type="button" class="btn btn-primary" onclick="evaluarIncidencia()">Evaluar Incidencia</button>
+                                        </div>                                        
+                                    </div>
+                                    <div  id="formIncidencias" name="formIncidencias" style="display: none;">
                                         <div class="row card-footer border-left-primary">
                                             <div class="col-sm-4 mb-0">
                                                 <label>Responsable</label>
@@ -83,13 +244,8 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-4 mb-0">
-                                                <label>Tipo</label>
-                                                <select id="slcTIncidencia" name="slcTIncidencia" class="form-select" onchange="tIncidencia(this.value);">
-                                                    <option value="">Selecciona...</option>
-                                                    <option value="Operación">Operaciónes</option>
-                                                    <option value="Personal">Personal</option>
-                                                    <option value="Calidad">Calidad</option>
-                                                </select>
+                                                <h6>Area: <span class="badge text-bg-primary" id="lblArea"></span></h6>
+                                                <h6>Región: <span class="badge text-bg-primary" id="lblRegion"></span></h6>
                                             </div>
                                             <div class="col-sm-4 mb-0">
                                                 <label>Clasificación</label>
@@ -100,11 +256,7 @@
                                             
                                         </div>
 
-                                        <div class="row card-footer border-left-primary">
-                                            <div class="col-sm-4 mb-0">
-                                                <h6>Area: <span class="badge text-bg-primary" id="lblArea"></span></h6>
-                                                <h6>Región: <span class="badge text-bg-primary" id="lblRegion"></span></h6>
-                                            </div>
+                                        <div class="row card-footer border-left-primary">                                            
                                             <div class="col-sm-4 mb-0">
                                                 <label>Fecha incidente</label>
                                                 <input type="date" class="form-control" id="fechaIncidente" name="fechaIncidente">
@@ -132,7 +284,11 @@
                                                 </center>
                                             </div>
                                         </div>
-                                    </form>
+                                    </div>
+                                    <div id="mensajeAlerta" class="alert alert-warning" style="display: none;">
+                                        <p>⚠️ **Incidencia de Bajo Impacto.** Antes de registrarla, por favor **verifique con el área correspondiente** para determinar si requiere registro formal en el sistema.</p>
+                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -216,6 +372,14 @@
         var tIncidencia = function(ti) {
             opcion = "clasficacion";
             tipo = ti;
+            if(tipo === "Personal") {
+                $('#formIncidencias').show();
+                $('#formFiltro').hide();
+            }else{
+                $('#formIncidencias').hide();
+                $('#formFiltro').show();
+            }
+
             $('#slcClasificacion').empty().append('<option value="">Selecciona...</option>');
             $.ajax({
                 url: 'acciones_solicitud.php',
@@ -363,6 +527,21 @@
             let value = "; " + document.cookie;
             let parts = value.split("; " + name + "=");
             if (parts.length === 2) return parts.pop().split(";").shift();
+        }
+        function evaluarIncidencia() {
+
+            const respuestasSi = formFiltro.querySelectorAll('input[type="radio"]:checked[value="si"]');
+
+            // 3. Evaluar el resultado
+            if (respuestasSi.length > 0) {
+                $('#formIncidencias').show();
+                $('#mensajeAlerta').hide();
+                $('#formFiltro').hide();
+            } else {
+                $('#formIncidencias').hide();
+                $('#mensajeAlerta').show();
+                $('#formFiltro').hide();
+            }
         }
     </script>
 </body>
