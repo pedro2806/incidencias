@@ -107,8 +107,9 @@
                                                                         (SELECT dias FROM diasvacaciones WHERE anio =(TIMESTAMPDIFF(YEAR,u.fechaIngreso,CURDATE()) ) )AS diasD
                                                                         FROM solicitudes s 
                                                                         INNER JOIN usuarios u ON s.empleado = u.noEmpleado
-                                                                        WHERE (s.estatus = 1 AND s.autorizaRH = 1) OR (s.estatus = 1 AND s.autorizaRH = 2) OR (s.estatus = 2 AND s.autorizaRH = 1) 
-                                                                            AND empleado in (SELECT noEmpleado FROM usuarios WHERE jefe = $noEmpleado)
+                                                                        WHERE empleado in (SELECT noEmpleado FROM usuarios WHERE jefe = $noEmpleado) AND
+                                                                            (s.estatus = 1 AND s.autorizaRH = 1) OR (s.estatus = 1 AND s.autorizaRH = 2) OR (s.estatus = 2 AND s.autorizaRH = 1) 
+                                                                            
                                                                         ORDER BY fesolicitud DESC";
                                                         $res2= mysqli_query( $conn, $Qsolicitudes ) or die (mysqli_error($conn));
                                                         
