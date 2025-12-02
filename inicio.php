@@ -81,7 +81,7 @@
                         -->
                         <div class = "col-xl-7 col-lg-7">
                             
-                                <embed id="vistaPrevia" src='https://www.mess.com.mx/wp-content/uploads/2025/11/Mural-Noviembre-2025.-.pdf#zoom=60' type="application/pdf" width="100%" height="500px" />
+                                <embed id="vistaPrevia" src='https://www.mess.com.mx/wp-content/uploads/2025/12/Mural-Diciembre-2025.pdf#zoom=60' type="application/pdf" width="100%" height="500px" />
                                 <!--<embed id="vistaPrevia" src='https://www.messbook.com.mx/incidencias/encuesta_viaje?usuario=<?php echo $_COOKIE['noEmpleado']; ?>' type="application/pdf" width="100%" height="550">-->
                         </div>
                         <!--AGENDA SALA DE JUNTAS-->

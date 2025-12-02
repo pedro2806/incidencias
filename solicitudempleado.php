@@ -107,14 +107,14 @@
                                                                         (SELECT dias FROM diasvacaciones WHERE anio =(TIMESTAMPDIFF(YEAR,u.fechaIngreso,CURDATE()) ) )AS diasD
                                                                         FROM solicitudes s 
                                                                         INNER JOIN usuarios u ON s.empleado = u.noEmpleado
-                                                                        WHERE empleado in (SELECT noEmpleado FROM usuarios WHERE jefe = $noEmpleado) AND
-                                                                            (s.estatus = 1 AND s.autorizaRH = 1) OR (s.estatus = 1 AND s.autorizaRH = 2) OR (s.estatus = 2 AND s.autorizaRH = 1) 
+                                                                        WHERE empleado in (SELECT noEmpleado FROM usuarios WHERE jefe = $noEmpleado)
+                                                                            AND ((s.estatus = 1 AND s.autorizaRH = 1) OR (s.estatus = 1 AND s.autorizaRH = 2) OR (s.estatus = 2 AND s.autorizaRH = 1) )
                                                                             
                                                                         ORDER BY fesolicitud DESC";
                                                         $res2= mysqli_query( $conn, $Qsolicitudes ) or die (mysqli_error($conn));
                                                         
                                                         While ($row2 = mysqli_fetch_array($res2)){
-                                                               
+
                                                                 $FechaIng = substr($row2["fechaIngreso"], 4, 6);
                                                                 $anio = date("Y");
                                                                 $fechaCompara = $anio.$FechaIng;
@@ -317,7 +317,7 @@
                                                         $noEmpleado = $_COOKIE['noEmpleado'];
                                                         $Qsolicitudes = "SELECT s.*, u.nombre as empleado FROM solicitudes s 
                                                         INNER JOIN usuarios u ON s.empleado = u.noEmpleado
-                                                        WHERE empleado in (SELECT noEmpleado FROM usuarios WHERE jefe = $noEmpleado) AND (s.estatus = 3) OR (s.autorizaRH = 3)";
+                                                        WHERE empleado in (SELECT noEmpleado FROM usuarios WHERE jefe = $noEmpleado) AND ((s.estatus = 3) OR (s.autorizaRH = 3))";
                                                         $res2= mysqli_query( $conn, $Qsolicitudes ) or die (mysqli_error($conn));
                                                         
                                                         While ($row2 = mysqli_fetch_array($res2)){
