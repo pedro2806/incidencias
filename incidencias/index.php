@@ -233,7 +233,8 @@
                                             <button type="button" class="btn btn-primary" onclick="evaluarIncidencia()">Evaluar Incidencia</button>
                                         </div>                                        
                                     </div>
-                                    <div  id="formIncidencias" name="formIncidencias" style="display: none;">
+                                    <div  id="divformIncidencias" name="divformIncidencias" style="display: none;">
+                                    <form id="formIncidencias" name="formIncidencias">
                                         <div class="row card-footer border-left-primary">
                                             <div class="col-sm-4 mb-0">
                                                 <label>Responsable</label>
@@ -284,6 +285,7 @@
                                                 </center>
                                             </div>
                                         </div>
+                                    </form>
                                     </div>
                                     <div id="mensajeAlerta" class="alert alert-warning" style="display: none;">
                                         <p>⚠️ **Incidencia de Bajo Impacto.** Antes de registrarla, por favor **verifique con el área correspondiente** para determinar si requiere registro formal en el sistema.</p>
@@ -534,11 +536,11 @@
 
             // 3. Evaluar el resultado
             if (respuestasSi.length > 0) {
-                $('#formIncidencias').show();
+                $('#divformIncidencias').show();
                 $('#mensajeAlerta').hide();
                 $('#formFiltro').hide();
             } else {
-                $('#formIncidencias').hide();
+                $('#divformIncidencias').hide();
                 $('#mensajeAlerta').show();
                 $('#formFiltro').hide();
             }
