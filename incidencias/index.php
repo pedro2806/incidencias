@@ -105,7 +105,8 @@
                                             </b>
                                         </div>
                                     </div>
-                                    <hr>                                    
+                                    <hr>
+                                    <form id="formIncidencias" name="formIncidencias">
                                     <div class="row card-footer border-left-success">
                                         <div class="col-sm-4 mb-0"></div>
                                         <div class="col-sm-4 mb-0">
@@ -233,8 +234,7 @@
                                             <button type="button" class="btn btn-primary" onclick="evaluarIncidencia()">Evaluar Incidencia</button>
                                         </div>                                        
                                     </div>
-                                    <div  id="divformIncidencias" name="divformIncidencias" style="display: none;">
-                                    <form id="formIncidencias" name="formIncidencias">
+                                    <div  id="divformIncidencias" name="divformIncidencias" style="display: none;">                                    
                                         <div class="row card-footer border-left-primary">
                                             <div class="col-sm-4 mb-0">
                                                 <label>Responsable</label>
@@ -413,6 +413,7 @@
             var formData = getFormData('formIncidencias');
             var responsable = formData["slcRespoonsable"];
             var tipo = formData["slcTIncidencia"];
+            
             var clasificacion = formData["slcClasificacion"];
             var fechaIncidente = formData["fechaIncidente"];
             var fechaCierre = formData["fechaCierre"];
