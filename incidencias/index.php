@@ -375,10 +375,10 @@
             opcion = "clasficacion";
             tipo = ti;
             if(tipo === "Personal") {
-                $('#formIncidencias').show();
+                $('#divformIncidencias').show();
                 $('#formFiltro').hide();
             }else{
-                $('#formIncidencias').hide();
+                $('#divformIncidencias').hide();
                 $('#formFiltro').show();
             }
 
