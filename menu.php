@@ -130,10 +130,6 @@ if ($noEmp == 183 || $noEmp ==  276 || $noEmp == 403 || $noEmp ==  523){
     </a>
 </li>
 
-<button type="button" class="nav-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-    <i class="fas fa-key fa-sm fa-fw mr-2 text-gray-800"></i>
-    Cambiar Contraseña
-</button>
 <!-- Sidebar Toggler (Sidebar) -->
 <div class = "text-center d-none d-md-inline">
     <button class = "rounded-circle border-0" id = "sidebarToggle"></button>
