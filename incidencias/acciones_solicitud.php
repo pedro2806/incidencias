@@ -371,7 +371,14 @@ $noEmpleadoInc = isset($_POST["noEmpleadoInc"]) ? $_POST["noEmpleadoInc"] : $noE
                 INNER JOIN usuarios u ON isol.solicita = u.noEmpleado
                 INNER JOIN usuarios ur ON isol.responsable = ur.noEmpleado
                 INNER JOIN incidencias_clasificacion ic ON isol.clasificacion = ic.id 
-                WHERE isol.estatus = 'Rechazada' ORDER BY isol.fecha_solicitud DESC";
+                WHERE isol.estatus = 'Rechazada' 
+                AND (
+                            isol.solicita = $noEmpleado_cookie 
+                            OR u.jefe = $noEmpleado_cookie
+                            OR ur.jefe = $noEmpleado_cookie
+                            OR isol.responsable = $noEmpleado_cookie
+                        )
+                ORDER BY isol.fecha_solicitud DESC";
         //echo $sql;
         $result = $conn->query($sql);
         
@@ -415,7 +422,10 @@ $noEmpleadoInc = isset($_POST["noEmpleadoInc"]) ? $_POST["noEmpleadoInc"] : $noE
 
     if($opcion == "DetalleIncidencias"){
         $sql = "SELECT isol.*, u.nombre AS nombre_usuario, ur.nombre AS responsable, ic.clasificacion AS detalle_incidencia,
-                d.departamento AS departamento_usuario, r.region AS region_usuario
+                d.departamento AS departamento_usuario, r.region AS region_usuario,
+                IFNULL(isol.comentarios_cierre, 'S/C') AS comentarios_cierre,
+                IFNULL(isol.comentarios_replica, 'S/C') AS comentarios_replica,
+                IFNULL(isol.comentarios_solicitud, 'S/C') AS comentarios_solicitud
                 FROM incidencias_solicitudes isol
                 INNER JOIN usuarios u ON isol.solicita = u.noEmpleado
                 INNER JOIN departamento d ON u.departamento = d.id

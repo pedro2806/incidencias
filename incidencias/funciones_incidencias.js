@@ -185,42 +185,54 @@ function renderizarTabla(selectorTabla, data) {
         }
     })();
 
-    data.forEach(function (solicitud) {
-        // Obtiene la acción y el estilo del mapa, con un fallback si no se encuentra
-        const accion = accionesPorTipo[solicitud.solicita] || { estilo: 'secondary', boton: '<span class="badge text-bg-primary">En espera de respuesta</span>' };
-        var comentarios  = '';
-        // Lógica específica para ciertas tablas si es necesario
-        if (selectorTabla === "#TSolAbiertas tbody") {
-            comentarios = 'Comentarios Sol: '+solicitud.comentarios_solicitud || 'Sin comentarios';
-        }else{
-            if (selectorTabla === "#TSolAceptadas tbody") {
-                comentarios = '<b>Coment. Sol:</b>'+solicitud.comentarios_solicitud+ '<br><b>Coment. Resp: </b>'+solicitud.comentarios_replica;
-            } else {
-                if (selectorTabla === "#TSolCerradas tbody") {
-                comentarios = '<b>Coment. Sol:</b>'+solicitud.comentarios_solicitud+ '<br><b>Coment. Resp: </b>'+solicitud.comentarios_replica + '<br><b>Coment. Cierre: </b>'+solicitud.comentarios_cierre;
-                } else {
-                    comentarios = '<b>Coment. Sol:</b>'+solicitud.comentarios_solicitud+ '<br><b>Coment. Resp: </b>'+solicitud.comentarios_replica;
-                }
-                
-            }
-        }
+data.forEach(function (solicitud) {
+    // Obtiene la acción y el estilo del mapa, con un fallback si no se encuentra
+    const accion = accionesPorTipo[solicitud.solicita] || { 
+        estilo: 'secondary', 
+        boton: '<span class="badge text-bg-primary">En espera de respuesta</span>' 
+    };
+    
+    let comentarios = '';
 
-        // Reemplaza el ID en el HTML del botón si aplica
-        const botonFinal = accion.boton.replace('this.dataset.id', solicitud.id_solicitud);
-        //<td>${solicitud.fecha_solicitud}</td>
-        const fila = `
-            <tr class="table-${accion.estilo}">
-                <td>${solicitud.nombre_usuario}</td>
-                <td>${solicitud.responsable}</td>                
-                <td>${solicitud.fecha_incidente}</td>
-                <td>${solicitud.fecha_cierre}</td>
-                <td>${solicitud.tipo}</td>
-                <td>${solicitud.detalle_incidencia}</td>
-                <td>${comentarios}</td>
-                <td>${botonFinal}</td>
-            </tr>`;
-        tabla.append(fila);
-    });
+    // Lógica para determinar el contenido de comentarios usando if/else if
+    if (selectorTabla === "#TSolAbiertas tbody") {
+        // Solo comentario de la solicitud
+        comentarios = `Comentarios Sol: ${solicitud.comentarios_solicitud || 'Sin comentarios'}`;
+    } else if (selectorTabla === "#TSolAceptadas tbody") {
+        // Comentario de solicitud y respuesta
+        comentarios = `<b>Coment. Sol:</b>${solicitud.comentarios_solicitud}<br><b>Coment. Resp: </b>${solicitud.comentarios_replica}`;
+    } else {
+        // #TSolCerradas o cualquier otro caso: Solicitud, Respuesta y Cierre
+        comentarios = `<b>Coment. Sol:</b>${solicitud.comentarios_solicitud}<br><b>Coment. Resp: </b>${solicitud.comentarios_replica}<br><b>Coment. Cierre: </b>${solicitud.comentarios_cierre}`;
+    }
+
+    // Reemplaza el ID en el HTML del botón
+    // Asegúrate de que 'this.dataset.id' sea un marcador de posición válido en accion.boton
+    const botonFinal = accion.boton.replace('this.dataset.id', solicitud.id_solicitud);
+
+    const comentariosEscapados = comentarios.replace(/"/g, "&quot;"); // Escapa comillas dobles usando entidad HTML
+    
+    // Construcción de la fila de la tabla
+    const fila = `
+        <tr class='table-${accion.estilo}'>
+            <td>${solicitud.nombre_usuario}</td>
+            <td>${solicitud.responsable}</td>
+            <td>${solicitud.fecha_incidente}</td>
+            <td>${solicitud.fecha_cierre}</td>
+            <td>${solicitud.tipo}</td>
+            <td>${solicitud.detalle_incidencia}</td>
+            <td>
+                <button class='btn btn-outline-primary btn-sm' 
+                    onclick='verComentarios("${comentariosEscapados}")'>
+                <i class='fas fa-comments'></i>
+            </button>
+            </td>
+            <td>${botonFinal}</td>
+        </tr>`;
+    
+    tabla.append(fila);
+});
+
 }
 
 // FUNCION PARA MOSTRAR MENSAJE DE ERROR
@@ -305,4 +317,15 @@ function aplicarEstiloDataTable(tablaId, ordenColumna) {
                 "searching": false
         });
     
+}
+
+//FUNCION PARA VER COMENTARIOS DE LA INCIDENCIA
+function verComentarios(comentarios) {
+    Swal.fire({
+        title: 'Comentarios de la Incidencia',
+        html: comentarios,
+        icon: 'info',
+        confirmButtonText: 'Cerrar',
+        draggable: true
+    });
 }
