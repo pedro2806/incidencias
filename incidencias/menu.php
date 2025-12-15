@@ -31,7 +31,7 @@
 </div>
 <!-- Nav Item - Pages Collapse Menu -->
 <?php
-$usuariosRegistran = array(212, 14, 42, 161, 403, 183, 521, 276, 523, 71);
+$usuariosRegistran = array(212, 14, 42, 161, 403, 183, 521, 276, 523, 71, 5);
 
 if (in_array($_COOKIE['noEmpleado'], $usuariosRegistran)) {
 ?>
