@@ -413,5 +413,46 @@ $noEmpleadoInc = isset($_POST["noEmpleadoInc"]) ? $_POST["noEmpleadoInc"] : $noE
         echo json_encode($data);
     }
 
+    if($opcion == "DetalleIncidencias"){
+        $sql = "SELECT isol.*, u.nombre AS nombre_usuario, ur.nombre AS responsable, ic.clasificacion AS detalle_incidencia,
+                d.departamento AS departamento_usuario, r.region AS region_usuario
+                FROM incidencias_solicitudes isol
+                INNER JOIN usuarios u ON isol.solicita = u.noEmpleado
+                INNER JOIN departamento d ON u.departamento = d.id
+                INNER JOIN region r ON u.region = r.id
+                INNER JOIN usuarios ur ON isol.responsable = ur.noEmpleado
+                INNER JOIN incidencias_clasificacion ic ON isol.clasificacion = ic.id
+                ORDER BY isol.fecha_solicitud DESC";
+        //echo $sql;
+        $result = $conn->query($sql);
+        
+        $solicitudes = array();
+        
+        while ($row = $result->fetch_assoc()) {
+            $solicitudes[] = array(
+                'id_solicitud' => $row['id'],
+                'solicita' => $row['solicita'],
+                'responsable' => $row['responsable'],
+                'fecha_solicitud' => $row['fecha_solicitud'],
+                'fecha_incidente' => $row['fecha_incidente'],
+                'fecha_cierre' => $row['fecha_cierre'],
+                'comentarios_solicitud' => $row['comentarios_solicitud'],
+                'comentarios_replica' => $row['comentarios_replica'],
+                'comentarios_cierre' => $row['comentarios_cierre'],
+                'fecha_replica' => $row['fecha_replica'],
+                'tipo' => $row['tipo'],
+                'clasificacion' => $row['clasificacion'],
+                'estatus' => $row['estatus'],
+                'nombre_usuario' => $row['nombre_usuario'],
+                'detalle_incidencia' => $row['detalle_incidencia'],
+                'departamento_usuario' => $row['departamento_usuario'],
+                'region_usuario' => $row['region_usuario']);
+        }
+        
+        // Devolver los eventos en formato JSON
+        header('Content-Type: application/json');
+        echo json_encode($solicitudes);
+    }
+
 
 ?>  

@@ -177,8 +177,8 @@ function renderizarTabla(selectorTabla, data) {
         } else {
             // Fallback para tablas desconocidas
             return {
-                'Yosolicito': { estilo: 'secondary', boton: '<span class="badge text-bg-secondary">Sin acción</span>' },
-                'SoyResponsable': { estilo: 'secondary', boton: '<span class="badge text-bg-secondary">Sin acción</span>' },
+                'Yosolicito': { estilo: 'light', boton: '<span class="badge text-bg-secondary">Sin acción</span>' },
+                'SoyResponsable': { estilo: 'light', boton: '<span class="badge text-bg-secondary">Sin acción</span>' },
                 'ResponsableMiPersonal': { estilo: 'light', boton: '<span class="badge text-bg-primary">En espera de respuesta</span>' },
                 'SolicitaMiPersonal': { estilo: 'light', boton: '<span class="badge text-bg-primary">En espera de respuesta</span>' },
             };
@@ -201,6 +201,7 @@ function renderizarTabla(selectorTabla, data) {
                 } else {
                     comentarios = '<b>Coment. Sol:</b>'+solicitud.comentarios_solicitud+ '<br><b>Coment. Resp: </b>'+solicitud.comentarios_replica;
                 }
+                
             }
         }
 

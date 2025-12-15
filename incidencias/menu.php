@@ -53,13 +53,27 @@ if (in_array($_COOKIE['noEmpleado'], $usuariosRegistran)) {
 </li>
 
 <?php
-$usuariosRegistran = array(212, 14, 42, 161, 403, 183, 521, 276, 523);
+$usuariosRegistran = array(212, 14, 42, 161, 403, 183, 521, 276, 523, 5);
     if (in_array($_COOKIE['noEmpleado'], $usuariosRegistran)) {
 ?>   
     <li class="nav-item">
         <a class="nav-link" href="grafica_incidencias">
             <i class="fas fa-fw fa-chart-bar"></i>
             <span>Resumen de los Registros</span>
+        </a>
+    </li>
+<?php
+    }
+?>
+
+<?php
+$usuariosReporteInc = array(403, 183, 521, 276, 523, 5);
+    if (in_array($_COOKIE['noEmpleado'], $usuariosReporteInc)) {
+?>   
+    <li class="nav-item">
+        <a class="nav-link" href="detalle_incidencias">
+            <i class="fas fa-fw fa-chart-bar"></i>
+            <span>Detalle incidencias</span>
         </a>
     </li>
 <?php
@@ -74,7 +88,7 @@ $usuariosRegistran = array(212, 14, 42, 161, 403, 183, 521, 276, 523);
 </li>
 
 <hr class="sidebar-divider d-none d-md-block">
-</ul>
+
 <div class="text-center d-none d-md-inline">
     <button class="rounded-circle border-0" id="sidebarToggle"></button> 
 </div>
