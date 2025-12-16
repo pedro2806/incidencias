@@ -276,6 +276,15 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div class="row card-header border-left-primary" style="display: none;">                                           
+                                            <div class="col-sm-4 mb-0">
+                                                <div class="mb-0">
+                                                    <label class="form-label">Cliente</label>
+                                                    <textarea class="form-control" id="comentarios" name="comentarios" rows="3"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="row  card-header border-left-success">
                                             <div class="col-xl-3"></div>
                                             <div class="col-xl-6">

@@ -69,11 +69,11 @@ header('Content-Type: text/html; charset=UTF-8');
         
     <center>
     <h1>
-         Morales Garcia Brenda Elizabeth acaba de mandar una solicitud a travez del sistema de incidencias
+         Morales Garcia Brenda Elizabeth acaba de mandar una solicitud a travez del sistema de vacaciones
     </h1>
     <br><br>
     <h2>
-        Para validar la solicitud por favor entra al sistema de incidencias.<br> 
+        Para validar la solicitud por favor entra al sistema de vacaciones.<br> 
         <a href="https://www.mess.com.mx/incidencias"> Ver Solicitud</a>
     </h2>
     </center> <br><br><br><br>

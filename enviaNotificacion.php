@@ -16,7 +16,7 @@ header('Content-Type: text/html; charset=UTF-8');
     }
     
     $solicitaN = mb_convert_encoding($solicitaNombre, 'UTF-8', 'ISO-8859-1');
-    $deAsunto="Solicitud del sistema de incidencias.";
+    $deAsunto="Solicitud del sistema de vacaciones.";
     
     require_once("PHPMailer-master/src/PHPMailer.php");
     require_once("PHPMailer-master/src/SMTP.php");
@@ -39,7 +39,7 @@ header('Content-Type: text/html; charset=UTF-8');
     $mail->Username = "mess.metrologia@gmail.com";//////////////////////////////////PONER CUENTA GMAIL
     $mail->Password = "hglidvwsxcbbefhe";////CONTRASENIA DE APLICACION GENERADA DESDE CONSOLA DE GOOGLE
     
-    $mail->SetFrom("mess.metrologia@gmail.com", "Solicitud sistema de incidencias");
+    $mail->SetFrom("mess.metrologia@gmail.com", "Solicitud sistema de vacaciones");
     $mail->Subject = $deAsunto;
     $mail->Body = ' 
 <html>
@@ -69,11 +69,11 @@ header('Content-Type: text/html; charset=UTF-8');
         
     <center>
     <h1>
-         '.utf8_decode($solicitaNombre).' acaba de mandar una solicitud a travez del sistema de incidencias
+         '.utf8_decode($solicitaNombre).' acaba de mandar una solicitud a travez del sistema de vacaciones
     </h1>
     <br><br>
     <h2>
-        Para validar la solicitud por favor entra al sistema de incidencias.<br> 
+        Para validar la solicitud por favor entra al sistema de vacaciones.<br> 
         <a href="https://www.mess.com.mx/incidencias"> Ver Solicitud</a>
     </h2>
     </center> <br><br><br><br>
