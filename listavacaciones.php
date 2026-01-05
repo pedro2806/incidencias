@@ -440,7 +440,7 @@ include 'conn.php';
                                     tSolicitudBadge,
                                     Registro.FechaBien,
                                     '<span class="badge text-bg-dark"><b>' + Registro.noDias + ' días</b></span><span class="badge text-bg-light"><b>' + Registro.Dgozados + ' gozados</b></span><span class="badge text-bg-warning"><b>' + Registro.diasDisp + ' Rest</b></span><br> <b>' + Registro.Finicio + ' - ' + Registro.FFin +'</b>',
-                                    '<p style="margin-bottom: 0px; margin-top: 0px;"><small>Grales:' + Registro.notasempleado + '</small></p><p style="margin-bottom: 0px; margin-top: 0px;"><small>Colab:' + Registro.ComentariosJ + '</small></p><p style="margin-bottom: 0px;"><small>Jefe:' + Registro.ComentariosJ + '</small></p>',
+                                    '<p style="margin-bottom: 0px; margin-top: 0px;"><small>Grales:' + Registro.Comentarios + '</small></p><p style="margin-bottom: 0px; margin-top: 0px;"><small>Colab:' + Registro.ComentariosE + '</small></p><p style="margin-bottom: 0px;"><small>Jefe:' + Registro.ComentariosJ + '</small></p>',
                                     EstatusBadge+EstatusRH,
                                     '<a class="btn btn-outline-primary btn-circle btn-sm" href="#" data-toggle="modal" data-target="#modalEdita" onClick="llenaInfoEditar('+ Registro.id+',\''+ Registro.fSolicitud+'\', '+Registro.noEmpleado+',\''+ Registro.usuario+'\', '+ Registro.Dgozados+')">'+
                                         '<i class="fas fa-edit"></i>'+
