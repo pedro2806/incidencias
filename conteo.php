@@ -60,7 +60,7 @@ include 'conn.php';
                     <div class = "col mr-2">
                         <div class = "h5 mb-0 font-weight-bold text-gray-800">
                             
-                            Días sol: 
+                            Días solic: 
                             <?php
                                 $noEmp = $_COOKIE['noEmpleado'];
                                 
@@ -78,17 +78,36 @@ include 'conn.php';
                                 $fechaCompara = $anio.$FechaIng;
                                 
                                 $hoy = date("Y-m-d");
+                                
                                 if ($fechaCompara <= $hoy){
                                     $anioNext = $anio + 1;
                                     $fechaPrev = $anio.$FechaIng;
                                     $fechaNext = $anioNext.$FechaIng;
                                     
-                                    $QdiasSol = "SELECT IFNULL(SUM(dias), '0') as diasSol FROM solicitudes WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext' AND tipo = 1";
+                                    $QdiasSol = "SELECT IFNULL(SUM(dias), '0') as diasSol 
+                                                    FROM solicitudes 
+                                                    WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) 
+                                                    AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext' AND tipo = 1";
                                     $resdiasSol= mysqli_query( $conn, $QdiasSol ) or die (mysqli_error($conn));
                                     
                                     While ($rowSol = mysqli_fetch_array($resdiasSol)){
                                         $diasSol = $rowSol["diasSol"];
                                     }
+
+                                    $anioAnt = $anio -1;
+                                    $fechaAnt = $anioAnt.$FechaIng;
+                                    $fechaSig = $anio.$FechaIng;
+
+                                    $QdiasSolAnt ="SELECT IFNULL(SUM(dias), '0') as diasSol, (SELECT dias FROM diasvacaciones WHERE anio = $antiguedad-1) as vacLey
+                                                    FROM solicitudes 
+                                                    WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) 
+                                                    AND fesolicitud BETWEEN '$fechaAnt' AND '$fechaSig' AND tipo = 1";
+                                    $resdiasSolAnt= mysqli_query( $conn, $QdiasSolAnt ) or die (mysqli_error($conn));
+                                    While ($rowSolAnt = mysqli_fetch_array($resdiasSolAnt)){
+                                        $diasSolAnt = $rowSolAnt["diasSol"];
+                                        $vacLey = $rowSolAnt["vacLey"];
+                                    }
+
                                 }else{
                                     $anioPrev = $anio - 1;
                                     $fechaPrev = $anioPrev.$FechaIng;
@@ -100,7 +119,21 @@ include 'conn.php';
                                     While ($rowSol = mysqli_fetch_array($resdiasSol)){
                                         $diasSol = $rowSol["diasSol"];
                                     }
+                                    
+                                    $anioAnt = $anio -2;;
+                                    $fechaAnt = $anioAnt.$FechaIng;
+                                    $fechaSig = $anioPrev.$FechaIng;
+                                    $QdiasSolAnt ="SELECT IFNULL(SUM(dias), '0') as diasSol, (SELECT dias FROM diasvacaciones WHERE anio = $antiguedad-1) as vacLey
+                                                    FROM solicitudes 
+                                                    WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) 
+                                                    AND fesolicitud BETWEEN '$fechaAnt' AND '$fechaSig' AND tipo = 1";
+                                    $resdiasSolAnt= mysqli_query( $conn, $QdiasSolAnt ) or die (mysqli_error($conn));
+                                    While ($rowSolAnt = mysqli_fetch_array($resdiasSolAnt)){
+                                        $diasSolAnt = $rowSolAnt["diasSol"];
+                                        $vacLey = $rowSolAnt["vacLey"];
+                                    }
                                 }
+                                $deuda = ($vacLey-$diasSolAnt)*(-1);
                                 echo $diasSol;
                                 
                                 
@@ -110,7 +143,7 @@ include 'conn.php';
                             días
                         </div>
                         <div class = "h5 mb-0 font-weight-bold text-gray-800">
-                            Días Disp: <?php echo $dias-$diasSol; ?>  días
+                            Días disp: <?php echo $dias-$diasSol; echo ' días ';?>  
                             <input type="hidden" class="form-control" id="diasDisponibles" name="diasDisponibles" value="<?php echo $dias-$diasSol; ?>" readonly>
                         </div>
                     </div>
@@ -125,52 +158,13 @@ include 'conn.php';
             <div class = "card-body">
                 <div class = "row no-gutters align-items-center">
                     <div class = "col mr-2">
-                        <div class = "h5 mb-0 font-weight-bold text-gray-800">
+                        <div class = "h5 mb-0 font-weight-bold text-gray-800">                            
                             <?php
-                                $noEmp = $_COOKIE['noEmpleado'];
-                                
-                                $Qdias = "SELECT * FROM usuarios WHERE noEmpleado = $noEmp";
-                                $resdias= mysqli_query( $conn, $Qdias ) or die (mysqli_error($conn));
-                                
-                                While ($row3 = mysqli_fetch_array($resdias)){
-                                    $FechaI = $row3["fechaIngreso"];
-                                }
-                                
-                                $FechaIng = substr($FechaI, 4, 6);
-                                
-                                $anio = date("Y");
-                                
-                                $fechaCompara = $anio.$FechaIng;
-                                
-                                $hoy = date("Y-m-d");
-                                if ($fechaCompara <= $hoy){
-                                    $anioNext = $anio + 1;
-                                    $fechaPrev = $anio.$FechaIng;
-                                    $fechaNext = $anioNext.$FechaIng;
-                                    
-                                    $QdiasSol = "SELECT IFNULL(SUM(dias), '0') as diasSol FROM solicitudes WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext'  AND tipo = 1";
-                                    $resdiasSol= mysqli_query( $conn, $QdiasSol ) or die (mysqli_error($conn));
-                                    
-                                    While ($rowSol = mysqli_fetch_array($resdiasSol)){
-                                        $diasSol = $rowSol["diasSol"];
-                                    }
-                                }else{
-                                    $anioPrev = $anio - 1;
-                                    $fechaPrev = $anioPrev.$FechaIng;
-                                    $fechaNext = $anio.$FechaIng;
-                                    
-                                    $QdiasSol = "SELECT SUM(dias) as diasSol FROM solicitudes WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext'";
-                                    $resdiasSol= mysqli_query( $conn, $QdiasSol ) or die (mysqli_error($conn));
-                                    
-                                    While ($rowSol = mysqli_fetch_array($resdiasSol)){
-                                        $diasSol = $rowSol["diasSol"];
-                                    }
-                                }
-                            ?>
-
+                                //echo '*Deuda: -'.$deuda . '*'; 
+                            ?> 
                         </div>
                         <div class = "h5 mb-0 font-weight-bold text-gray-800">
-                            Renovación Vac: <?php echo $fechaNext; ?>
+                            Renovación Vac: <?php echo $fechaNext; ?>                        
                         </div>
                     </div>
                 </div>

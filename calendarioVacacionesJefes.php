@@ -140,16 +140,22 @@ include 'conn.php';
                     info.el.style.backgroundColor = randomColor;
                 },
                 eventContent: function(info) {
-                    // Personalizar el contenido del evento
-                    var nombreEmpleado = info.event.title; // Nombre del empleado
-                    var fechaInicio = info.event.start.toISOString().split('T')[0]; // Formato YYYY-MM-DD para la fecha de inicio
-                    var fechaFin = info.event.end ? info.event.end.toISOString().split('T')[0] : null; // Fecha de fin, si existe
+                    var nombre = info.event.title;
+                    var inicio = info.event.start.toISOString().split('T')[0];
+                    var finReal = "";
 
-                    // Si se tiene una fecha de fin, mostrar ambas fechas
-                    var displayText = nombreEmpleado + '<br>Inicio: ' + fechaInicio;
-                    
+                    if (info.event.end) {
+                        var d = new Date(info.event.end);
+                        d.setDate(d.getDate() - 1);
+                        finReal = d.toISOString().split('T')[0];
+                    }
 
-                    return { html: displayText };
+                    // Si el inicio y el fin son iguales, solo mostramos una fecha
+                    var textoFechas = (inicio === finReal) ? 
+                                    'Día: ' + inicio : 
+                                    'Inicio: ' + inicio + '    Fin: ' + finReal;
+
+                    return { html: '<b>' + nombre + '</b><br>' + textoFechas };
                 }
             });
 

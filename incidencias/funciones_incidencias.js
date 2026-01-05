@@ -197,7 +197,7 @@ data.forEach(function (solicitud) {
     // Lógica para determinar el contenido de comentarios usando if/else if
     if (selectorTabla === "#TSolAbiertas tbody") {
         // Solo comentario de la solicitud
-        comentarios = `Comentarios Sol: ${solicitud.comentarios_solicitud || 'Sin comentarios'}`;
+        comentarios = `Coment. Solicitud: ${solicitud.comentarios_solicitud || 'Sin comentarios'}`;
     } else if (selectorTabla === "#TSolAceptadas tbody") {
         // Comentario de solicitud y respuesta
         comentarios = `<b>Coment. Sol:</b>${solicitud.comentarios_solicitud}<br><b>Coment. Resp: </b>${solicitud.comentarios_replica}`;

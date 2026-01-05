@@ -9,7 +9,7 @@ $accion = isset($_POST['accion']) ? $_POST['accion'] : '';
 // Consulta de las solicitudes de vacaciones aprobadas
 if ($opcion == "rrhh") {
     
-    $sql = "SELECT s.empleado, s.fesolicitud, s.feinicio, s.fefin, u.nombre
+    $sql = "SELECT s.empleado, s.fesolicitud, s.feinicio, DATE_ADD(s.fefin, INTERVAL 1 DAY) as fefin, u.nombre
             FROM solicitudes s
             INNER JOIN usuarios u ON s.empleado = u.noEmpleado
             WHERE s.estatus = 2 AND s.autorizaRH = 2 AND u.estatus = 1"; // Filtrar solo las aprobadas
