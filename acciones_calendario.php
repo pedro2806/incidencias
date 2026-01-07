@@ -4,6 +4,7 @@ include 'conn.php';
 mysqli_set_charset($conn, "utf8");
 $noEmpleado_cookie = isset($_COOKIE['noEmpleado']) ? $_COOKIE['noEmpleado'] : null;
 $opcion = $_GET["opcion"];
+$ing = $_GET["ing"];
 $accion = isset($_POST['accion']) ? $_POST['accion'] : '';
 
 // Consulta de las solicitudes de vacaciones aprobadas
@@ -13,7 +14,9 @@ if ($opcion == "rrhh") {
             FROM solicitudes s
             INNER JOIN usuarios u ON s.empleado = u.noEmpleado
             WHERE s.estatus = 2 AND s.autorizaRH = 2 AND u.estatus = 1"; // Filtrar solo las aprobadas
-    
+    if (!empty($ing)) {
+        $sql .= " AND s.empleado = " . intval($ing);
+    }
     $result = $conn->query($sql);
     
     $events = array();
@@ -128,6 +131,25 @@ if ($accion == 'ActividadesCalendarioPlaneadasfiltro') {
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Error al preparar la consulta: ' . $conn->error]);
     }
+}
+
+if ($opcion == 'llenaIngenieros') {        
+    header('Content-Type: application/json; charset=utf-8');
+
+    $sql = "SELECT noEmpleado, nombre FROM usuarios WHERE estatus = 1 ORDER BY nombre ASC";
+    $result = $conn->query($sql);
+
+    $ingenieros = [];
+    if ($result) {
+        while ($row = $result->fetch_assoc()) {
+            // Aseguramos que los datos vayan en UTF-8 para evitar errores con acentos o la "ñ"
+            $ingenieros[] =  $row; 
+            // Nota: Si tu base de datos ya está en UTF-8, basta con: $ingenieros[] = $row;
+        }
+    }
+
+    echo json_encode($ingenieros);
+    exit; // Importante para detener la ejecución aquí
 }
 
 // Cerrar la conexión

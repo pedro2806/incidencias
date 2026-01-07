@@ -25,6 +25,8 @@ include 'conn.php';
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
     
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 </head>
 
 <body id = "page-top">
@@ -71,7 +73,16 @@ include 'conn.php';
                         <div class = "card shadow mb-2">
                             <div class = "card-body">
                                 <div class = "row">
-    
+                                    <div class = "row">
+                                        <div class="col-md-4">
+                                            <label for="empleado" class="form-label">Empleado:</label>
+                                            <select name="empleado" id="empleado" class="form-select"></select>
+                                        </div>
+                                        <div class="col-md-3"><br>
+                                            <button class="btn btn-primary btn-sm" onclick="vacaciones()">Buscar</button>
+                                        </div>
+                                    </div>
+
                                     <div class="container mt-5">
                                         <h1>Calendario de Vacaciones</h1>
                                         <div id="calendar"></div>
@@ -125,15 +136,59 @@ include 'conn.php';
     <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.0.2/index.global.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.0.2/index.global.min.js"></script>
     
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', function() {
+        $(document).ready(function() {
+            vacaciones();
+            llenaIngenieros();
+
+            $('#empleado').select2({
+        placeholder: "Busca un ingeniero...",
+        allowClear: true,
+        width: '100%' // Para que se adapte al diseño
+    });
+        });
+
+        function llenaIngenieros() {
+            $.ajax({
+                url: 'acciones_calendario.php',
+                type: 'GET',
+                data: { opcion: 'llenaIngenieros' },
+                dataType: 'json',
+                success: function(data) {
+                    var empleadoSelect = $('#empleado');
+                    
+                    // Verificamos si realmente recibimos un arreglo
+                    if (Array.isArray(data)) {
+                        empleadoSelect.empty();
+                        empleadoSelect.append('<option value="" selected disabled>Seleccione un empleado</option>');
+                        
+                        $.each(data, function(index, empleado) {
+                            // Usamos una variable para construir el string (más limpio)
+                            var option = $('<option></option>')
+                                            .attr('value', empleado.noEmpleado)
+                                            .text(empleado.nombre);
+                            empleadoSelect.append(option);
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error al cargar:', error);
+                    // Es buena práctica avisar al usuario si algo falló
+                    alert("No se pudo cargar la lista de ingenieros.");
+                }
+            });
+        }
+
+        function vacaciones() {
+            ing = $('#empleado').val();
             var calendarEl = document.getElementById('calendar');
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 themeSystem: 'bootstrap5',
                 initialView: 'dayGridMonth',
-                events: 'acciones_calendario.php?opcion=rrhh', // Aquí llamas a tu PHP que devuelve las vacaciones en JSON
+                events: 'acciones_calendario.php?opcion=rrhh&ing=' + ing, // Aquí llamas a tu PHP que devuelve las vacaciones en JSON
                 editable: false,
                 eventDidMount: function(info) {
                     // Generar un color aleatorio para cada evento
@@ -161,7 +216,7 @@ include 'conn.php';
             });
 
             calendar.render();
-        });
+        }
     </script>
 </body>
 </html>
