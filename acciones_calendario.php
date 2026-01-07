@@ -14,7 +14,7 @@ if ($opcion == "rrhh") {
             FROM solicitudes s
             INNER JOIN usuarios u ON s.empleado = u.noEmpleado
             WHERE s.estatus = 2 AND s.autorizaRH = 2 AND u.estatus = 1"; // Filtrar solo las aprobadas
-    if (!empty($ing)) {
+    if (!empty($ing) || $ing != '' || $ing != null) {
         $sql .= " AND s.empleado = " . intval($ing);
     }
     $result = $conn->query($sql);
