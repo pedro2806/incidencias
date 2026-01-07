@@ -14,9 +14,13 @@ if ($opcion == "rrhh") {
             FROM solicitudes s
             INNER JOIN usuarios u ON s.empleado = u.noEmpleado
             WHERE s.estatus = 2 AND s.autorizaRH = 2 AND u.estatus = 1"; // Filtrar solo las aprobadas
-    if (!empty($ing) || $ing != '' || $ing != null) {
+    
+    // Validamos que no sea vacío, ni cero, ni el string "null"
+    if (!empty($ing) && $ing !== 'null' && $ing !== 'undefined') {
         $sql .= " AND s.empleado = " . intval($ing);
     }
+
+    //echo $sql;
     $result = $conn->query($sql);
     
     $events = array();
