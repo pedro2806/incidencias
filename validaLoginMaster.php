@@ -22,7 +22,7 @@ if ($accion == 'getPlaca') {
                     UNION
                     SELECT inv.placa, inv.modelo
                     FROM inventario inv
-                    INNER JOIN prestamos p ON inv.id_vehiculo = p.id_vehiculo
+                    INNER JOIN prestamos p ON inv.id_vehiculo = p.id_vehiculo AND p.estatus != 'FINALIZADO'
                     WHERE p.id_usuario = '".$id_usuario."'";
         $resultPlaca = $conn->query($sqlPlaca);
 
