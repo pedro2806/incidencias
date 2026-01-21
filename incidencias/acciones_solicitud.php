@@ -61,7 +61,7 @@ $noEmpleadoInc = isset($_POST["noEmpleadoInc"]) ? $_POST["noEmpleadoInc"] : $noE
         $noEmpleado = $idEmpleado_cookie;
 
         $sqlInsert = "INSERT INTO incidencias_solicitudes(solicita, responsable, fecha_solicitud, fecha_incidente, fecha_estimada_cierre, comentarios_solicitud, comentarios_replica, comentarios_cierre, fecha_replica, tipo, clasificacion, estatus)
-                                                    VALUES ('$noEmpleado_cookie', '$responsable', '$fecha', '$fechaIncidente', '$fechaCierre', '$comentarios', NULL, NULL, NULL, '$tipo', '$clasificacion', '$estatus')";
+                                                    VALUES ('$noEmpleado', '$responsable', '$fecha', '$fechaIncidente', '$fechaCierre', '$comentarios', NULL, NULL, NULL, '$tipo', '$clasificacion', '$estatus')";
         //echo $sqlInsert;
         if ($conn->query($sqlInsert) === TRUE) {
             $response = array('status' => 'success', 'message' => 'Incidencia registrada con éxito.');
