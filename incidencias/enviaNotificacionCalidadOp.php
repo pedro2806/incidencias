@@ -9,11 +9,11 @@
     
     $responsable = $_POST['responsable'];
     $tipo = $_POST['tipo'];
-    $solicita = $_COOKIE['noEmpleado'];
+    $solicita = $_COOKIE['id_usuario'];
     
-    $sqlCorreo = "SELECT correo as correoResponsable, nombre as nombreResponsable, (SELECT correo FROM usuarios WHERE noEmpleado = (SELECT jefe FROM usuarios WHERE noEmpleado = '$responsable')) AS correoJefe
+    $sqlCorreo = "SELECT correo as correoResponsable, nombre as nombreResponsable, (SELECT correo FROM usuarios WHERE id_usuario = (SELECT jefe FROM usuarios WHERE id_usuario = '$responsable')) AS correoJefe
                     FROM usuarios 
-                    WHERE noEmpleado = '$responsable'";
+                    WHERE id_usuario = '$responsable'";
                     //echo $sqlCorreo; 
     $resCorreo = $conn->query($sqlCorreo);
     

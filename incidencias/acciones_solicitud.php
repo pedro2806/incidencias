@@ -3,6 +3,7 @@
 include '../conn.php';
 mysqli_set_charset($conn, "utf8");
 $noEmpleado_cookie = isset($_COOKIE['noEmpleado']) ? $_COOKIE['noEmpleado'] : null;
+$idEmpleado_cookie = isset($_COOKIE['id_usuario']) ? $_COOKIE['id_usuario'] : null;
 $opcion = $_POST["opcion"];
 $noEmpleadoInc = isset($_POST["noEmpleadoInc"]) ? $_POST["noEmpleadoInc"] : $noEmpleado_cookie;
 //FUNCION PARA MOSTRAR LOS EMPLEADOS
@@ -16,7 +17,7 @@ $noEmpleadoInc = isset($_POST["noEmpleadoInc"]) ? $_POST["noEmpleadoInc"] : $noE
         while ($row = $result->fetch_assoc()) {
             $usuarios[] = array(
                 'nombre' => $row['nombre'],
-                'noEmpleado' => $row['noEmpleado']            
+                'noEmpleado' => $row['id_usuario']            
             );
         }
         
@@ -57,10 +58,10 @@ $noEmpleadoInc = isset($_POST["noEmpleadoInc"]) ? $_POST["noEmpleadoInc"] : $noE
         $estatus = 'Abierta';
         $comentarios = $_POST["comentarios"];
         $tipo = $_POST["tipo"];
-        $noEmpleado = $noEmpleado_cookie;
+        $noEmpleado = $idEmpleado_cookie;
 
         $sqlInsert = "INSERT INTO incidencias_solicitudes(solicita, responsable, fecha_solicitud, fecha_incidente, fecha_estimada_cierre, comentarios_solicitud, comentarios_replica, comentarios_cierre, fecha_replica, tipo, clasificacion, estatus)
-                                                    VALUES ('$noEmpleado', '$responsable', '$fecha', '$fechaIncidente', '$fechaCierre', '$comentarios', NULL, NULL, NULL, '$tipo', '$clasificacion', '$estatus')";
+                                                    VALUES ('$noEmpleado_cookie', '$responsable', '$fecha', '$fechaIncidente', '$fechaCierre', '$comentarios', NULL, NULL, NULL, '$tipo', '$clasificacion', '$estatus')";
         //echo $sqlInsert;
         if ($conn->query($sqlInsert) === TRUE) {
             $response = array('status' => 'success', 'message' => 'Incidencia registrada con éxito.');
@@ -118,10 +119,10 @@ $noEmpleadoInc = isset($_POST["noEmpleadoInc"]) ? $_POST["noEmpleadoInc"] : $noE
         if($noEmpleado_cookie == 403){
             $sql = "SELECT isol.*, u.nombre AS nombre_usuario, ur.nombre AS responsable, ic.clasificacion AS detalle_incidencia,
                     CASE
-                        WHEN isol.solicita = $noEmpleado_cookie THEN 'Yosolicito'
+                        WHEN isol.solicita = $idEmpleado_cookie THEN 'Yosolicito'
                         WHEN u.jefe = $noEmpleado_cookie THEN 'SolicitaMiPersonal'
                         WHEN ur.jefe = $noEmpleado_cookie THEN 'ResponsableMiPersonal'
-                        WHEN isol.responsable = $noEmpleado_cookie THEN 'SoyResponsable'
+                        WHEN isol.responsable = $idEmpleado_cookie THEN 'SoyResponsable'
                         ELSE 'otro'
                     END AS solicita
                     FROM incidencias_solicitudes isol
@@ -134,45 +135,45 @@ $noEmpleadoInc = isset($_POST["noEmpleadoInc"]) ? $_POST["noEmpleadoInc"] : $noE
         }else if($noEmpleado_cookie == 521){
             $sql = "SELECT isol.*, u.nombre AS nombre_usuario, ur.nombre AS responsable, ic.clasificacion AS detalle_incidencia,
                     CASE
-                        WHEN isol.solicita = $noEmpleado_cookie THEN 'Yosolicito'
+                        WHEN isol.solicita = $idEmpleado_cookie THEN 'Yosolicito'
                         WHEN u.jefe = $noEmpleado_cookie THEN 'SolicitaMiPersonal'
                         WHEN ur.jefe = $noEmpleado_cookie THEN 'ResponsableMiPersonal'
-                        WHEN isol.responsable = $noEmpleado_cookie THEN 'SoyResponsable'
+                        WHEN isol.responsable = $idEmpleado_cookie THEN 'SoyResponsable'
                         ELSE 'otro'
                     END AS solicita
                     FROM incidencias_solicitudes isol
-                    INNER JOIN usuarios u ON isol.solicita = u.noEmpleado
-                    INNER JOIN usuarios ur ON isol.responsable = ur.noEmpleado
+                    INNER JOIN usuarios u ON isol.solicita = u.id_usuario
+                    INNER JOIN usuarios ur ON isol.responsable = ur.id_usuario
                     INNER JOIN incidencias_clasificacion ic ON isol.clasificacion = ic.id
                     WHERE isol.estatus = 'Abierta'
                         AND (
-                            isol.solicita = $noEmpleado_cookie 
+                            isol.solicita = $idEmpleado_cookie 
                             OR u.jefe = $noEmpleado_cookie
                             OR ur.jefe = $noEmpleado_cookie
-                            OR isol.responsable = $noEmpleado_cookie
+                            OR isol.responsable = $idEmpleado_cookie
                         )
                     ORDER BY
                         isol.fecha_solicitud DESC";
         }else{
             $sql = "SELECT isol.*, u.nombre AS nombre_usuario, ur.nombre AS responsable,
                     CASE
-                        WHEN isol.solicita = $noEmpleado_cookie THEN 'Yosolicito'
+                        WHEN isol.solicita = $idEmpleado_cookie THEN 'Yosolicito'
                         WHEN u.jefe = $noEmpleado_cookie THEN 'SolicitaMiPersonal'
                         WHEN ur.jefe = $noEmpleado_cookie THEN 'ResponsableMiPersonal'
-                        WHEN isol.responsable = $noEmpleado_cookie THEN 'SoyResponsable'
+                        WHEN isol.responsable = $idEmpleado_cookie THEN 'SoyResponsable'
                         ELSE 'otro'
                     END AS solicita,
                     ic.clasificacion AS detalle_incidencia 
                     FROM incidencias_solicitudes isol 
-                    INNER JOIN usuarios u ON isol.solicita = u.noEmpleado
-                    INNER JOIN usuarios ur ON isol.responsable = ur.noEmpleado
+                    INNER JOIN usuarios u ON isol.solicita = u.id_usuario
+                    INNER JOIN usuarios ur ON isol.responsable = ur.id_usuario
                     INNER JOIN incidencias_clasificacion ic ON isol.clasificacion = ic.id 
                     WHERE isol.estatus = 'Abierta' 
                         AND (
-                            isol.solicita = $noEmpleado_cookie 
+                            isol.solicita = $idEmpleado_cookie 
                             OR u.jefe = $noEmpleado_cookie
                             OR ur.jefe = $noEmpleado_cookie
-                            OR isol.responsable = $noEmpleado_cookie
+                            OR isol.responsable = $idEmpleado_cookie
                         )
                     ORDER BY isol.fecha_solicitud DESC";
         }
@@ -210,22 +211,22 @@ $noEmpleadoInc = isset($_POST["noEmpleadoInc"]) ? $_POST["noEmpleadoInc"] : $noE
     if($opcion == "SolicitudesAceptadas"){
         $sql = "SELECT isol.*, u.nombre AS nombre_usuario, ur.nombre AS responsable, ic.clasificacion AS detalle_incidencia,
                 CASE
-                    WHEN isol.solicita = $noEmpleado_cookie THEN 'Yosolicito'
+                    WHEN isol.solicita = $idEmpleado_cookie THEN 'Yosolicito'
                     WHEN u.jefe = $noEmpleado_cookie THEN 'SolicitaMiPersonal'
                     WHEN ur.jefe = $noEmpleado_cookie THEN 'ResponsableMiPersonal'
-                    WHEN isol.responsable = $noEmpleado_cookie THEN 'SoyResponsable'
+                    WHEN isol.responsable = $idEmpleado_cookie THEN 'SoyResponsable'
                     ELSE 'otro'
                 END AS solicita
                 FROM incidencias_solicitudes isol
-                INNER JOIN usuarios u ON isol.solicita = u.noEmpleado
-                INNER JOIN usuarios ur ON isol.responsable = ur.noEmpleado
+                INNER JOIN usuarios u ON isol.solicita = u.id_usuario
+                INNER JOIN usuarios ur ON isol.responsable = ur.id_usuario
                 INNER JOIN incidencias_clasificacion ic ON isol.clasificacion = ic.id
                 WHERE isol.estatus = 'Aceptada'
                     AND (
-                        isol.solicita = $noEmpleado_cookie 
+                        isol.solicita = $idEmpleado_cookie 
                         OR u.jefe = $noEmpleado_cookie
                         OR ur.jefe = $noEmpleado_cookie
-                        OR isol.responsable = $noEmpleado_cookie
+                        OR isol.responsable = $idEmpleado_cookie
 
                     )
                 ORDER BY
@@ -263,15 +264,15 @@ $noEmpleadoInc = isset($_POST["noEmpleadoInc"]) ? $_POST["noEmpleadoInc"] : $noE
     if($opcion == "SolicitudesEnProceso"){
         $sql = "SELECT isol.*, u.nombre AS nombre_usuario, ur.nombre AS responsable, ic.clasificacion AS detalle_incidencia,
         CASE
-                    WHEN isol.solicita = $noEmpleado_cookie THEN 'Yosolicito'
+                    WHEN isol.solicita = $idEmpleado_cookie THEN 'Yosolicito'
                     WHEN u.jefe = $noEmpleado_cookie THEN 'SolicitaMiPersonal'
                     WHEN ur.jefe = $noEmpleado_cookie THEN 'ResponsableMiPersonal'
-                    WHEN isol.responsable = $noEmpleado_cookie THEN 'SoyResponsable'
+                    WHEN isol.responsable = $idEmpleado_cookie THEN 'SoyResponsable'
                     ELSE 'otro'
                 END AS solicita 
                 FROM incidencias_solicitudes isol 
-                INNER JOIN usuarios u ON isol.solicita = u.noEmpleado
-                INNER JOIN usuarios ur ON isol.responsable = ur.noEmpleado
+                INNER JOIN usuarios u ON isol.solicita = u.id_usuario
+                INNER JOIN usuarios ur ON isol.responsable = ur.id_usuario
                 INNER JOIN incidencias_clasificacion ic ON isol.clasificacion = ic.id 
                 WHERE isol.estatus = 'EnProceso' ORDER BY isol.fecha_solicitud DESC";
         //echo $sql;
@@ -307,22 +308,22 @@ $noEmpleadoInc = isset($_POST["noEmpleadoInc"]) ? $_POST["noEmpleadoInc"] : $noE
     if($opcion == "SolicitudesCerradas"){
         $sql = "SELECT isol.*, u.nombre AS nombre_usuario, ur.nombre AS responsable, ic.clasificacion AS detalle_incidencia,
                 CASE
-                    WHEN isol.solicita = $noEmpleado_cookie THEN 'Yosolicito'
+                    WHEN isol.solicita = $idEmpleado_cookie THEN 'Yosolicito'
                     WHEN u.jefe = $noEmpleado_cookie THEN 'SolicitaMiPersonal'
                     WHEN ur.jefe = $noEmpleado_cookie THEN 'ResponsableMiPersonal'
-                    WHEN isol.responsable = $noEmpleado_cookie THEN 'SoyResponsable'
+                    WHEN isol.responsable = $idEmpleado_cookie THEN 'SoyResponsable'
                     ELSE 'otro'
                 END AS solicita
                 FROM incidencias_solicitudes isol
-                INNER JOIN usuarios u ON isol.solicita = u.noEmpleado
-                INNER JOIN usuarios ur ON isol.responsable = ur.noEmpleado
+                INNER JOIN usuarios u ON isol.solicita = u.id_usuario
+                INNER JOIN usuarios ur ON isol.responsable = ur.id_usuario
                 INNER JOIN incidencias_clasificacion ic ON isol.clasificacion = ic.id
                 WHERE isol.estatus = 'Cerrada'
                     AND (
-                        isol.solicita = $noEmpleado_cookie 
+                        isol.solicita = $idEmpleado_cookie 
                         OR u.jefe = $noEmpleado_cookie
                         OR ur.jefe = $noEmpleado_cookie
-                        OR isol.responsable = $noEmpleado_cookie
+                        OR isol.responsable = $idEmpleado_cookie
 
                     )
                 ORDER BY
@@ -361,22 +362,22 @@ $noEmpleadoInc = isset($_POST["noEmpleadoInc"]) ? $_POST["noEmpleadoInc"] : $noE
 
         $sql = "SELECT isol.*, u.nombre AS nombre_usuario, ur.nombre AS responsable, ic.clasificacion AS detalle_incidencia,
         CASE
-                    WHEN isol.solicita = $noEmpleado_cookie THEN 'Yosolicito'
+                    WHEN isol.solicita = $idEmpleado_cookie THEN 'Yosolicito'
                     WHEN u.jefe = $noEmpleado_cookie THEN 'SolicitaMiPersonal'
                     WHEN ur.jefe = $noEmpleado_cookie THEN 'ResponsableMiPersonal'
-                    WHEN isol.responsable = $noEmpleado_cookie THEN 'SoyResponsable'
+                    WHEN isol.responsable = $idEmpleado_cookie THEN 'SoyResponsable'
                     ELSE 'otro'
                 END AS solicita 
                 FROM incidencias_solicitudes isol 
-                INNER JOIN usuarios u ON isol.solicita = u.noEmpleado
-                INNER JOIN usuarios ur ON isol.responsable = ur.noEmpleado
+                INNER JOIN usuarios u ON isol.solicita = u.id_usuario
+                INNER JOIN usuarios ur ON isol.responsable = ur.id_usuario
                 INNER JOIN incidencias_clasificacion ic ON isol.clasificacion = ic.id 
                 WHERE isol.estatus = 'Rechazada' 
                 AND (
-                            isol.solicita = $noEmpleado_cookie 
+                            isol.solicita = $idEmpleado_cookie 
                             OR u.jefe = $noEmpleado_cookie
                             OR ur.jefe = $noEmpleado_cookie
-                            OR isol.responsable = $noEmpleado_cookie
+                            OR isol.responsable = $idEmpleado_cookie
                         )
                 ORDER BY isol.fecha_solicitud DESC";
         //echo $sql;
@@ -427,10 +428,10 @@ $noEmpleadoInc = isset($_POST["noEmpleadoInc"]) ? $_POST["noEmpleadoInc"] : $noE
                 IFNULL(isol.comentarios_replica, 'S/C') AS comentarios_replica,
                 IFNULL(isol.comentarios_solicitud, 'S/C') AS comentarios_solicitud
                 FROM incidencias_solicitudes isol
-                INNER JOIN usuarios u ON isol.solicita = u.noEmpleado
+                INNER JOIN usuarios u ON isol.solicita = u.id_usuario
                 INNER JOIN departamento d ON u.departamento = d.id
                 INNER JOIN region r ON u.region = r.id
-                INNER JOIN usuarios ur ON isol.responsable = ur.noEmpleado
+                INNER JOIN usuarios ur ON isol.responsable = ur.id_usuario
                 INNER JOIN incidencias_clasificacion ic ON isol.clasificacion = ic.id
                 ORDER BY isol.fecha_solicitud DESC";
         //echo $sql;

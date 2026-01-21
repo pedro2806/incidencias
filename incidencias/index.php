@@ -439,8 +439,8 @@
                             icon: "success",
                             draggable: true
                         });
-                        ///enviaNotificacion(responsable, tipo);
-                        //window.location.href = 'seguimiento_incidencias';
+                        enviaNotificacion(responsable, tipo);
+                        window.location.href = 'seguimiento_incidencias';
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         Swal.fire({
