@@ -189,7 +189,7 @@ data.forEach(function (solicitud) {
     // Obtiene la acción y el estilo del mapa, con un fallback si no se encuentra
     const accion = accionesPorTipo[solicitud.solicita] || { 
         estilo: 'secondary', 
-        boton: '<span class="badge text-bg-primary">En espera de respuesta</span>' 
+        boton: '<span class="badge text-bg-info">En espera de respuesta</span>' 
     };
     
     let comentarios = '';
