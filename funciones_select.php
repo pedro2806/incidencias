@@ -210,10 +210,101 @@ if ($opcion == "llenaTablaCanceladas") {
 if ($opcion2 == "feSolicitudEdit") {
 
     $sqlcambiofeSo = "UPDATE solicitudes 
-                          SET fesolicitud = '$fesolicitud', Dgozados = $Dgozados
-                          WHERE empleado='$noEmpleado' AND id = $idSolicitud";
+                        SET fesolicitud = '$fesolicitud', Dgozados = $Dgozados
+                        WHERE empleado='$noEmpleado' AND id = $idSolicitud";
     $resultcambiofeSo = mysqli_query($conn, $sqlcambiofeSo);
     //echo $sqlcambiofeSo; 
     // Devolver los datos en formato JSON
     echo json_encode($resultcambiofeSo);
+}
+
+if ($opcion2 == "llenaSelectPersonal") {
+    // 1. Selecciona solo las columnas que necesitas (mejora el rendimiento)
+    $QPersonal = "SELECT noEmpleado, nombre FROM usuarios WHERE estatus = 1 ORDER BY nombre ASC";
+    
+    $resPersonal = mysqli_query($conn, $QPersonal);
+    
+    if (!$resPersonal) {
+        // 2. Manejo de errores más limpio para entornos JSON
+        die(json_encode(["error" => mysqli_error($conn)]));
+    }
+
+    $personal = array();
+    // 3. Usa MYSQLI_ASSOC para mayor claridad y menor consumo de memoria
+    while ($rowP = mysqli_fetch_array($resPersonal, MYSQLI_ASSOC)) {
+        $personal[] = array(
+            'noEmpleado' => $rowP["noEmpleado"],
+            'nombre'     => $rowP["nombre"]
+        );
+    }
+    
+    // 4. No olvides imprimir el resultado si esto lo consume un AJAX
+    echo json_encode($personal);
+}    
+
+if ($opcion2 == "llenaTablaVacaciones") {
+
+    $sql = "SELECT s.id, s.tipo, DATE_FORMAT(s.feinicio, '%d/%m/%Y') as feinicio, DATE_FORMAT(s.fefin, '%d/%m/%Y') as fefin, s.notasempleado, s.notajefe, s.comentarios, s.estatus, s.dias, s.autorizaRH, s.Dgozados, s.empleado as noEmp, u.nombre as empleado,s.fesolicitud,DATE_FORMAT(s.fesolicitud, '%Y-%m-%d') AS FechaBien,
+            (SELECT dias FROM diasvacaciones WHERE anio =(TIMESTAMPDIFF(YEAR,u.fechaIngreso,CURDATE()) ) )AS diasD, u.fechaIngreso
+                FROM solicitudes s  
+                INNER JOIN usuarios u ON s.empleado = u.noEmpleado
+                WHERE s.fesolicitud BETWEEN DATE_SUB(CURDATE(), INTERVAL 2 YEAR) AND CURDATE()
+                AND u.noEmpleado = $_POST[empleado]
+                ORDER BY s.fesolicitud DESC";
+
+    $res2 = mysqli_query($conn, $sql) or die(mysqli_error($conn));
+
+    // Crear un array para almacenar los resultados
+    $registros = array();
+    while ($row2 = mysqli_fetch_array($res2)) {
+
+        $FechaIng = substr($row2["fechaIngreso"], 4, 6);
+        $anio = date("Y");
+        $fechaCompara = $anio . $FechaIng;
+        $hoy = date("Y-m-d");
+        $noEmp = $row2["noEmp"];
+        if ($fechaCompara <= $hoy) {
+            $anioNext = $anio + 1;
+            $fechaPrev = $anio . $FechaIng;
+            $fechaNext = $anioNext . $FechaIng;
+            $QdiasSol = "SELECT IFNULL(SUM(dias), '0') as diasSol FROM solicitudes WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext' AND tipo = 1";
+            $resdiasSol = mysqli_query($conn, $QdiasSol) or die(mysqli_error($conn));
+
+            while ($rowSol = mysqli_fetch_array($resdiasSol)) {
+                $diasSol = $rowSol["diasSol"];
+            }
+        } else {
+            $anioPrev = $anio - 1;
+            $fechaPrev = $anioPrev . $FechaIng;
+            $fechaNext = $anio . $FechaIng;
+
+            $QdiasSol = "SELECT SUM(dias) as diasSol FROM solicitudes WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext' AND tipo = 1";
+            $resdiasSol = mysqli_query($conn, $QdiasSol) or die(mysqli_error($conn));
+
+            while ($rowSol = mysqli_fetch_array($resdiasSol)) {
+                $diasSol = $rowSol["diasSol"];
+            }
+        }
+
+        $registros[] = array(
+            'id' => $row2["id"],
+            'tSolicitud' => $row2["tipo"],
+            'Finicio' => $row2["feinicio"],
+            'FFin' => $row2["fefin"],
+            'fSolicitud' => $row2["fesolicitud"],
+            'ComentariosE' => $row2["notasempleado"],
+            'ComentariosJ' => $row2["notajefe"],
+            'Comentarios' => $row2["comentarios"],
+            'Estatus' => $row2["estatus"],
+            'usuario' => $row2["empleado"],
+            'noEmpleado' => $row2["noEmp"],
+            'noDias' => $row2["dias"],
+            'autorizaRH' => $row2["autorizaRH"],
+            'FechaBien' => $row2["FechaBien"],
+            'Dgozados' => $row2["Dgozados"],
+            'diasDisp' => $row2["diasD"] - $diasSol
+        );
+    }
+    // Devolver los datos en formato JSON
+    echo json_encode($registros);
 }

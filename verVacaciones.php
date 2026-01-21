@@ -64,11 +64,14 @@ include 'conn.php';
                                         <a class="nav-link active btn-outline-warning text-dark" type="button" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Lista de solicitudes</a>
                                     </li>
                                 </ul><br>
-                                                                        
+                                <select name="selectPersonal" id="selectPersonal">
+                                    <option value="0">-- Selecciona un empleado --</option>
+                                </select>
+                                <button type="button" class="btn btn-primary" onclick="llenaTablaVacaciones()">Buscar</button>
                                 <div class="tab-content" id="myTabContent">                                    
                                     <br>
                                     <div class="tab-pane border-left-warning fade show active in" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                        <table class="table table-sm table-striped" id = "TporAutorizar" name = "TporAutorizar">
+                                        <table class="table table-sm table-striped" id = "TvacacionesPersonal" name = "TvacacionesPersonal">
                                             <thead class = "table-primary">
                                                 <tr>
                                                     <th scope="col" width="24%">Empleado</th>
@@ -135,9 +138,9 @@ include 'conn.php';
     
         $(document).ready(function () {
                         
-            llenaTablaPorAutorizar();
+            llenaSelectPersonal();
             
-            $('#Tautorizadas').DataTable({
+            $('#TvacacionesPersonal').DataTable({
                 "language": {
                     "decimal": "",
                     "emptyTable": "No hay información disponible",
@@ -180,19 +183,18 @@ include 'conn.php';
             
         });
         
-        function llenaTablaAutorizadas() {
+        function llenaTablaVacaciones() {
             
-                    opcion = "llenaTablaAutorizadas";
-                    cookieNoEmpleado="403";
-                    cookieRol="1";
+                    opcion = "llenaTablaVacaciones";
+                    empleado = $('#selectPersonal').val();
                     $.ajax({
                         url: 'funciones_select.php', // La URL del script PHP que obtendrá los datos
-                        method: 'GET',
+                        method: 'POST',
                         dataType: 'json', //TIPO DE DATO JSON
-                        data:{opcion, cookieNoEmpleado, cookieRol}, //Los parametros que se envian
+                        data:{opcion, empleado}, //Los parametros que se envian
                         success: function(registros) {
                             
-                            var table = $('#Tautorizadas').DataTable();
+                            var table = $('#TvacacionesPersonal').DataTable();
                             
                             table.clear().draw();
                             
@@ -234,10 +236,7 @@ include 'conn.php';
                                     Registro.FechaBien,
                                     '<span class="badge text-bg-dark"><b>' + Registro.noDias + ' días</b></span><span class="badge text-bg-light"><b>' + Registro.Dgozados + ' gozados</b></span><span class="badge text-bg-warning"><b>' + Registro.diasDisp + ' Rest</b></span><br> <b>' + Registro.Finicio + ' - ' + Registro.FFin +'</b>',
                                     '<p style="margin-bottom: 0px; margin-top: 0px;"><small>Grales:' + Registro.Comentarios + '</small></p><p style="margin-bottom: 0px; margin-top: 0px;"><small>Colab:' + Registro.ComentariosE + '</small></p><p style="margin-bottom: 0px;"><small>Jefe:' + Registro.ComentariosJ + '</small></p>',
-                                    EstatusBadge+EstatusRH,
-                                    '<a class="btn btn-outline-primary btn-circle btn-sm" href="#" data-toggle="modal" data-target="#modalEdita" onClick="llenaInfoEditar('+ Registro.id+',\''+ Registro.fSolicitud+'\', '+Registro.noEmpleado+',\''+ Registro.usuario+'\', '+ Registro.Dgozados+')">'+
-                                        '<i class="fas fa-edit"></i>'+
-                                    '</a>'
+                                    EstatusBadge+EstatusRH
                                     ]).draw(false);
                             });
                         },
@@ -248,12 +247,26 @@ include 'conn.php';
                     });
         }
         
-        function llenaInfo(estatusRH, id, estatus, accion) {
-            $('#idSolicitud').val(id);
-            $('#estatusSol').val(estatus);
-            $('#estatusRH').val(estatusRH);
-            $('#accion').val(accion);
-        }
+        function llenaSelectPersonal() {
+            opcion = "llenaSelectPersonal";
+            $.ajax({
+                url: 'funciones_select.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {opcion},
+                success: function(registros) {
+                    var select = $('#selectPersonal');
+                    select.empty();
+                    select.append('<option value="0">-- Selecciona un empleado --</option>');
+                    registros.forEach(function(Registro) {
+                        select.append('<option value="' + Registro.noEmpleado + '">' + Registro.nombre + '</option>');
+                    });
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error al obtener el personal:', textStatus, errorThrown);
+                }
+            });
+        }   
         
     </script>
 </body>

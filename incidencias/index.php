@@ -281,7 +281,7 @@
                                             <div class="col-sm-4 mb-0">
                                                 <div class="mb-0">
                                                     <label class="form-label">Cliente</label>
-                                                    <textarea class="form-control" id="comentarios" name="comentarios" rows="3"></textarea>
+                                                    <textarea class="form-control" id="cliente" name="cliente" rows="3"></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -439,8 +439,8 @@
                             icon: "success",
                             draggable: true
                         });
-                        enviaNotificacion(responsable, tipo);
-                        window.location.href = 'seguimiento_incidencias';
+                        ///enviaNotificacion(responsable, tipo);
+                        //window.location.href = 'seguimiento_incidencias';
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         Swal.fire({

@@ -132,8 +132,8 @@ function obtenerYRenderizarSolicitudes(opcion, tablaSeleccionada) {
 
 // FUNCIÓN PARA RENDERIZAR LA TABLA
 function renderizarTabla(selectorTabla, data) {
-    const tabla = $(selectorTabla);
-    tabla.empty(); // Limpia el contenido actual de la tabla
+    var tabla = $(selectorTabla).closest('table').DataTable();
+    tabla.clear().draw();
 
     // Mapa de acciones para evitar if/else anidados
 
@@ -212,26 +212,31 @@ data.forEach(function (solicitud) {
 
     const comentariosEscapados = comentarios.replace(/"/g, "&quot;"); // Escapa comillas dobles usando entidad HTML
     
+    if(solicitud.solicita === 'Yosolicito'){
+        QuienSolicita = '<span class="badge text-bg-primary">' + solicitud.nombre_usuario + '</span>';
+    }else{
+        QuienSolicita = '<span class="badge text-bg-secondary">' + solicitud.nombre_usuario + '</span>';
+    }
+
+    
     // Construcción de la fila de la tabla
-    const fila = `
-        <tr class='table-${accion.estilo}'>
-            <td>${solicitud.nombre_usuario}</td>
-            <td>${solicitud.responsable}</td>
-            <td>${solicitud.fecha_incidente}</td>
-            <td>${solicitud.fecha_cierre}</td>
-            <td>${solicitud.tipo}</td>
-            <td>${solicitud.detalle_incidencia}</td>
-            <td>
-                <button class='btn btn-outline-primary btn-sm' 
+    const fila = [        
+            QuienSolicita,
+            solicitud.responsable,
+            solicitud.fecha_incidente,
+            solicitud.fecha_cierre,
+            solicitud.tipo,
+            solicitud.detalle_incidencia,
+            `<button class='btn btn-outline-primary btn-sm' 
                     onclick='verComentarios("${comentariosEscapados}")'>
                 <i class='fas fa-comments'></i>
-            </button>
-            </td>
-            <td>${botonFinal}</td>
-        </tr>`;
+            </button>`,            
+            botonFinal
+        ];
     
-    tabla.append(fila);
-});
+    tabla.row.add(fila);
+    });
+    tabla.draw();
 
 }
 
