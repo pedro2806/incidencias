@@ -227,8 +227,9 @@ data.forEach(function (solicitud) {
             solicitud.fecha_cierre,
             solicitud.tipo,
             solicitud.detalle_incidencia,
-            `<button class='btn btn-outline-primary btn-sm' 
-                    onclick='verComentarios("${comentariosEscapados}")'>
+            `<button class='btn btn-outline-primary btn-sm'
+                    data-comentarios="${comentariosEscapados}"
+                    onclick='verComentarios(this)'>
                 <i class='fas fa-comments'></i>
             </button>`,            
             botonFinal
@@ -326,6 +327,7 @@ function aplicarEstiloDataTable(tablaId, ordenColumna) {
 
 //FUNCION PARA VER COMENTARIOS DE LA INCIDENCIA
 function verComentarios(comentarios) {
+    comentarios = comentarios.getAttribute('data-comentarios');
     Swal.fire({
         title: 'Comentarios de la Incidencia',
         html: comentarios,

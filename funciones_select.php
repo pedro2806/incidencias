@@ -308,3 +308,41 @@ if ($opcion2 == "llenaTablaVacaciones") {
     // Devolver los datos en formato JSON
     echo json_encode($registros);
 }
+
+if ($opcion2 == "llenaTablaServicios") {
+
+    $sqlEnServicio = "SELECT ot.*, DATE(ot.start_date) as FechaPlaneadaInicioDate, u.nombre, IFNULL(u2.nombre,'') AS nombre2, IFNULL(u3.nombre,'') AS nombre3, 
+                    comment_logistic, estatus_logistic,
+                    (SELECT departamento FROM usuarios WHERE noEmpleado = ot.capturado_por) as depto, reprogramado, motivo_reprogramacion, motivo_cancelacion
+            FROM servicios_planeados_mess ot
+            inner join usuarios u on ot.engineer = u.id_usuario 
+            LEFT join usuarios u2 on ot.engineer2 = u2.id_usuario
+            LEFT join usuarios u3 on ot.engineer3 = u3.id_usuario             
+            WHERE $_POST[empleado] IN (ot.engineer, ot.engineer2, ot.engineer3)
+            ORDER BY ot.start_date DESC";  
+    
+    $resdiasSol = mysqli_query($conn, $sqlEnServicio) or die(mysqli_error($conn));
+
+    while ($rowSol = mysqli_fetch_array($resdiasSol)) {
+        $servicios[] = array(
+            'id' => $rowSol["id"],
+            'service_order' => $rowSol["service_order"],
+            'cliente' => $rowSol["ds_cliente"],
+            'ot' => $rowSol["order_code"],
+            'start_date' => $rowSol["start_date"],
+            'area' => $rowSol["area"],
+            'FechaPlaneadaInicioDate' => $rowSol["FechaPlaneadaInicioDate"],
+            'engineer' => $rowSol["nombre"],
+            'engineer2' => $rowSol["nombre2"],
+            'engineer3' => $rowSol["nombre3"],
+            'estatus' => $rowSol["estatus"],            
+            'depto' => $rowSol["depto"],
+            'reprogramado' => $rowSol["reprogramado"],
+            'motivo_reprogramacion' => $rowSol["motivo_reprogramacion"],
+            'ciudad' => $rowSol["city"]
+        );
+    }
+    // Devolver los datos en formato JSON
+    echo json_encode($servicios);
+
+}

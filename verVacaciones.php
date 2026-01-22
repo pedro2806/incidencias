@@ -24,6 +24,7 @@ include 'conn.php';
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
     <!--<link href="https://cdn.datatables.net/1.13.2/css/jquery.dataTables.min.css" rel="stylesheet" crossorigin="anonymous">-->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
@@ -59,18 +60,30 @@ include 'conn.php';
                     <div class = "card shadow mb-2">
                         <div class = "card-body">
                             <div class = "row">
+                                <br>
+                                <div class="col-md-6">
+                                    <label for="filtro-ingeniero" class="mr-1">Filtrar por Ingeniero:</label>
+                                    <select id="filtro-ingeniero" name="filtro-ingeniero" class="form-select mr-1">
+                                        <option value="0">Selecciona...</option>
+                                    </select>                             
+                                </div>
+                                <div class="col-md-1 d-flex align-items-end">
+                                    <button class="btn btn-primary btn-sm w-100" style="margin-top: 24px;" onclick="llenaTablaVacaciones()"><i class="fas fa-fw fa-filter"></i></button>
+                                </div>
+                            </div>
+                                <br>
                                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                                     <li class="nav-item">
-                                        <a class="nav-link active btn-outline-warning text-dark" type="button" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Lista de solicitudes</a>
+                                        <a class="nav-link active btn-outline-warning text-dark" type="button" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Lista Vacaciones</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link btn-outline-success text-dark" id="autorizadas-tab" data-toggle="tab" href="#autorizadas" role="tab" aria-controls="autorizadas" aria-selected="false">Servicios</a>
                                     </li>
                                 </ul><br>
-                                <select name="selectPersonal" id="selectPersonal">
-                                    <option value="0">-- Selecciona un empleado --</option>
-                                </select>
-                                <button type="button" class="btn btn-primary" onclick="llenaTablaVacaciones()">Buscar</button>
-                                <div class="tab-content" id="myTabContent">                                    
-                                    <br>
-                                    <div class="tab-pane border-left-warning fade show active in" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+                                <div class="tab-content" id="myTabContent">                                      
+                                    <div class="tab-pane border-left-warning fade show active in" id="home" role="tabpanel" aria-labelledby="home-tab">                                                                         
+                                        <br>
                                         <table class="table table-sm table-striped" id = "TvacacionesPersonal" name = "TvacacionesPersonal">
                                             <thead class = "table-primary">
                                                 <tr>
@@ -86,6 +99,30 @@ include 'conn.php';
                                             </tbody>
                                         </table>
                                     </div>
+                                    <div class="tab-pane border-left-success fade" id="autorizadas" role="tabpanel" aria-labelledby="autorizadas-tab">                                        
+                                        <div class="row">
+                                            <div class="col-xl-12">                                            
+                                                <table id="TSolAbiertas" class="table table-hover" style="width:100%">
+                                                    <thead class="table-primary">
+                                                        <tr>                                                        
+                                                            <th>Ingeniero</th>
+                                                            <th>Area</th>
+                                                            <th>OT</th>
+                                                            <th>Fecha Planeada</th>
+                                                            <th>Cliente</th>
+                                                            <th>Ciudad</th>                                                            
+                                                            <th>Estatus</th>                                                            
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+
                                 </div>
                                 
                             
@@ -132,11 +169,17 @@ include 'conn.php';
     <script src = "js/sb-admin-2.min.js"></script>    
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
     <!--<script src="https://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js" defer="defer"></script>-->
-    
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>        
 
     <script type="text/javascript">
     
         $(document).ready(function () {
+
+            $('#filtro-ingeniero').select2({
+                placeholder: "Busca un ingeniero...",
+                allowClear: true,
+                width: '100%' // Para que se adapte al diseño
+            });
                         
             llenaSelectPersonal();
             
@@ -186,7 +229,7 @@ include 'conn.php';
         function llenaTablaVacaciones() {
             
                     opcion = "llenaTablaVacaciones";
-                    empleado = $('#selectPersonal').val();
+                    empleado = $('#filtro-ingeniero').val();
                     $.ajax({
                         url: 'funciones_select.php', // La URL del script PHP que obtendrá los datos
                         method: 'POST',
@@ -245,6 +288,37 @@ include 'conn.php';
                             //console.error('Error al obtener los equipos:', textStatus, errorThrown);
                         }
                     });
+
+            llenaTablaServicios();        
+        }
+
+        function llenaTablaServicios() {
+            opcion = "llenaTablaServicios";
+            empleado = $('#filtro-ingeniero').val();
+            $.ajax({
+                url: 'funciones_select.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {opcion, empleado},
+                success: function(registros) {
+                    var table = $('#TSolAbiertas').DataTable();
+                    table.clear().draw();
+                    registros.forEach(function(Registro) {                        
+                        table.row.add([
+                            Registro.engineer +'<br>'+ Registro.engineer2 +'<br>'+ Registro.engineer3,
+                            Registro.area,
+                            Registro.ot,
+                            Registro.start_date,
+                            Registro.cliente,
+                            Registro.ciudad,
+                            Registro.estatus,                            
+                        ]).draw(false);
+                    });
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error al obtener los servicios:', textStatus, errorThrown);
+                }
+            });
         }
         
         function llenaSelectPersonal() {
@@ -255,9 +329,9 @@ include 'conn.php';
                 dataType: 'json',
                 data: {opcion},
                 success: function(registros) {
-                    var select = $('#selectPersonal');
+                    var select = $('#filtro-ingeniero');
                     select.empty();
-                    select.append('<option value="0">-- Selecciona un empleado --</option>');
+                    select.append('<option value="0">Selecciona un empleado</option>');
                     registros.forEach(function(Registro) {
                         select.append('<option value="' + Registro.noEmpleado + '">' + Registro.nombre + '</option>');
                     });
