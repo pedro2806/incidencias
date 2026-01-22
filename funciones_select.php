@@ -318,7 +318,7 @@ if ($opcion2 == "llenaTablaServicios") {
             inner join usuarios u on ot.engineer = u.id_usuario 
             LEFT join usuarios u2 on ot.engineer2 = u2.id_usuario
             LEFT join usuarios u3 on ot.engineer3 = u3.id_usuario             
-            WHERE $_POST[empleado] IN (ot.engineer, ot.engineer2, ot.engineer3)
+            WHERE (select id_usuario from usuarios where noEmpleado = $_POST[empleado]) IN (ot.engineer, ot.engineer2, ot.engineer3)
             ORDER BY ot.start_date DESC";  
     
     $resdiasSol = mysqli_query($conn, $sqlEnServicio) or die(mysqli_error($conn));
