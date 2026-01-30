@@ -265,7 +265,11 @@
                                             <div class="col-sm-4 mb-0">
                                                 <label>Fecha planeada de cierre</label>
                                                 <input type="date" class="form-control" id="fechaCierre" name="fechaCierre">
-                                            </div>                                            
+                                            </div>
+                                            <div class="col-sm-4 mb-0">
+                                                <label>Ot/Ov</label>
+                                                <input type="text" class="form-control" id="otOv" name="otOv">
+                                            </div>
                                         </div>
 
                                         <div class="row card-header border-left-primary">                                           
@@ -427,12 +431,13 @@
             var fechaIncidente = formData["fechaIncidente"];
             var fechaCierre = formData["fechaCierre"];
             var comentarios = formData["comentarios"];
+            var otOv = formData["otOv"];
                         
                 $.ajax({
                     url: 'acciones_solicitud.php',
                     method: 'POST',
                     dataType: 'json',
-                    data: {opcion, responsable, tipo, clasificacion, fechaIncidente, fechaCierre, comentarios},
+                    data: {opcion, responsable, tipo, clasificacion, fechaIncidente, fechaCierre, comentarios, otOv},
                     success: function(data) {
                         Swal.fire({
                             title: "La solicitúd se proceso con éxito!",
@@ -468,7 +473,7 @@
                 url: 'acciones_solicitud.php',
                 method: 'POST',
                 dataType: 'json',
-                data: {opcion, noEmpleadoInc},
+                data: {opcion, responsable: noEmpleadoInc},
                 success: function(data) {
                     $('#lblArea').text(data.area);
                     $('#lblRegion').text(data.region);

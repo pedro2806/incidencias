@@ -58,10 +58,11 @@ $noEmpleadoInc = isset($_POST["noEmpleadoInc"]) ? $_POST["noEmpleadoInc"] : $noE
         $estatus = 'Abierta';
         $comentarios = $_POST["comentarios"];
         $tipo = $_POST["tipo"];
+        $otOv = $_POST["otOv"];
         $noEmpleado = $idEmpleado_cookie;
 
-        $sqlInsert = "INSERT INTO incidencias_solicitudes(solicita, responsable, fecha_solicitud, fecha_incidente, fecha_estimada_cierre, comentarios_solicitud, comentarios_replica, comentarios_cierre, fecha_replica, tipo, clasificacion, estatus)
-                                                    VALUES ('$noEmpleado', '$responsable', '$fecha', '$fechaIncidente', '$fechaCierre', '$comentarios', NULL, NULL, NULL, '$tipo', '$clasificacion', '$estatus')";
+        $sqlInsert = "INSERT INTO incidencias_solicitudes(solicita, responsable, fecha_solicitud, fecha_incidente, fecha_estimada_cierre, comentarios_solicitud, comentarios_replica, comentarios_cierre, fecha_replica, tipo, clasificacion, estatus, ot_ov)
+                                                    VALUES ('$noEmpleado', '$responsable', '$fecha', '$fechaIncidente', '$fechaCierre', '$comentarios', NULL, NULL, NULL, '$tipo', '$clasificacion', '$estatus', '$otOv')";
         //echo $sqlInsert;
         if ($conn->query($sqlInsert) === TRUE) {
             $response = array('status' => 'success', 'message' => 'Incidencia registrada con éxito.');
@@ -410,10 +411,11 @@ $noEmpleadoInc = isset($_POST["noEmpleadoInc"]) ? $_POST["noEmpleadoInc"] : $noE
     }
 
     if($opcion == "areaRegion"){
+        $responsable = $_POST["responsable"];
         $sql = "SELECT departamento.departamento as area, region.region FROM usuarios 
                 INNER JOIN departamento ON usuarios.departamento = departamento.id
                 INNER JOIN region ON usuarios.region = region.id
-                WHERE noEmpleado  = $noEmpleadoInc";
+                WHERE id_usuario  = $responsable";
         $result = $conn->query($sql);
         $data = $result->fetch_assoc();
 
