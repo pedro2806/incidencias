@@ -275,7 +275,15 @@ $noEmpleadoInc = isset($_POST["noEmpleadoInc"]) ? $_POST["noEmpleadoInc"] : $noE
                 INNER JOIN usuarios u ON isol.solicita = u.id_usuario
                 INNER JOIN usuarios ur ON isol.responsable = ur.id_usuario
                 INNER JOIN incidencias_clasificacion ic ON isol.clasificacion = ic.id 
-                WHERE isol.estatus = 'EnProceso' ORDER BY isol.fecha_solicitud DESC";
+                WHERE isol.estatus = 'EnProceso'
+                AND (
+                        isol.solicita = $idEmpleado_cookie 
+                        OR u.jefe = $noEmpleado_cookie
+                        OR ur.jefe = $noEmpleado_cookie
+                        OR isol.responsable = $idEmpleado_cookie
+
+                    )
+                ORDER BY isol.fecha_solicitud DESC";
         //echo $sql;
         $result = $conn->query($sql);
         
