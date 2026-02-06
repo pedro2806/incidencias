@@ -438,7 +438,7 @@ $noEmpleadoInc = isset($_POST["noEmpleadoInc"]) ? $_POST["noEmpleadoInc"] : $noE
                 IFNULL(isol.comentarios_replica, 'S/C') AS comentarios_replica,
                 IFNULL(isol.comentarios_solicitud, 'S/C') AS comentarios_solicitud,                
                 CASE
-                WHEN isol.estatus = 'Abierta' THEN 'text-bg-secondary'
+                WHEN isol.estatus = 'Abierta' THEN 'text-bg-warning'
                 WHEN isol.estatus = 'Aceptada' THEN 'text-bg-primary'
                 WHEN isol.estatus = 'EnProceso' THEN 'text-bg-info'
                 WHEN isol.estatus = 'Cerrada' THEN 'text-bg-success'
