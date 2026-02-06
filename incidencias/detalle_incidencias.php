@@ -67,7 +67,7 @@
                                                     <th>Tipo</th>
                                                     <th>Detalle</th>
                                                     <th>Cometarios</th>
-                                                    <th>Acciones</th>
+                                                    <th>Estatus</th>
                                                 </tr>
                                             </thead>
                                             <tbody>

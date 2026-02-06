@@ -174,7 +174,15 @@ function renderizarTabla(selectorTabla, data) {
                 'ResponsableMiPersonal': { estilo: 'light', boton: '<span class="badge text-bg-info">En espera de respuesta</span>' },
                 'SolicitaMiPersonal': { estilo: 'light', boton: '<span class="badge text-bg-info">En espera de respuesta</span>' },
             };
-        } else {
+        } else if (selectorTabla === "#tablaDetalleIncidencias tbody") {
+            return {
+                'Yosolicito': { estilo: 'light', boton: `<span class="badge text-bg-secondary"></span>` },
+                'SoyResponsable': { estilo: 'light', boton: '<span class="badge text-bg-secondary">Sin acción</span>' },
+                'ResponsableMiPersonal': { estilo: 'light', boton: '<span class="badge text-bg-info">En espera de respuesta</span>' },
+                'SolicitaMiPersonal': { estilo: 'light', boton: '<span class="badge text-bg-info">En espera de respuesta</span>' },
+            };
+        }   
+        else {
             // Fallback para tablas desconocidas
             return {
                 'Yosolicito': { estilo: 'light', boton: '<span class="badge text-bg-secondary">Sin acción</span>' },
@@ -208,8 +216,12 @@ data.forEach(function (solicitud) {
 
     // Reemplaza el ID en el HTML del botón
     // Asegúrate de que 'this.dataset.id' sea un marcador de posición válido en accion.boton
-    const botonFinal = accion.boton.replace('this.dataset.id', solicitud.id_solicitud);
-
+    botonFinal = accion.boton.replace('this.dataset.id', solicitud.id_solicitud);
+    if(selectorTabla === "#tablaDetalleIncidencias tbody"){
+        botonFinal = accion.boton.replace('this.dataset.id', solicitud.id_solicitud);
+    }else{
+        botonFinal = accion.boton.replace('this.dataset.id', solicitud.id_solicitud);
+    }
     const comentariosEscapados = comentarios.replace(/"/g, "&quot;"); // Escapa comillas dobles usando entidad HTML
     
     if(solicitud.solicita === 'Yosolicito'){
@@ -231,8 +243,10 @@ data.forEach(function (solicitud) {
                     data-comentarios="${comentariosEscapados}"
                     onclick='verComentarios(this)'>
                 <i class='fas fa-comments'></i>
-            </button>`,            
-            botonFinal
+            </button>`,
+            selectorTabla === "#tablaDetalleIncidencias tbody" ? 
+                `<span class="badge ${solicitud.estilo_estatus}">${solicitud.estatus}</span>` :     
+                botonFinal
         ];
     
     tabla.row.add(fila);

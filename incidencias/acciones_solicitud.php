@@ -436,7 +436,15 @@ $noEmpleadoInc = isset($_POST["noEmpleadoInc"]) ? $_POST["noEmpleadoInc"] : $noE
                 d.departamento AS departamento_usuario, r.region AS region_usuario,
                 IFNULL(isol.comentarios_cierre, 'S/C') AS comentarios_cierre,
                 IFNULL(isol.comentarios_replica, 'S/C') AS comentarios_replica,
-                IFNULL(isol.comentarios_solicitud, 'S/C') AS comentarios_solicitud
+                IFNULL(isol.comentarios_solicitud, 'S/C') AS comentarios_solicitud,                
+                CASE
+                WHEN isol.estatus = 'Abierta' THEN 'text-bg-secondary'
+                WHEN isol.estatus = 'Aceptada' THEN 'text-bg-primary'
+                WHEN isol.estatus = 'EnProceso' THEN 'text-bg-info'
+                WHEN isol.estatus = 'Cerrada' THEN 'text-bg-success'
+                WHEN isol.estatus = 'Rechazada' THEN 'text-bg-danger'
+                ELSE 'text-bg-secondary'
+                END AS estilo_estatus
                 FROM incidencias_solicitudes isol
                 INNER JOIN usuarios u ON isol.solicita = u.id_usuario
                 INNER JOIN departamento d ON u.departamento = d.id
@@ -467,7 +475,8 @@ $noEmpleadoInc = isset($_POST["noEmpleadoInc"]) ? $_POST["noEmpleadoInc"] : $noE
                 'nombre_usuario' => $row['nombre_usuario'],
                 'detalle_incidencia' => $row['detalle_incidencia'],
                 'departamento_usuario' => $row['departamento_usuario'],
-                'region_usuario' => $row['region_usuario']);
+                'region_usuario' => $row['region_usuario'],
+                'estilo_estatus' => $row['estilo_estatus']);
         }
         
         // Devolver los eventos en formato JSON
