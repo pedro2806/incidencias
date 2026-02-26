@@ -53,17 +53,8 @@
         }
     </style>
 
-<?php
-    $usuariosRegistran = array(212, 14, 42, 161, 403, 183, 521, 276, 523, 71, 5, 360, 487, 19, 37, 206, 263);
-
-    if (in_array($_COOKIE['noEmpleado'], $usuariosRegistran)) {
-        // El usuario tiene permiso para ver la página
-    } else {
-        header("Location: seguimiento_incidencias");        
-    }
-?>
+<!-- -Usuarios con Acceso (212, 14, 42, 161, 403, 183, 521, 276, 523, 71, 5, 360, 487, 19, 37, 206, 263)-->
 </head>
-
 <body id="page-top">
 
     <!-- Page Wrapper -->
@@ -319,7 +310,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; MESS 2025</span>
+                        <span>Copyright &copy; MESS <?php echo date('Y'); ?></span>
                     </div>
                 </div>
             </footer>
@@ -374,8 +365,12 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- Funciones Globales -->
+    <script src="../loginMaster/funcionesGlobales.js"></script>
+
     <script type="text/javascript">
         $(document).ready(function() {
+            verificarAccesoRegistro();
             empleadoSolicita();
             // Inicializa Select2 en el campo de responsable
             $('#slcRespoonsable').select2({            
@@ -545,6 +540,7 @@
             let parts = value.split("; " + name + "=");
             if (parts.length === 2) return parts.pop().split(";").shift();
         }
+
         function evaluarIncidencia() {
 
             const respuestasSi = formFiltro.querySelectorAll('input[type="radio"]:checked[value="si"]');
@@ -558,6 +554,44 @@
                 $('#divformIncidencias').hide();
                 $('#mensajeAlerta').show();
                 $('#formFiltro').hide();
+            }
+        }
+
+        // Función para validar las opciones de acceso a las diferentes funcionalidades del sistema
+        async function validaOpciones2(sistema, opcion) {
+            return new Promise((resolve) => {
+                $.ajax({
+                    url: '/loginMaster/acciones_globales.php',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        accion: 'ValidarPermisos',
+                        sistema: sistema,
+                        opcion: opcion,
+                        noEmpleado: (document.cookie.match('(^|;)\\s*noEmpleado\\s*=\\s*([^;]+)') || [])[2] || ''
+                    },
+                    success: function(response) {
+                        resolve(response);
+                    },
+                    error: function() {
+                        resolve({ status: 'error', data: [{ cuantos: 0 }] });
+                    }
+                });
+            });
+        }
+
+        // Función para validar el acceso al registro de incidencias
+        async function verificarAccesoRegistro() {
+            // 1.Mandamos llamar nuestra función principal. Agregamos await para esperar la respuesta
+            const respuesta = await validaOpciones2('incidencias', 'verRegistroIncidencias');
+            // 2. Evaluamos la respuesta y aplicamos las acciones a realizar según el caso
+            const cuantos = (respuesta && respuesta.status === 'success') 
+                            ? parseInt(respuesta.data[0].cuantos) 
+                            : 0;
+            if (cuantos <= 0) {            
+                $('#registrarIncidencias').hide();
+            }else {
+                $('#registrarIncidencias').show();
             }
         }
     </script>
