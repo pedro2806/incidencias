@@ -56,6 +56,14 @@ function GuardaRespuesta() {
     });
 }
 
+//FUNCION PARA MOSTRAR TODAS LAS SOLICITUDES
+function solicitudesTodas() {
+    
+    manejarVisibilidadDeTablas("#TSolTodas_wrapper");
+    obtenerYRenderizarSolicitudes("solicitudesTodas", "#TSolTodas tbody");
+
+}
+
 //FUNCION PARA MOSTRAR LAS SOLICITUDES ABIERTAS
 function SolicitudesAbiertas() {
     
@@ -106,10 +114,11 @@ function SolicitudesAbiertasPorTipoUsuario() {
 // FUNCIÓN PARA MANEJAR LA VISIBILIDAD DE LAS TABLAS
 function manejarVisibilidadDeTablas(tablaAMostrar) {
     // Oculta todas las tablas
-    $("#TSolAbiertas_wrapper, #TSolAceptadas_wrapper, #TSolEnProceso_wrapper, #TSolCerradas_wrapper, #TSolRechazadas_wrapper").hide();
+    $("#TSolAbiertas_wrapper, #TSolAceptadas_wrapper, #TSolEnProceso_wrapper, #TSolCerradas_wrapper, #TSolRechazadas_wrapper, #TSolTodas_wrapper").hide();
     
     // Muestra solo la tabla deseada
     $(tablaAMostrar).show();
+    ////alert("Mostrando: " + tablaAMostrar); // Debug: Ver qué tabla se está mostrando
 }
 
 // FUNCIÓN PARA OBTENER Y RENDERIZAR LAS SOLICITUDES
@@ -235,6 +244,7 @@ data.forEach(function (solicitud) {
     const fila = [        
             QuienSolicita,
             solicitud.responsable,
+            selectorTabla === "#TSolTodas tbody" ? `<span class="badge ${accion.estilo}">${solicitud.estatus}</span>` : '',
             solicitud.fecha_incidente,
             solicitud.fecha_cierre,
             solicitud.tipo,

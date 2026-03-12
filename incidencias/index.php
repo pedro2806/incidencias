@@ -427,6 +427,16 @@
             var fechaCierre = formData["fechaCierre"];
             var comentarios = formData["comentarios"];
             var otOv = formData["otOv"];
+
+            //valida comentarios
+            if(!comentarios || comentarios.trim() === "") {
+                Swal.fire({
+                    title: "El campo de comentarios es obligatorio!",
+                    icon: "warning",
+                    draggable: true
+                });
+                return;
+            }
                         
                 $.ajax({
                     url: 'acciones_solicitud.php',

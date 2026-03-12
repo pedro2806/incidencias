@@ -104,6 +104,20 @@ if ($noEmp == 183 || $noEmp ==  276 || $noEmp == 403 || $noEmp ==  523){
 <?php
     include 'conn.php';
     $rol = $_COOKIE['rol'];
+    if($_COOKIE['noEmpleado'] ==  183 || $_COOKIE['noEmpleado'] ==  276 || $_COOKIE['noEmpleado'] ==  523){
+?>
+    <li class = "nav-item">
+        <a class = "nav-link" href = "pendientesProgramacion">
+            <i class = "fas fa-fw fa-table"></i>
+            <span>Mis pendientes</span>
+        </a>
+    </li>
+<?php
+    }
+?>
+<?php
+    include 'conn.php';
+    $rol = $_COOKIE['rol'];
     if($rol == 3 || $_COOKIE['noEmpleado'] ==  403){
 ?>
     <li class = "nav-item">

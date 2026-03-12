@@ -65,6 +65,7 @@
                                     <div class="row">
                                         <div class="col-xl-12">
                                             <div class="btn-group" role="group" aria-label="Default button group" id="statusBtnGroup">
+                                                <button type="button" class="btn btn-outline-secondary" data-status="Todas" onclick="solicitudesTodas()">Todas</button>
                                                 <button type="button" class="btn btn-outline-warning" data-status="Abiertas" onclick="SolicitudesAbiertas()">Abiertas</button>
                                                 <button type="button" class="btn btn-outline-primary" data-status="Aceptadas" onclick="SolicitudesAceptadas()">Aceptadas</button>
                                                 <button type="button" class="btn btn-outline-danger" data-status="Rechazadas" onclick="SolicitudesRechazadas()">Rechazadas</button>
@@ -77,6 +78,24 @@
                                     <hr>
                                     <div class="row">
                                         <div class="col-xl-12">
+                                            <!-- Representa la tabla de solicitudes Abiertas.-->
+                                            <table id="TSolTodas" name="TSolTodas" class="table table-sm table-hover table-striped table-bordered" style="width:100%">
+                                                <thead class="table-secondary">
+                                                    <tr>                                                        
+                                                        <th>Solicita</th>
+                                                        <th>Dirigida a</th>
+                                                        <th>Estatus</th>
+                                                        <th>Fecha Incidente</th>
+                                                        <th>Fecha Cierre</th>
+                                                        <th>Tipo</th>
+                                                        <th>Clasificación</th>                                                        
+                                                        <th>Comentarios</th>
+                                                        <th>Acciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
 
                                             <!-- Representa la tabla de solicitudes Abiertas.-->
                                             <table id="TSolAbiertas" name="TSolAbiertas" class="table table-sm table-hover table-striped table-bordered" style="width:100%">
@@ -293,7 +312,7 @@
                 aplicarEstiloDataTable('#TSolRechazadas', 1);
 
                 // Mostrar inicialmente las solicitudes abiertas
-                SolicitudesAbiertas();
+                solicitudesTodas(); ///SolicitudesAbiertas();
 
         });
         

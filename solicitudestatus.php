@@ -303,7 +303,7 @@
                                                                             echo '<span class="badge text-bg-success">Autorizada</span>';
                                                                         }
                                                                         if($estatus == 3){
-                                                                            echo '<span class="badge text-bg-danger">Rechazada</span>';
+                                                                            echo '<span class="badge text-bg-danger">Cancelada/Rechazada</span>';
                                                                         }                                                                    
 
                                                             echo ' </td>

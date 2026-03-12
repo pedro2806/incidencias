@@ -115,6 +115,97 @@ $noEmpleadoInc = isset($_POST["noEmpleadoInc"]) ? $_POST["noEmpleadoInc"] : $noE
         echo json_encode($response);
     }
 
+    //FUNCION PARA MOSTRAR TODAS LAS SOLICITUDES 403 fer 521 hugo
+    if($opcion == "solicitudesTodas"){
+        if($noEmpleado_cookie == 403){
+            $sql = "SELECT isol.*, u.nombre AS nombre_usuario, ur.nombre AS responsable, ic.clasificacion AS detalle_incidencia,
+                    CASE
+                        WHEN isol.solicita = $idEmpleado_cookie THEN 'Yosolicito'
+                        WHEN u.jefe = $noEmpleado_cookie THEN 'SolicitaMiPersonal'
+                        WHEN ur.jefe = $noEmpleado_cookie THEN 'ResponsableMiPersonal'
+                        WHEN isol.responsable = $idEmpleado_cookie THEN 'SoyResponsable'
+                        ELSE 'otro'
+                    END AS solicita
+                    FROM incidencias_solicitudes isol
+                    INNER JOIN usuarios u ON isol.solicita = u.noEmpleado
+                    INNER JOIN usuarios ur ON isol.responsable = ur.noEmpleado
+                    INNER JOIN incidencias_clasificacion ic ON isol.clasificacion = ic.id
+                    WHERE isol.tipo = 'Personal'                        
+                    ORDER BY isol.fecha_solicitud DESC"; 
+        }else if($noEmpleado_cookie == 521){
+            $sql = "SELECT isol.*, u.nombre AS nombre_usuario, ur.nombre AS responsable, ic.clasificacion AS detalle_incidencia,
+                    CASE
+                        WHEN isol.solicita = $idEmpleado_cookie THEN 'Yosolicito'
+                        WHEN u.jefe = $noEmpleado_cookie THEN 'SolicitaMiPersonal'
+                        WHEN ur.jefe = $noEmpleado_cookie THEN 'ResponsableMiPersonal'
+                        WHEN isol.responsable = $idEmpleado_cookie THEN 'SoyResponsable'
+                        ELSE 'otro'
+                    END AS solicita
+                    FROM incidencias_solicitudes isol
+                    INNER JOIN usuarios u ON isol.solicita = u.id_usuario
+                    INNER JOIN usuarios ur ON isol.responsable = ur.id_usuario
+                    INNER JOIN incidencias_clasificacion ic ON isol.clasificacion = ic.id
+                    WHERE(
+                            isol.solicita = $idEmpleado_cookie 
+                            OR u.jefe = $noEmpleado_cookie
+                            OR ur.jefe = $noEmpleado_cookie
+                            OR isol.responsable = $idEmpleado_cookie
+                        )
+                    ORDER BY
+                        isol.fecha_solicitud DESC";
+        }else{
+            $sql = "SELECT isol.*, u.nombre AS nombre_usuario, ur.nombre AS responsable,
+                    CASE
+                        WHEN isol.solicita = $idEmpleado_cookie THEN 'Yosolicito'
+                        WHEN u.jefe = $noEmpleado_cookie THEN 'SolicitaMiPersonal'
+                        WHEN ur.jefe = $noEmpleado_cookie THEN 'ResponsableMiPersonal'
+                        WHEN isol.responsable = $idEmpleado_cookie THEN 'SoyResponsable'
+                        ELSE 'otro'
+                    END AS solicita,
+                    ic.clasificacion AS detalle_incidencia 
+                    FROM incidencias_solicitudes isol 
+                    INNER JOIN usuarios u ON isol.solicita = u.id_usuario
+                    INNER JOIN usuarios ur ON isol.responsable = ur.id_usuario
+                    INNER JOIN incidencias_clasificacion ic ON isol.clasificacion = ic.id 
+                    WHERE (
+                            isol.solicita = $idEmpleado_cookie 
+                            OR u.jefe = $noEmpleado_cookie
+                            OR ur.jefe = $noEmpleado_cookie
+                            OR isol.responsable = $idEmpleado_cookie
+                        )
+                    ORDER BY isol.fecha_solicitud DESC";
+        }
+
+        //echo $sql;
+        $result = $conn->query($sql);
+        
+        $solicitudes = array();
+        
+        while ($row = $result->fetch_assoc()) {
+            $solicitudes[] = array(
+                'id_solicitud' => $row['id'],
+                'solicita' => $row['solicita'],
+                'responsable' => $row['responsable'],
+                'fecha_solicitud' => $row['fecha_solicitud'],
+                'fecha_incidente' => $row['fecha_incidente'],
+                'fecha_cierre' => $row['fecha_cierre'],
+                'comentarios_solicitud' => $row['comentarios_solicitud'],
+                'comentarios_replica' => $row['comentarios_replica'],
+                'comentarios_cierre' => $row['comentarios_cierre'],
+                'fecha_replica' => $row['fecha_replica'],
+                'tipo' => $row['tipo'],
+                'clasificacion' => $row['clasificacion'],
+                'estatus' => $row['estatus'],
+                'nombre_usuario' => $row['nombre_usuario'],
+                'detalle_incidencia' => $row['detalle_incidencia']);
+        }
+        
+        // Devolver los eventos en formato JSON
+        header('Content-Type: application/json');
+        echo json_encode($solicitudes);
+    }
+
+
 //FUNCION PARA MOSTRAR LAS SOLICITUDES ABIERTAS 403 fer 521 hugo
     if($opcion == "solicitudesAbiertas"){
         if($noEmpleado_cookie == 403){
