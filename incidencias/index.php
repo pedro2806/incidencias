@@ -431,7 +431,7 @@
             //valida comentarios
             if(!comentarios || comentarios.trim() === "") {
                 Swal.fire({
-                    title: "El campo de comentarios es obligatorio!",
+                    title: "El campo de Detalle/Comentarios es obligatorio!",
                     icon: "warning",
                     draggable: true
                 });
