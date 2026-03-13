@@ -59,7 +59,7 @@ switch ($op) {
                         <small class='text-muted'><i class='far fa-clock'></i> Registrado: " . date('d/m/Y H:i', strtotime($reg->fecha_registro)) . "</small>
                     </td>
                     <td><span class='badge bg-$badgeColor'>$reg->prioridad</span></td>
-                    <td>" . ($esRealizado ? "<small class='text-success font-weight-bold'>Terminado: ".date('d/m/Y', strtotime($reg->fecha_finalizado))."</small>" : "<span class='text-warning'>En curso</span>") . "</td>
+                    <td>" . ($esRealizado ? "<small class='text-secondary font-weight-bold'>Terminado: ".date('d/m/Y', strtotime($reg->fecha_finalizado))."</small>" : "<span class='text-warning font-weight-bold'>En curso</span>") . "</td>
                     <td class='text-center'>
                         <div class='btn-group'>
                             <button class='btn btn-success btn-sm' onclick='abrirAvances($reg->id, \"".addslashes($reg->tarea)."\")' title='Ver Bitácora'>
