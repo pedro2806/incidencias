@@ -78,7 +78,8 @@
                                     <hr>
                                     <div class="row">
                                         <div class="col-xl-12">
-                                            <!-- Representa la tabla de solicitudes Abiertas.-->
+                                            <h4 class="card-title text-muted" id="tituloTabla">Seguimiento de Incidencias</h4>
+                                            <!-- Representa la tabla de todas las solicitudes.-->
                                             <table id="TSolTodas" name="TSolTodas" class="table table-sm table-hover table-striped table-bordered" style="width:100%">
                                                 <thead class="table-secondary">
                                                     <tr>                                                        
@@ -305,11 +306,12 @@
                 });
                 
                 // Aplica el estilo a ambas tablas
-                aplicarEstiloDataTable('#TSolAbiertas', 1);
-                aplicarEstiloDataTable('#TSolAceptadas', 1);
-                aplicarEstiloDataTable('#TSolEnProceso', 1);
-                aplicarEstiloDataTable('#TSolCerradas', 1);
-                aplicarEstiloDataTable('#TSolRechazadas', 1);
+                aplicarEstiloDataTable('#TSolAbiertas', 1, 'Solicitudes Abiertas');
+                aplicarEstiloDataTable('#TSolAceptadas', 1, 'Solicitudes Aceptadas');
+                aplicarEstiloDataTable('#TSolEnProceso', 1, 'Solicitudes En Proceso');
+                aplicarEstiloDataTable('#TSolCerradas', 1, 'Solicitudes Cerradas');
+                aplicarEstiloDataTable('#TSolRechazadas', 1, 'Solicitudes Rechazadas');
+                aplicarEstiloDataTable('#TSolTodas', 1, 'Todas las Solicitudes');
 
                 // Mostrar inicialmente las solicitudes abiertas
                 solicitudesTodas(); ///SolicitudesAbiertas();

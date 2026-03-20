@@ -190,14 +190,21 @@ function renderizarTabla(selectorTabla, data) {
                 'ResponsableMiPersonal': { estilo: 'light', boton: '<span class="badge text-bg-info">En espera de respuesta</span>' },
                 'SolicitaMiPersonal': { estilo: 'light', boton: '<span class="badge text-bg-info">En espera de respuesta</span>' },
             };
+        }else if (selectorTabla === "#TSolTodas tbody") {
+            return {
+                'Yosolicito': { estilo: 'secondary', boton: '<button class="btn btn-outline-primary btn-sm" onclick="abrirModalResponder(this.dataset.id,\'aceptada\')" data-id="idSol"><i class="fas fa-reply"></i> Responder</button>' },
+                'SoyResponsable': { estilo: 'secondary', boton: '<button class="btn btn-outline-primary btn-sm" onclick="abrirModalResponder(this.dataset.id,\'aceptada\')" data-id="idSol"><i class="fas fa-reply"></i> Responder</button>' },
+                'ResponsableMiPersonal': { estilo: 'secondary', boton: '<span class="badge text-bg-info">En espera de respuesta</span>' },
+                'SolicitaMiPersonal': { estilo: 'secondary', boton: '<span class="badge text-bg-info">En espera de respuesta</span>' },
+            };
         }   
         else {
             // Fallback para tablas desconocidas
             return {
-                'Yosolicito': { estilo: 'light', boton: '<span class="badge text-bg-secondary">Sin acción</span>' },
-                'SoyResponsable': { estilo: 'light', boton: '<span class="badge text-bg-secondary">Sin acción</span>' },
-                'ResponsableMiPersonal': { estilo: 'light', boton: '<span class="badge text-bg-info">En espera de respuesta</span>' },
-                'SolicitaMiPersonal': { estilo: 'light', boton: '<span class="badge text-bg-info">En espera de respuesta</span>' },
+                'Yosolicito': { estilo: 'secondary', boton: '<span class="badge text-bg-secondary">Sin acción</span>' },
+                'SoyResponsable': { estilo: 'secondary', boton: '<span class="badge text-bg-secondary">Sin acción</span>' },
+                'ResponsableMiPersonal': { estilo: 'secondary', boton: '<span class="badge text-bg-info">En espera de respuesta</span>' },
+                'SolicitaMiPersonal': { estilo: 'secondary', boton: '<span class="badge text-bg-info">En espera de respuesta</span>' },
             };
         }
     })();
@@ -244,7 +251,7 @@ data.forEach(function (solicitud) {
     const fila = [        
             QuienSolicita,
             solicitud.responsable,
-            selectorTabla === "#TSolTodas tbody" ? `<span class="badge ${accion.estilo}">${solicitud.estatus}</span>` : '',
+            selectorTabla === "#TSolTodas tbody" ? `<span class="badge text-bg-dark">${solicitud.estatus}</span>` : accionesPorTipo,
             solicitud.fecha_incidente,
             solicitud.fecha_cierre,
             solicitud.tipo,
