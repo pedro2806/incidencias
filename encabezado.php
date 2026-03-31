@@ -59,6 +59,16 @@
             </form>
         </div>
     </li>
+
+    <li class="nav-item no-arrow">
+        <button class="btn btn-link nav-link fw-bold text-dark" type="button" id="btnNotificaciones" onclick="mostrarNotificacionesFlotantes()">
+            <span class="noti-icon-wrap">
+                <i class="fas fa-bell text-dark"></i>
+                <span id="badgeNotificaciones" class="badge rounded-pill bg-danger d-none noti-badge">0</span>
+            </span>
+        </button>
+    </li>
+
     <div class = "topbar-divider d-none d-sm-block"></div>
     <!-- Nav Item - User Information -->
     <li class = "nav-item dropdown no-arrow">
@@ -168,8 +178,185 @@
             </div>
         </div>
     </div>
+
+    <div id="notificationStack" style="position: fixed; top: 80px; right: 20px; z-index: 1060; width: 360px;"></div>
     
     <script>
+    function mostrarNotificacionesFlotantes() {
+        cargarNotificaciones(true);
+    }
+
+    function escapeHtml(value) {
+        return $('<div>').text(value || '').html();
+    }
+
+    function limpiarStackNotificaciones() {
+        $('#notificationStack').empty();
+    }
+
+    function cargarContadorNotificaciones() {
+        var badge = $('#badgeNotificaciones');
+
+        $.ajax({
+            url: 'acciones_notificaciones.php',
+            method: 'POST',
+            dataType: 'json',
+            data: { accion: 'contarNotificaciones' },
+            success: function(response) {
+                if (!response || !response.success) {
+                    return;
+                }
+
+                var total = parseInt(response.total || 0, 10);
+                if (total > 0) {
+                    badge.removeClass('d-none').text(total > 99 ? '99+' : total);
+                } else {
+                    badge.addClass('d-none').text('0');
+                }
+            }
+        });
+    }
+
+    function cargarNotificaciones(mostrarFlotantes) {
+        var badge = $('#badgeNotificaciones');
+
+        $.ajax({
+            url: 'acciones_notificaciones.php',
+            method: 'POST',
+            data: { accion: 'cargarNotificaciones' },
+            dataType: 'json',
+            success: function(response) {
+                if (!response || !response.success) {
+                    return;
+                }
+
+                var notificaciones = response.notificaciones || [];
+                var total = parseInt(response.total || 0, 10);
+
+                if (total > 0) {
+                    badge.removeClass('d-none').text(total > 99 ? '99+' : total);
+                } else {
+                    badge.addClass('d-none').text('0');
+                }
+
+                if (mostrarFlotantes !== true) {
+                    return;
+                }
+
+                limpiarStackNotificaciones();
+
+                if (notificaciones.length > 0) {
+                    notificaciones.forEach(function(notificacion) {
+                        renderNotificacionFlotante(notificacion);
+                    });
+                } else {
+                    renderNotificacionFlotante({
+                        id: 0,
+                        iniciales: 'OK',
+                        nota: 'No tienes nuevas notificaciones.',
+                        fecha_actualizacion: ''
+                    });
+                }
+            }
+        });
+    }
+
+    // Función para renderizar una notificación flotante
+    function renderNotificacionFlotante(notificacion) {
+        var stack = $('#notificationStack');
+        var iniciales = escapeHtml(notificacion.iniciales || 'NA');
+        var nota = escapeHtml(notificacion.nota || notificacion.mensaje || 'Sin nota');
+        var accion = escapeHtml(notificacion.accion || '');
+        var fecha = escapeHtml(notificacion.fecha_actualizacion || notificacion.fecha || '');
+        var id = parseInt(notificacion.id, 10) || 0;
+        var idRegistro = parseInt(notificacion.id_registro_referencia, 10) || 0;
+        var sistema = escapeHtml(notificacion.sistema || '');
+        var archivo = escapeHtml(notificacion.archivo || '');
+
+        var html = '';
+        html += '<div class="toast show border-0 shadow-sm mb-2" data-notificacion-id="' + id + '" role="alert" aria-live="assertive" aria-atomic="true">';
+        html += '  <div class="toast-body p-2">';
+        html += '      <div class="d-flex justify-content-between align-items-start gap-4">';
+        html += '          <div class="d-flex align-items-start gap-4">';
+        html += '              <span class="badge rounded-pill bg-primary mt-1">' + iniciales + (accion ? ' - ' + accion : '') + '</span>';
+        html += '              <div>';
+        html += '                  <div class="small text-dark fw-semibold">' + nota + '</div>';
+        html += '                  <div class="small text-muted">' + fecha + '</div>';
+        html += '              </div>';
+        html += '          </div>';
+        html += '          <button class="btn btn-sm btn-outline-success btn-marcar-leida" title="Marcar como leída" aria-label="Marcar como leída" data-id="' + id + '" data-registro="' + idRegistro + '" data-sistema="' + sistema + '" data-archivo="' + archivo + '">';
+        html += '              <i class="fas fa-check"></i>';
+        html += '          </button>';
+        html += '      </div>';
+        html += '  </div>';
+        html += '</div>';
+
+        var toast = $(html);
+        stack.append(toast);
+
+        setTimeout(function() {
+            toast.fadeOut(10000, function() {
+                $(this).remove();
+            });
+        }, 5000);
+    }
+
+    function construirUrlNotificacion(sistema, archivo, idRegistro) {
+        var id = parseInt(idRegistro || 0, 10);
+        var sis = (sistema || '').toLowerCase();
+        var arc = (archivo || '').toLowerCase();
+
+        if (sis === 'incidencias' && arc === 'solicitudestatus' && id > 0) {
+            return 'solicitudestatus?id=' + id;
+        }
+
+        if (archivo && id > 0) {
+            return archivo + '?id=' + id;
+        }
+
+        return '';
+    }
+
+    function marcarNotificacionLeida(idNotificacion, idRegistro, sistema, archivo) {
+        if (!idNotificacion || parseInt(idNotificacion, 10) <= 0) {
+            return;
+        }
+
+        $.ajax({
+            url: 'acciones_notificaciones.php',
+            method: 'POST',
+            dataType: 'json',
+            data: { accion: 'marcarLeida', idNotificacion: idNotificacion },
+            success: function(response) {
+                if (!response || !response.success) {
+                    return;
+                }
+
+                var toast = $('#notificationStack [data-notificacion-id="' + parseInt(idNotificacion, 10) + '"]');
+                if (toast.length > 0) {
+                    toast.remove();
+                }
+
+                cargarContadorNotificaciones();
+
+                var url = construirUrlNotificacion(sistema, archivo, idRegistro);
+                if (url !== '') {
+                    window.location.href = url;
+                }
+            }
+        });
+    }
+
+    function registrarEventosNotificaciones() {
+        $(document).off('click', '.btn-marcar-leida').on('click', '.btn-marcar-leida', function () {
+            var id = parseInt($(this).data('id') || 0, 10);
+            var registro = parseInt($(this).data('registro') || 0, 10);
+            var sistema = $(this).data('sistema') || '';
+            var archivo = $(this).data('archivo') || '';
+            marcarNotificacionLeida(id, registro, sistema, archivo);
+        });
+    }
+
     // Función para mostrar/ocultar contraseñas
     document.getElementById('showPassword').addEventListener('change', function () {
         var passwordField = document.getElementById('nuevapass');
@@ -239,14 +426,19 @@
         return null; // Si no encuentra la cookie, retorna null
     }
     // Asignar el valor de la cookie al input
-    window.onload = function() {
+    window.addEventListener('load', function() {
         var cookieValue = getCookie("noEmpleado"); // Aquí "noEmpleadoCookie" es el nombre de la cookie
     
         // Verificar si la cookie existe y asignar el valor al input
         if (cookieValue) {
             document.getElementById("noEmpleado").value = cookieValue;
         }
-    };
+
+        if (typeof window.jQuery !== 'undefined') {
+            registrarEventosNotificaciones();
+            cargarContadorNotificaciones();
+        }
+    });
     </script>
 </nav>
 <!-- End of Topbar -->
