@@ -366,7 +366,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Funciones Globales 
-    <script src="../loginMaster/funcionesGlobales.js"></script>
+    <script src="/loginMaster/funcionesGlobales.js"></script>
     -->
     <script type="text/javascript">
         $(document).ready(function() {

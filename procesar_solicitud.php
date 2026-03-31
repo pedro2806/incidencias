@@ -15,7 +15,9 @@ $accion = $_POST["accion"];
 
 
 if($accion == "agregaSolicitud") {
-    
+    $insertados = 0;
+    $idRegistroReferencia = 0;
+
     foreach ($periodos as $renglon) {
         $fechaInicial = $renglon['fechaInicial'];
         $fechaFinal = $renglon['fechaFinal'];
@@ -29,10 +31,18 @@ if($accion == "agregaSolicitud") {
                         VALUES ($solicita, '$opIncidencia', '$fechaInicial', '$fechaFinal', '$hoy', $noDias, '$notas', '', 1, $noEmpleado, '$comentarios', 1,'',$noDias)";
         $resultadoNuevaSolicitud = mysqli_query($conn, $sql);
 
+        if ($resultadoNuevaSolicitud) {
+            $insertados++;
+            $idRegistroReferencia = mysqli_insert_id($conn);
+        }
+
     }
     
-    // Devolver los datos en formato JSON
-    echo json_encode($resultadoNuevaSolicitud);
+    echo json_encode([
+        'success' => $insertados > 0,
+        'insertados' => $insertados,
+        'id_registro_referencia' => $idRegistroReferencia
+    ]);
 }
 
 ?>

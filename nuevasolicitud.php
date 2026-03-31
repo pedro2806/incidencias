@@ -261,7 +261,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; MESS 2025</span>
+                        <span>Copyright &copy; MESS <?php echo date("Y"); ?></span>
                     </div>
                 </div>
             </footer>
@@ -496,13 +496,25 @@
                         periodos
                     },
                     success: function(data) {
+                        if (data && data.success === false) {
+                            Swal.fire({
+                                title: "La solicitúd no se pudo procesar!",
+                                icon: "error",
+                                draggable: true
+                            });
+                            return;
+                        }
+
                         Swal.fire({
                             title: "La solicitúd se proceso son éxito!",
                             icon: "success",
                             draggable: true
                         });
-                        enviaNotificacion(solicita);
-                        window.location.href = 'solicitudestatus';
+
+                        var idRegistroReferencia = (data && data.id_registro_referencia) ? parseInt(data.id_registro_referencia, 10) : 0;
+                        registrarNotificacionVacaciones(solicita, idRegistroReferencia, function() {
+                            window.location.href = 'solicitudestatus';
+                        });
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         Swal.fire({
@@ -539,6 +551,24 @@
                     draggable: true
                     });*/
 
+                }
+            });
+        }
+
+        function registrarNotificacionVacaciones(solicita, idRegistroReferencia, callback) {
+            $.ajax({
+                url: 'acciones_notificaciones.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    accion: 'registrarNotificacionVacaciones',
+                    solicita: solicita,
+                    id_registro_referencia: idRegistroReferencia
+                },
+                complete: function() {
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
                 }
             });
         }
@@ -580,7 +610,7 @@
                 $("#mensaje").text("No puedes solicitar vacaciones hasta tener un año de antigüedad.");
             } else {
                 $("#btnSolicitar").prop("disabled", false);
-                $("#mensaje").text("MESS 2025");
+                $("#mensaje").text("MESS " + new Date().getFullYear());
             }
         }
         function validarDiasDisponibles() {            
@@ -593,7 +623,7 @@
                 $("#mensaje").css("font-size", "1.2rem");
             } else {
                 $("#btnSolicitar").prop("disabled", false);
-                $("#mensaje").text("MESS 2025");
+                $("#mensaje").text("MESS " + new Date().getFullYear());
                 $("#mensaje").addClass("badge text-bg-primary");
             }
         }
