@@ -62,9 +62,18 @@ $noEmpleadoInc = isset($_POST["noEmpleadoInc"]) ? $_POST["noEmpleadoInc"] : $noE
         $noEmpleado = $idEmpleado_cookie;
 
         $sqlInsert = "INSERT INTO incidencias_solicitudes(solicita, responsable, fecha_solicitud, fecha_incidente, fecha_estimada_cierre, comentarios_solicitud, comentarios_replica, comentarios_cierre, fecha_replica, tipo, clasificacion, estatus, ot_ov)
-                                                    VALUES ('$noEmpleado', '$responsable', '$fecha', '$fechaIncidente', '$fechaCierre', '$comentarios', NULL, NULL, NULL, '$tipo', '$clasificacion', '$estatus', '$otOv')";
+                    VALUES ('$noEmpleado', '$responsable', '$fecha', '$fechaIncidente', '$fechaCierre', '$comentarios', NULL, NULL, NULL, '$tipo', '$clasificacion', '$estatus', '$otOv')";
         //echo $sqlInsert;
         if ($conn->query($sqlInsert) === TRUE) {
+            $idIncidencia = $conn->insert_id;
+            
+            // Insertar notificación en el historial
+            $sqlNotificacion = "INSERT INTO notificacion_historial
+                (id_usuario_actualiza, id_usuario_destino, accion, sistema, archivo, id_registro_referencia, fecha_creacion, fecha_atencion, recordar, estatus)
+                VALUES ('$noEmpleado', '$responsable', 'IncidenciaReportada', 'incidencias', 'seguimiento_incidencias', '$idIncidencia', NOW(), NULL, 'Tienes una incidencia', 'NoLeida')";
+            
+            $conn->query($sqlNotificacion);
+            
             $response = array('status' => 'success', 'message' => 'Incidencia registrada con éxito.');
         } else {
             $response = array('status' => 'error', 'message' => 'Error al registrar la incidencia: ' . $conn->error);
