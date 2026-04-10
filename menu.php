@@ -95,6 +95,7 @@ if ($noEmp == 183 || $noEmp ==  276 || $noEmp == 403 || $noEmp ==  523){
                 <a class = "collapse-item" href = "mandarNomina">Control pagos nómina</a>
                 <a class = "collapse-item" href = "verVacaciones">Ver solicitudes de vacaciones</a>
                 <a class = "collapse-item" href = "verActividades">Planeación semanal OTs</a>
+                <a class = "collapse-item" href = "restarDias">Restar días </a>
             </div>
         </div>
     </li>

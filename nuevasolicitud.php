@@ -146,29 +146,6 @@
                                                 <b>Favor de tomar nota de los días que el empleado estará fuera de Jornada Laboral (aplica para permiso sin goce, con goce y vacaciones):</b>
                                             </div>
                                         </div>
-                                        <!--
-                                            <div class = "row card-footer border-left-primary">
-                                                <div class = "col-xl-1"></div>
-                                                <div class = "col-xl-3">
-                                                    <div class="mb-1">
-                                                        <label for="exampleFormControlInput1" class="form-label">Fecha de incio</label>
-                                                        <input type="date" class="form-control" id="fechaInicial" name = "fechaInicial" onchange="diasEntreFechas();"  required>
-                                                    </div>
-                                                </div>
-                                                <div class = "col-xl-3">
-                                                    <div class="mb-1">
-                                                        <label for="exampleFormControlInput1" class="form-label">Fecha de termino</label>
-                                                        <input type="date" class="form-control" id="fechaFinal" name  = "fechaFinal" onchange="diasEntreFechas();" required>
-                                                    </div>
-                                                </div>
-                                                <div class = "col-xl-2">
-                                                    <div class="mb-1">
-                                                        <label for="exampleFormControlInput1" class="form-label">No de días</label>
-                                                        <input type="number" class="form-control" id="noDias" name ="noDias">
-                                                    </div>  
-                                                </div>
-                                            </div>
-                                            -->
                                         <div class="row card-footer border-left-primary dynamic-row">
                                             <div class="col-sm-10">
                                                 <div id="renglones-container">

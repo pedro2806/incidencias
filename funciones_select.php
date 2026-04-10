@@ -177,6 +177,7 @@ if ($opcion == "llenaTablaPorAutorizar") {
     // Devolver los datos en formato JSON
     echo json_encode($registros);
 }
+
 if ($opcion == "llenaTablaCanceladas") {
     $sql = "SELECT s.*, s.empleado as noEmp, u.nombre as empleado,s.fesolicitud
                 FROM solicitudes s 
