@@ -99,7 +99,7 @@
                                                         
                                                         While ($row2 = mysqli_fetch_array($res2)){
                                                             $id = $row2["id"];
-                                                            $tipo = $row2["tipo"];                            
+                                                            $tipo = $row2["tipo"];
                                                             $desde = $row2["feinicio"];
                                                             $hasta = $row2["fefin"];
                                                             $feSol = $row2["fesolicitud"];
@@ -108,10 +108,8 @@
                                                             $notasJ = $row2["notajefe"];
                                                             $estatus = $row2["estatus"];
                                                             $estatusRH = $row2["autorizaRH"];
-                                                            
-                                                            
-                                                            //<td>'.$correo.'</td>
-                                                            echo '<tr>                                                                    
+
+                                                            echo '<tr>
                                                                     <td>';
                                                                     if($tipo == 1){
                                                                         echo '<span class="badge text-bg-success">Vacaciones</span><br>'.$feSol.'';
@@ -121,7 +119,7 @@
                                                                     }
                                                                     if($tipo == 3){
                                                                         echo '<span class="badge text-bg-primary">Permiso con goce</span><br>'.$feSol.'';
-                                                                    } 
+                                                                    }
                                                                     
                                                             echo '</td>
                                                                     <td><span class="badge text-bg-dark"> '.$noDias.' días</span><br>'.$desde.' - '.$hasta.'</td>                                                                    
@@ -192,10 +190,10 @@
                                                             $notasJ = $row2["notajefe"];
                                                             $estatus = $row2["estatus"];
                                                             $autorizaRH = $row2["autorizaRH"];
-                                                            
-                                                            
+                                                            $origen = $row2["origen"];
+
                                                             //<td>'.$correo.'</td>
-                                                            echo '<tr>                                                                    
+                                                            echo '<tr>
                                                                     <td>';
                                                                     if($tipo == 1){
                                                                         echo '<span class="badge text-bg-success">Vacaciones</span>';
@@ -205,8 +203,11 @@
                                                                     }
                                                                     if($tipo == 3){
                                                                         echo '<span class="badge text-bg-primary">Permiso con goce</span>';
-                                                                    } 
-                                                                    
+                                                                    }
+                                                                    if($origen != ''){
+                                                                        echo '<br><span class="badge text-bg-secondary">'.$origen.'</span>';
+                                                                    }
+
                                                             echo '</td>
                                                                     <td>'.$feSol.'</td>
                                                                     <td>'.$noDias.'</td>
@@ -274,10 +275,9 @@
                                                             $notasE = $row2["notasempleado"];
                                                             $notasJ = $row2["notajefe"];
                                                             $estatus = $row2["estatus"];
-                                                            
-                                                            
+
                                                             //<td>'.$correo.'</td>
-                                                            echo '<tr>                                                                    
+                                                            echo '<tr>
                                                                     <td>';
                                                                     if($tipo == 1){
                                                                         echo '<span class="badge text-bg-success">Vacaciones</span>';
@@ -287,8 +287,8 @@
                                                                     }
                                                                     if($tipo == 3){
                                                                         echo '<span class="badge text-bg-primary">Permiso con goce</span>';
-                                                                    } 
-                                                                    
+                                                                    }
+
                                                             echo '</td>
                                                                     <td>'.$feSol.'</td>
                                                                     <td>'.$noDias.'</td>
