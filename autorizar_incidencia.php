@@ -29,12 +29,6 @@ else{
         mysqli_query($conn, $sql);
     }
 }
-/*
-if($estatus == 2 && $estatusRH == 2){
-    $sqlDias = "UPDATE usuarios SET diasdisponibles = (diasdisponibles - $ndias) WHERE noEmpleado =  $nempleado";
-    mysqli_query($conn, $sqlDias);
-}*/
-
 
 echo '<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>';
 echo '<script>swal("¡Tu solicitud fue procesada con éxito!", "", "success");</script>';

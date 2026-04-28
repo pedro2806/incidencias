@@ -186,12 +186,15 @@
                                                             $antiguedad = $row2["antiguedad"];
                                                             $tipoContrato = $row2["tipoContrato"];
                                                             $jefe = $row2["jefe"];
-                                                            $dias = 0; // Initialize to avoid undefined variable warning
-                                                            $Qdias = "SELECT * FROM diasvacaciones WHERE anio = $antiguedad";
-                                                            $resdias= mysqli_query( $conn, $Qdias ) or die (mysqli_error($conn));
-                                                            
-                                                            While ($row3 = mysqli_fetch_array($resdias)){
-                                                                $dias = $row3["dias"];
+                                                            $dias = 0;
+                                                            if ($antiguedad !== null && $antiguedad !== '') {
+                                                                $Qdias = "SELECT * FROM diasvacaciones WHERE anio = $antiguedad";
+                                                                $resdias = mysqli_query($conn, $Qdias);
+                                                                if ($resdias) {
+                                                                    while ($row3 = mysqli_fetch_array($resdias)) {
+                                                                        $dias = $row3["dias"];
+                                                                    }
+                                                                }
                                                             }
                                                             $dias = 0;
                                                             
