@@ -167,7 +167,7 @@
                                                         <div class="col-sm-3">
                                                             <div class="mb-1">
                                                                 <label for="noDias-1" class="form-label">No de días</label>
-                                                                <input type="number" class="form-control" id="noDias-1" name="noDias[]">
+                                                                <input type="number" class="form-control" id="noDias-1" name="noDias[]" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -354,34 +354,35 @@
             $('#opIncidencia').val(ti);
         }
 
-        var diasEntreFechas = function(idRenglon) {
-            // Seleccionar los campos específicos usando el ID del renglón
-            var fechaInicial = $(`#fechaInicial-${idRenglon}`).val();
-            var fechaFinal = $(`#fechaFinal-${idRenglon}`).val();
+var diasEntreFechas = function(idRenglon) {
+    var fechaInicialStr = $(`#fechaInicial-${idRenglon}`).val();
+    var fechaFinalStr = $(`#fechaFinal-${idRenglon}`).val();
 
-            // Verificar que las fechas no estén vacías
-            if (!fechaInicial || !fechaFinal) {
-                return;
-            }
+    if (!fechaInicialStr || !fechaFinalStr) return;
 
-            var fechaDesde = new Date(fechaInicial);
-            var fechaHasta = new Date(fechaFinal);
-            var contador = 0;
+    // Usamos split y el constructor (año, mes - 1, día) para evitar desfases de zona horaria
+    var partesIni = fechaInicialStr.split('-');
+    var partesFin = fechaFinalStr.split('-');
+    
+    var fechaDesde = new Date(partesIni[0], partesIni[1] - 1, partesIni[2]);
+    var fechaHasta = new Date(partesFin[0], partesFin[1] - 1, partesFin[2]);
+    
+    var contador = 0;
 
-            // Calcular los días excluyendo fines de semana
-            while (fechaDesde <= fechaHasta) {
-                var dia = fechaDesde.getDay(); // Obtener el día de la semana (0=Domingo, 6=Sábado)
+    // Clonamos la fecha inicial para no modificar la original si se necesitara después
+    var tempFecha = new Date(fechaDesde);
 
-                // Si no es fin de semana (Domingo o Sábado), sumar al contador
-                if (dia != 0 && dia != 6) {
-                    contador++;
-                }
-                fechaDesde.setDate(fechaDesde.getDate() + 1); // Avanzar al siguiente día
-            }
-
-            // Asignar el valor calculado en el campo correspondiente de "no de días"
-            $(`#noDias-${idRenglon}`).val(contador);
+    while (tempFecha <= fechaHasta) {
+        var diaSemana = tempFecha.getDay();
+        // 0 = Domingo, 6 = Sábado
+        if (diaSemana !== 0 && diaSemana !== 6) {
+            contador++;
         }
+        tempFecha.setDate(tempFecha.getDate() + 1);
+    }
+
+    $(`#noDias-${idRenglon}`).val(contador);
+};
 
         function empleadoSolicita() {
             var opcion = "empleadoSolicita";
