@@ -254,7 +254,7 @@ data.forEach(function (solicitud) {
             selectorTabla === "#TSolTodas tbody" ? `<span class="badge text-bg-dark">${solicitud.estatus}</span>` : accionesPorTipo,
             solicitud.fecha_incidente,
             solicitud.fecha_cierre,
-            solicitud.tipo,
+            solicitud.tipo + " - " + solicitud.fecha_incidente,
             solicitud.detalle_incidencia,
             `<button class='btn btn-outline-primary btn-sm'
                     data-comentarios="${comentariosEscapados}"

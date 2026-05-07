@@ -77,7 +77,7 @@
 <!-- Nav Item - Utilities Collapse Menu -->
 <?php
 $noEmp = $_COOKIE['noEmpleado'];
-if ($noEmp == 183 || $noEmp ==  276 || $noEmp == 403 || $noEmp ==  523){
+if ($noEmp == 183 || $noEmp ==  276 || $noEmp == 403 || $noEmp ==  523 || $noEmp == 569){
 ?>
     <li class = "nav-item">
         <a class = "nav-link collapsed" href = "#" data-toggle = "collapse" data-target = "#collapseUtilities"
