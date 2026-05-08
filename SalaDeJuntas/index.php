@@ -13,6 +13,79 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.css' rel='stylesheet' />
     <link href="../css/sb-admin-2.min.css" rel="stylesheet">
+
+    <style>
+    /* Estética Minimalista y Pro */
+    :root {
+        --glass-bg: #ffffff;
+        --border-color: #e3e6f0;
+        --primary-accent: #4e73df;
+        --success-accent: #1cc88a;
+    }
+
+    .booking-toolbar {
+        background: var(--glass-bg);
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    }
+
+    .input-group-modern {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .input-group-modern label {
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: #858796;
+        letter-spacing: 0.05em;
+        margin-left: 2px;
+    }
+
+    .form-control-pro {
+        border: 1px solid #d1d3e2;
+        border-radius: 8px;
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+    }
+
+    .form-control-pro:focus {
+        border-color: var(--primary-accent);
+        box-shadow: 0 0 0 3px rgba(78, 115, 223, 0.1);
+        outline: none;
+    }
+
+    .btn-action {
+        height: 44px;
+        margin-top: 25px; /* Alineación perfecta con los inputs */
+        border-radius: 8px;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+        transition: all 0.3s;
+        width: 100%;
+    }
+
+    .btn-action:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(28, 200, 138, 0.2);
+    }
+
+    #calendar {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    }
+</style>
 </head>
 
 <body id="page-top">
@@ -21,45 +94,48 @@
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
                 <?php include '../encabezado.php'; ?>
-                <div class="container-fluid">
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Sala de Juntas</h1>
+                
+                <div class="container-fluid">                    
+                    <!-- Toolbar de Reserva -->
+                    <div class="booking-toolbar">
+                        <div class="row align-items-end">
+                            <div class="col-xl-3 col-lg-4 mb-2 mb-xl-0">
+                                <div class="input-group-modern">
+                                    <label for="fecha_hora_inicio">Comienza</label>
+                                    <input class="form-control-pro" type="datetime-local" id="fecha_hora_inicio" name="fecha_hora_inicio" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-xl-3 col-lg-4 mb-2 mb-xl-0">
+                                <div class="input-group-modern">
+                                    <label for="fecha_hora_fin">Termina</label>
+                                    <input class="form-control-pro" type="datetime-local" id="fecha_hora_fin" name="fecha_hora_fin" required>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 mb-2 mb-xl-0">
+                                <div class="input-group-modern">
+                                    <label for="descripcion">Motivo / Asunto</label>
+                                    <textarea class="form-control-pro" id="descripcion" name="descripcion" rows="1" placeholder="Breve descripción..." required></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-2 col-lg-12">
+                                <button id="btnSolicitar" type="button" class="btn btn-success btn-action" onclick="validarReserva()">
+                                    <i class="fas fa-calendar-plus mr-2"></i> Reservar
+                                </button>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- Sección del Calendario -->
                     <div class="row">
-                        <div class="col-xl-3 col-lg-3">
-                            <label for="fecha_hora_inicio">Fecha y hora de inicio:</label>
-                            <input class="form-control" type="datetime-local" id="fecha_hora_inicio" name="fecha_hora_inicio" required>
+                        <div class="col-12">
+                            <div id="calendar"></div>
                         </div>
-                        <div class="col-xl-3 col-lg-3">
-                            <label for="fecha_hora_fin">Fecha y hora de fin:</label>
-                            <input class="form-control" type="datetime-local" id="fecha_hora_fin" name="fecha_hora_fin" required>
-                        </div>
-                        <div class="col-xl-3 col-lg-3">
-                            <label for="descripcion">Motivo:</label>
-                            <textarea class="form-control" type="text-area" id="descripcion" name="descripcion" required></textarea><br><br>
-                        </div>
-                    </div>
-                    <?php
-                        $rol = $_COOKIE['rol'];
-                        $noEmp = $_COOKIE['noEmpleado'];
-                        $Qrol = "SELECT rol FROM usuarios WHERE noEmpleado = $noEmp";
-                        $resRol = mysqli_query($conn, $Qrol) or die(mysqli_error($conn));
-                        while ($row = mysqli_fetch_array($resRol)) {
-                            $rol = utf8_encode($row["rol"]);
-                        }
-                        if ($rol == 3) {
-                            echo '<div class="row">
-                                    <div class="col-xl-3 col-lg-3">
-                                        <button id="btnSolicitar" type="button" class="btn btn-success" onclick="validarReserva()">Reservar</button>
-                                    </div>
-                                </div>';
-                        }
-                    ?>
-                    <div class="row">
-                        <div id="calendar"></div>
                     </div>
                 </div>
-                </div>
+            </div>
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
@@ -182,9 +258,9 @@
                 if (response.success === false && finicio >= ffin) {
                     // Alerta especial si la fecha de inicio es mayor o igual a la fecha de fin
                     Swal.fire({
-                        title: "Error en las fechas",
+                        title: "Detalle en las fechas",
                         text: "Revisa tus fechas y horas de reserva.",
-                        icon: "error",
+                        icon: "warning",
                         draggable: true
                     });
                 } else if (response.success === false) {

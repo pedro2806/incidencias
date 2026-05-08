@@ -116,20 +116,6 @@ if ($noEmp == 183 || $noEmp ==  276 || $noEmp == 403 || $noEmp ==  523 || $noEmp
 <?php
     }
 ?>
-<?php
-    include 'conn.php';
-    $rol = $_COOKIE['rol'];
-    if($rol == 3 || $_COOKIE['noEmpleado'] ==  403){
-?>
-    <li class = "nav-item">
-        <a class = "nav-link" href = "SalaDeJuntas">
-            <i class = "fas fa-fw fa-table"></i>
-            <span>Sala de Juntas</span>
-        </a>
-    </li>
-<?php
-    }
-?>
 <!--
 <li class = "nav-item">
     <a class = "nav-link" href = "verActividades">

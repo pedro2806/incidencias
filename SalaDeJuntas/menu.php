@@ -10,19 +10,18 @@
 <!-- Sidebar -->
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 <!-- Sidebar - Brand -->
-<a class="sidebar-brand d-flex align-items-center justify-content-center" href="inicio">
+<a class="sidebar-brand d-flex align-items-center justify-content-center" href="index">
     <div class="sidebar-brand-icon rotate-n-1">
-        <img class="sidebar-card-illustration mb-2" href="../inicio" src="../img/MESS_07_CuboMess_2.png" width="40" alt="Logo">
+        <img class="sidebar-card-illustration mb-2" href="index" src="../img/MESS_07_CuboMess_2.png" width="40" alt="Logo">
     </div>
 </a>
+
+<!-- Título -->
+<div class="d-sm-flex align-items-center justify-content-between mb-1">
+    <h2 class="text-lg font-weight-bold text-white ml-5">Sala de Juntas</h2>
+</div>
 <hr class="sidebar-divider my-0">
-<!-- Nav Item - Dashboard -->
-<li class="nav-item active btn-warning">
-    <a class="nav-link" href="../inicio">
-        <i class="fas fa-fw fa-home"></i>
-        <span>Volver a Incidencias</span>
-    </a>
-</li>
+
 <!-- Divider -->
 <hr class="sidebar-divider">
 <!-- Heading -->
@@ -30,19 +29,20 @@
     <span class="badge text-xl-white">Opciones</span>
 </div>
 <!-- Nav Item - Pages Collapse Menu -->
-<li class="nav-item">
-    <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-        <i class="fas fa-fw fa-calendar-day"></i>
-        <span>Sala de Juntas</span>
-    </a>
-    <div id="collapseTwo" class="collapse" aria-labelledby="headingUtilities">
-        <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="index">Ver calendario</a>
-            <a class="collapse-item" href="modificarAgenda">Modificar/Eliminar Reserva</a>
-        </div>
-    </div>
+<li class="nav-item">    
+    <a class="nav-link" href="index"><i class="fas fa-fw fa-calendar-day"></i>Reservar</a>
 </li>
+<li class="nav-item">    
+    <a class="nav-link" href="modificarAgenda"><i class="fas fa-fw fa-edit"></i>Modificar/Eliminar Reserva</a>
+</li>
+
 <hr class="sidebar-divider d-none d-md-block">
+<li class="nav-item active btn-warning">
+    <a class="nav-link" href="../../loginMaster/inicio">
+        <i class="fas fa-fw fa-home"></i>
+        <span>Salir</span>
+    </a>
+</li>
 </ul>
 <div class="text-center d-none d-md-inline">
     <button class="rounded-circle border-0" id="sidebarToggle"></button> 

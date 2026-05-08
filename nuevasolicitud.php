@@ -62,11 +62,11 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-xl-4" style="text-align: center">
-                                            <img class="sidebar-card-illustration" src="img/MESS_05_Imagotipo_1.png" width="160">
+                                            <img class="sidebar-card-illustration" src="img/MESS_05_Imagotipo_1.png" width="150">
                                         </div>
                                         <div class="col-xl-4">
                                             <center>
-                                                <p class="fs-4"><b>SOLICITUD DE INCIDENCIAS</b></p>
+                                                <p class="fs-5"><b>SOLICITUD DE VACACIONES</b></p>
                                             </center>
                                         </div>
                                         <div class="col-xl-4" style="text-align: center">
@@ -93,8 +93,8 @@
                                             </div>
                                             <div class="col-sm-4">
                                                 <div id="DivsolicitaMss" name="DivsolicitaMss">
-                                                    <div class="alert alert-info" role="alert" style="font-size: 12px;">
-                                                        Si deseas realizar la solicitud en nombre de otra persona, por favor selecciona su nombre.
+                                                    <div class="badge bg-primary text-white" role="alert" style="font-size: 12px;">
+                                                        Puedes solicitar vacaciones para los colaboradores a tu cargo.
                                                     </div>
                                                 </div>
                                             </div>
@@ -326,7 +326,7 @@
                 </div>
                 <div class="col-sm-3">
                     <div class="mb-1">
-                        <input type="number" class="form-control" id="noDias-${renglonCounter}" name="noDias[]">
+                        <input type="number" class="form-control" id="noDias-${renglonCounter}" name="noDias[]" readonly>
                     </div>
                 </div>
             `;
