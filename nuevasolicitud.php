@@ -352,6 +352,35 @@
 
         var tIncidencia = function(ti) {
             $('#opIncidencia').val(ti);
+            if (ti == 1) {
+                let noEmpleado = $('#solicita').val() || getCookie('noEmpleado');
+                verificaVehiculo(noEmpleado);
+            }
+        }
+
+        function verificaVehiculo(noEmpleado) {
+            if (!noEmpleado) return;
+            $.ajax({
+                url: 'getInfoLoginMaster.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    accion: 'getPlaca',
+                    noEmpleado: noEmpleado
+                },
+                success: function(data) {
+                    if (data && data.success === true) {
+                        Swal.fire({
+                            title: '¡Aviso Importante!',
+                            html: 'Tienes un vehículo asignado con placa <b>' + data.placa + '</b>.<br><br>' +
+                                  'Durante los días que <b>no labores</b>, deberás dejar tu vehículo en las instalaciones de la empresa.',
+                            icon: 'warning',
+                            confirmButtonText: 'Entendido',
+                            confirmButtonColor: '#3085d6'
+                        });
+                    }
+                }
+            });
         }
 
 var diasEntreFechas = function(idRenglon) {
@@ -483,15 +512,45 @@ var diasEntreFechas = function(idRenglon) {
                             return;
                         }
 
-                        Swal.fire({
-                            title: "La solicitúd se proceso son éxito!",
-                            icon: "success",
-                            draggable: true
-                        });
-
                         var idRegistroReferencia = (data && data.id_registro_referencia) ? parseInt(data.id_registro_referencia, 10) : 0;
-                        registrarNotificacionVacaciones(solicita, idRegistroReferencia, function() {
-                            window.location.href = 'solicitudestatus';
+
+                        function mostrarExito() {
+                            Swal.fire({
+                                title: "¡La solicitud se procesó con éxito!",
+                                icon: "success",
+                                draggable: true
+                            }).then(function() {
+                                registrarNotificacionVacaciones(solicita, idRegistroReferencia, function() {
+                                    window.location.href = 'solicitudestatus';
+                                });
+                            });
+                        }
+
+                        var noEmpleadoSolicita = $('#solicita').val() || getCookie('noEmpleado');
+                        $.ajax({
+                            url: 'getInfoLoginMaster.php',
+                            method: 'POST',
+                            dataType: 'json',
+                            data: { accion: 'getPlaca', noEmpleado: noEmpleadoSolicita },
+                            success: function(vehiculoData) {
+                                if (vehiculoData && vehiculoData.success === true) {
+                                    Swal.fire({
+                                        title: '¡Recuerda!',
+                                        html: 'Tienes un vehículo asignado con placa <b>' + vehiculoData.placa + '</b>.<br><br>' +
+                                              'Durante los días que <b>no labores</b>, deberás dejar tu vehículo en las instalaciones de la empresa.',
+                                        icon: 'warning',
+                                        confirmButtonText: 'Entendido',
+                                        confirmButtonColor: '#3085d6'
+                                    }).then(function() {
+                                        mostrarExito();
+                                    });
+                                } else {
+                                    mostrarExito();
+                                }
+                            },
+                            error: function() {
+                                mostrarExito();
+                            }
                         });
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
