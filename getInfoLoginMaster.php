@@ -27,26 +27,28 @@ $correo = $_POST["correo"];
 //MODIFICAR Usuario 
     if($accion == "getInfo") {
         
-        $sql = "SELECT TIMESTAMPDIFF(YEAR, u.fechaIngreso, CURDATE()) AS antiguedad, d.departamento, j.nombre AS jefe,
+        $sql = "SELECT TIMESTAMPDIFF(YEAR, u.fechaIngreso, CURDATE()) AS antiguedad,
+                d.departamento,
+                j.nombre AS jefe,
                 COALESCE((
-                    SELECT dv.dias 
-                    FROM diasvacaciones dv 
+                    SELECT dv.dias
+                    FROM diasvacaciones dv
                     WHERE dv.anio = TIMESTAMPDIFF(YEAR, u.fechaIngreso, CURDATE())
                     LIMIT 1
                 ), 0) AS diasdisponibles,
                 u.fechaIngreso,
                 IFNULL(SUM(
-                    CASE 
-                        WHEN s.estatus = 2 AND s.autorizaRH = 2 AND s.tipo = 1 
-                        THEN s.dias ELSE 0 
+                    CASE
+                        WHEN s.estatus = 2 AND s.autorizaRH = 2 AND s.tipo = 1
+                        THEN s.dias ELSE 0
                     END
                 ), 0) AS diasSol
                 FROM usuarios u
-                INNER JOIN usuarios j ON u.jefe = j.noEmpleado
-                INNER JOIN departamento d ON u.departamento = d.id
-                LEFT JOIN solicitudes s 
+                LEFT JOIN usuarios j ON u.jefe = j.noEmpleado
+                LEFT JOIN departamento d ON u.departamento = d.id
+                LEFT JOIN solicitudes s
                     ON u.noEmpleado = s.empleado
-                    AND s.fesolicitud BETWEEN 
+                    AND s.fesolicitud BETWEEN
                             (CASE
                                 WHEN MAKEDATE(YEAR(CURDATE()), DAYOFYEAR(u.fechaIngreso)) > CURDATE()
                                 THEN MAKEDATE(YEAR(CURDATE()) - 1, DAYOFYEAR(u.fechaIngreso))
@@ -58,7 +60,8 @@ $correo = $_POST["correo"];
                                 THEN MAKEDATE(YEAR(CURDATE()), DAYOFYEAR(u.fechaIngreso))
                                 ELSE MAKEDATE(YEAR(CURDATE()) + 1, DAYOFYEAR(u.fechaIngreso))
                             END)
-                WHERE u.noEmpleado = $noEmpleado";
+                WHERE u.noEmpleado = $noEmpleado
+                GROUP BY u.noEmpleado";
 
         $result = $conn->query($sql);
         //echo $sql;
@@ -91,7 +94,7 @@ $correo = $_POST["correo"];
             $id_usuario = $rowUsuario['id_usuario'];
 
             // 2. Obtener placa desde la tabla inventario usando id_usuario
-            $sqlPlaca = "SELECT placa FROM inventario WHERE id_usuario = $id_usuario ORDER BY id_vehiculo DESC LIMIT 1";
+            $sqlPlaca = "SELECT placa FROM mess_control_vehicular.inventario WHERE id_usuario = $id_usuario ORDER BY id_vehiculo DESC LIMIT 1";
             $resultPlaca = $conn->query($sqlPlaca);
 
             if ($resultPlaca && $resultPlaca->num_rows > 0) {
