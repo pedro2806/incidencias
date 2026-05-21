@@ -66,6 +66,43 @@ if ($opcion == "jefes") {
     echo json_encode($events);
 }
 
+// Vacaciones de los compañeros del mismo departamento (excluyendo al usuario logueado).
+// Pensado para usuarios NO jefes que quieren ver el calendario de su departamento.
+if ($opcion == "departamento") {
+    $noEmp = intval($noEmpleado_cookie);
+    $events = array();
+
+    if ($noEmp > 0) {
+        $sqlDept = "SELECT s.empleado,
+                           s.fesolicitud,
+                           s.feinicio,
+                           DATE_ADD(s.fefin, INTERVAL 1 DAY) AS fefin,
+                           u.nombre
+                    FROM solicitudes s
+                    INNER JOIN usuarios u ON s.empleado = u.noEmpleado
+                    WHERE s.estatus = 2
+                      AND s.autorizaRH = 2
+                      AND u.estatus = 1
+                      AND u.noEmpleado <> $noEmp
+                      AND u.departamento = (SELECT departamento FROM usuarios WHERE noEmpleado = $noEmp)";
+
+        $resultDept = $conn->query($sqlDept);
+        if ($resultDept) {
+            while ($row = $resultDept->fetch_assoc()) {
+                $events[] = array(
+                    'title'  => $row['nombre'],
+                    'start'  => $row['feinicio'],
+                    'end'    => $row['fefin'],
+                    'nombre' => $row['nombre']
+                );
+            }
+        }
+    }
+
+    header('Content-Type: application/json');
+    echo json_encode($events);
+}
+
 if ($accion == 'ActividadesCalendarioPlaneadasfiltro') {
 
     // Si 'area' es un multiselect, se recibirá como un array

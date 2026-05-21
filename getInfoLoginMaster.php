@@ -28,7 +28,8 @@ $correo = $_POST["correo"];
     if($accion == "getInfo") {
         
         $sql = "SELECT TIMESTAMPDIFF(YEAR, u.fechaIngreso, CURDATE()) AS antiguedad,
-                d.departamento,
+                a.AREA AS departamento,
+                p.puesto AS puesto,
                 j.nombre AS jefe,
                 COALESCE((
                     SELECT dv.dias
@@ -45,7 +46,8 @@ $correo = $_POST["correo"];
                 ), 0) AS diasSol
                 FROM usuarios u
                 LEFT JOIN usuarios j ON u.jefe = j.noEmpleado
-                LEFT JOIN departamento d ON u.departamento = d.id
+                LEFT JOIN areas a ON u.departamento = a.id
+                LEFT JOIN puesto p ON u.puesto = p.id
                 LEFT JOIN solicitudes s
                     ON u.noEmpleado = s.empleado
                     AND s.fesolicitud BETWEEN

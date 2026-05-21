@@ -18,7 +18,7 @@ if ($accion == 'getPlaca') {
         $id_usuario = $rowUsuario['id_usuario'];
 
         // Obtener todas las placas y modelos en un solo array
-        $sqlPlaca = "SELECT placa, modelo FROM inventario WHERE id_usuario = $id_usuario";
+        $sqlPlaca = "SELECT id_vehiculo, placa, modelo FROM inventario WHERE id_usuario = $id_usuario";
         $resultPlaca = $conn->query($sqlPlaca);
 
         $vehiculos = [];
