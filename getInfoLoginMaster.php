@@ -28,9 +28,10 @@ $correo = $_POST["correo"];
     if($accion == "getInfo") {
         
         $sql = "SELECT TIMESTAMPDIFF(YEAR, u.fechaIngreso, CURDATE()) AS antiguedad,
-                a.AREA AS departamento,
+                d.departamento AS departamento,
                 p.puesto AS puesto,
                 j.nombre AS jefe,
+                u.foto AS foto,
                 COALESCE((
                     SELECT dv.dias
                     FROM diasvacaciones dv
@@ -46,7 +47,7 @@ $correo = $_POST["correo"];
                 ), 0) AS diasSol
                 FROM usuarios u
                 LEFT JOIN usuarios j ON u.jefe = j.noEmpleado
-                LEFT JOIN areas a ON u.departamento = a.id
+                LEFT JOIN departamento d ON u.departamento = d.id
                 LEFT JOIN puesto p ON u.puesto = p.id
                 LEFT JOIN solicitudes s
                     ON u.noEmpleado = s.empleado
@@ -75,6 +76,56 @@ $correo = $_POST["correo"];
             echo json_encode(['status' => 'success', 'info' => $info]);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'No se encontraron actividades planeadas o error en la consulta.']);
+        }
+    }
+
+// Listado de empleados para el Directorio
+    if ($accion == 'listarEmpleados') {
+        // u.nave se devuelve crudo (número); cuando exista la tabla `nave`
+        // habrá que hacer LEFT JOIN nave n ON u.nave = n.id y devolver n.nombre.
+        // Teléfonos: tabla `telefono` 1:N (un empleado puede tener varios).
+        // Se concatenan todos en un solo string ya formateado, sin filtrar tipo.
+        $sql = "SELECT u.noEmpleado,
+                       COALESCE(
+                           NULLIF(TRIM(CONCAT_WS(' ', u.nombres, u.apellidos)), ''),
+                           u.nombre
+                       ) AS nombre,
+                       u.foto,
+                       u.correo,
+                       d.departamento AS area,
+                       p.puesto       AS puesto,
+                       u.nave         AS nave,
+                       tel.telefono   AS telefono
+                FROM usuarios u
+                LEFT JOIN departamento d ON u.departamento = d.id
+                LEFT JOIN puesto p       ON u.puesto       = p.id
+                LEFT JOIN (
+                    SELECT t.noEmpleado,
+                           GROUP_CONCAT(
+                               CONCAT(
+                                   TRIM(t.telefono),
+                                   IF(t.extension IS NOT NULL AND t.extension <> '',
+                                      CONCAT(' ext. ', t.extension), '')
+                               )
+                               ORDER BY t.idTelefono
+                               SEPARATOR ' / '
+                           ) AS telefono
+                    FROM telefono t
+                    WHERE t.noEmpleado > 0
+                      AND t.telefono IS NOT NULL
+                      AND t.telefono <> ''
+                    GROUP BY t.noEmpleado
+                ) tel ON tel.noEmpleado = u.noEmpleado
+                WHERE u.estatus = 1
+                ORDER BY nombre ASC";
+
+        $result = $conn->query($sql);
+        if ($result && $result->num_rows > 0) {
+            $info = [];
+            while ($row = $result->fetch_assoc()) { $info[] = $row; }
+            echo json_encode(['status' => 'success', 'info' => $info]);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'No se encontraron empleados activos.']);
         }
     }
 
