@@ -79,11 +79,6 @@
                         <p>                            
                         </center>encuesta_viaje
                         -->
-                        <div class = "col-xl-7 col-lg-7">
-                            
-                                <embed id="vistaPrevia" src='https://www.mess.com.mx/wp-content/uploads/2026/04/MURAL-ABRIL-2026_compressed.pdf#zoom=33' type="application/pdf" width="100%" height="500px" />
-                                <!--<embed id="vistaPrevia" src='https://www.messbook.com.mx/incidencias/encuesta_viaje?usuario=<?php echo $_COOKIE['noEmpleado']; ?>' type="application/pdf" width="100%" height="550">-->
-                        </div>
                         <!--AGENDA SALA DE JUNTAS-->
                             <div class="col-lg-5 mx-auto">
                                 <div class="text-center">

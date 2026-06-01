@@ -6,7 +6,7 @@ mysqli_set_charset($conn, "utf8");
 
 $opcion = $_GET["opcion"];
 $rol = $_GET["cookieRol"];
-$usuario = $_GET["cookieNoEmpleado"];
+$usuario = $_COOKIE['noEmpleado'];
 
 $fesolicitud = $_POST["fsolicitud"];
 $noEmpleado = $_POST["noEmpleado"];
