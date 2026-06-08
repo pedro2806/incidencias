@@ -105,8 +105,11 @@ function consultaSolicitudes($conn, $sql, $noEmpleado)
 $porAutorizar = consultaSolicitudes(
     $conn,
     "SELECT * FROM solicitudes
-     WHERE empleado = ? AND (estatus = 1 OR autorizaRH = 1)
-     ORDER BY fesolicitud ASC",
+        WHERE empleado = ? 
+            AND (estatus = 1 OR autorizaRH = 1)
+            AND estatus != 3 
+            AND autorizaRH != 3
+        ORDER BY fesolicitud ASC",
     $noEmpleado
 );
 
