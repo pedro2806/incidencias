@@ -35,8 +35,10 @@ include 'conn.php';
                         </div>
                         <div class = "h5 mb-0 font-weight-bold text-gray-800">
                             Vac. por ley: <?php
-                                $antiguedad = $_COOKIE['antiguedad'];
-                                
+                                // Saneo a entero: si la cookie 'antiguedad' viene vacía/ausente,
+                                // queda 0 (anio = 0, válido) en vez de "WHERE anio = " (error de sintaxis).
+                                $antiguedad = isset($_COOKIE['antiguedad']) ? (int) $_COOKIE['antiguedad'] : 0;
+
                                 $Qdias = "SELECT * FROM diasvacaciones WHERE anio = $antiguedad";
                                 $resdias= mysqli_query( $conn, $Qdias ) or die (mysqli_error($conn));
                                 

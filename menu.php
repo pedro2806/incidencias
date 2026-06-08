@@ -9,7 +9,7 @@
 <ul class = "navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id = "accordionSidebar">
 
 <!-- Sidebar - Brand -->
-<a class = "sidebar-brand d-flex align-items-center justify-content-center" href = "../logout.php?sesion=LM"">
+<a class = "sidebar-brand d-flex align-items-center justify-content-center" href = "logout.php?sesion=LM">
     <div class = "sidebar-brand-icon rotate-n-1">
         <img class = "sidebar-card-illustration mb-2" src = "img/MESS_07_CuboMess_2.png" width = "40">
     </div>
@@ -57,7 +57,7 @@
             While ($row = mysqli_fetch_array($resRol)){
                 $rol = utf8_encode($row["rol"]);
             }
-            if(($rol == 3) || ($noEmp ==  276 || $noEmp ==  244 )){
+            if(($rol == 3) || ($noEmp ==  276 || $noEmp ==  244 || $noEmp ==  523 )){
         
                 echo '<a class = "collapse-item" href = "solicitudempleado">Solicitudes para revisar</a>';
                 if ($noEmp ==  19) {  
@@ -76,8 +76,15 @@
 
 <!-- Nav Item - Utilities Collapse Menu -->
 <?php
-$noEmp = $_COOKIE['noEmpleado'];
-if ($noEmp == 183 || $noEmp ==  276 || $noEmp == 403 || $noEmp ==  523 || $noEmp == 569){
+// Acceso al bloque "Administración": validado contra accesos_especiales
+// (opcion 'verAdministracion'), no por números de empleado hardcodeados.
+$noEmpAdmin = (int) $_COOKIE['noEmpleado'];
+$stmtAdmin = $conn->prepare("SELECT id FROM accesos_especiales WHERE noEmpleado = ? AND sistema = 'incidencias' AND opcion = 'verAdministracion' AND estatus = 1 LIMIT 1");
+$stmtAdmin->bind_param("i", $noEmpAdmin);
+$stmtAdmin->execute();
+$tieneAdmin = $stmtAdmin->get_result()->num_rows > 0;
+$stmtAdmin->close();
+if ($tieneAdmin){
 ?>
     <li class = "nav-item">
         <a class = "nav-link collapsed" href = "#" data-toggle = "collapse" data-target = "#collapseUtilities"
@@ -88,8 +95,6 @@ if ($noEmp == 183 || $noEmp ==  276 || $noEmp == 403 || $noEmp ==  523 || $noEmp
         <div id = "collapseUtilities" class = "collapse" aria-labelledby = "headingUtilities"
             data-parent = "#accordionSidebar">
             <div class = "bg-white py-2 collapse-inner rounded">
-                <a class = "collapse-item" href = "personal">Personal</a>
-                <a class = "collapse-item" href = "areaspuestos">Areas/Puestos/Regiones</a>            
                 <a class = "collapse-item" href = "listavacaciones">Lista de Vacaciones</a>
                 <a class = "collapse-item" href = "calendarioVacaciones">Calendario de Vacaciones</a>
                 <a class = "collapse-item" href = "mandarNomina">Control pagos nómina</a>
