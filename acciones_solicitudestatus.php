@@ -123,7 +123,7 @@ $autorizadas = consultaSolicitudes(
 $canceladas = consultaSolicitudes(
     $conn,
     "SELECT * FROM solicitudes
-     WHERE empleado = ? AND estatus = 3",
+     WHERE empleado = ? AND (estatus = 3 OR autorizaRH = 3)",
     $noEmpleado
 );
 
