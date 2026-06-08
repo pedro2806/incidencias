@@ -1,16 +1,16 @@
 <!-- Topbar -->
 <nav class = "navbar navbar-expand navbar-light bg-white topbar mb-2 static-top shadow">
-<!-- Enlace a Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Enlace a Bootstrap CSS (local) -->
+<link href="vendor/bootstrap5/css/bootstrap.min.css" rel="stylesheet">
 
-<!-- Enlace a Bootstrap JS (necesario para el funcionamiento del modal) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Enlace a Bootstrap JS (necesario para el funcionamiento del modal) (local) -->
+<script src="vendor/bootstrap5/js/bootstrap.bundle.min.js"></script>
 
-<!-- Enlace a FontAwesome para los íconos (si usas íconos) -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+<!-- FontAwesome (local) -->
+<link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
 
-<!-- SweetAlert2 CDN -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- SweetAlert2 (local) -->
+<script src="vendor/sweetalert2/sweetalert2.all.min.js"></script>
 
 
 <!-- Sidebar Toggle (Topbar) -->
@@ -331,9 +331,11 @@
     window.addEventListener('load', function() {
         var cookieValue = getCookie("noEmpleado"); // Aquí "noEmpleadoCookie" es el nombre de la cookie
     
-        // Verificar si la cookie existe y asignar el valor al input
-        if (cookieValue) {
-            document.getElementById("noEmpleado").value = cookieValue;
+        // Verificar si la cookie existe y que el input exista antes de asignar
+        // (no todas las páginas tienen #noEmpleado; evita "Cannot set properties of null")
+        var campoNoEmpleado = document.getElementById("noEmpleado");
+        if (cookieValue && campoNoEmpleado) {
+            campoNoEmpleado.value = cookieValue;
         }
 
         if (typeof window.jQuery !== 'undefined') {

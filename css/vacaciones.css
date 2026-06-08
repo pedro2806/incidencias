@@ -1,0 +1,21 @@
+/* =========================================================================
+   vacaciones.css - Estilos propios del módulo de vacaciones/incidencias.
+   (Centraliza estilos del proyecto; ir migrando aquí los <style> inline.)
+   ========================================================================= */
+
+/* Naranja institucional (--orange del tema SB Admin 2).
+   Se usa .btn.btn-naranja (doble clase) para ganar especificidad al tema y
+   que el color aplique también en estado normal, no solo en :focus. */
+.btn.btn-naranja {
+    background-color: #fd7e14;
+    border-color: #fd7e14;
+    color: #fff;
+}
+
+.btn.btn-naranja:hover,
+.btn.btn-naranja:focus,
+.btn.btn-naranja:active {
+    background-color: #e36f0a;
+    border-color: #e36f0a;
+    color: #fff;
+}
