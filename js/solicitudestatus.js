@@ -154,7 +154,7 @@ function renderCanceladas(filas) {
             '<td>' + (r.feinicio) + ' - ' + (r.fefin) + '</td>' +
             '<td>' + escapeHtml(r.notasempleado) + '</td>' +
             '<td>' + escapeHtml(r.notajefe) + '</td>' +
-            '<td>' + badgeEstatusCancelada(r.estatus) + '</td>' +
+            '<td><span class="badge text-bg-danger">Cancelada</span></td>' +
             '</tr>';
     });
     $('#Tcanceladas tbody').html(html);
