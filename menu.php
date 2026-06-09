@@ -55,7 +55,7 @@
             $resRol= mysqli_query( $conn, $Qrol ) or die (mysqli_error($conn));
             
             While ($row = mysqli_fetch_array($resRol)){
-                $rol = utf8_encode($row["rol"]);
+                $rol = $row["rol"];
             }
             if(($rol == 3) || ($noEmp ==  276 || $noEmp ==  244 || $noEmp ==  523 )){
         

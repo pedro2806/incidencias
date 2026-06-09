@@ -25,16 +25,16 @@
 			document.cookie = "noEmpleado=00; expires=Thu, 01 Jan 1970 00:00:00 UTC";
 			document.cookie = "nombredelusuario=00; expires=Thu, 01 Jan 1970 00:00:00 UTC";
 			document.cookie = "rol=00; expires=Thu, 01 Jan 1970 00:00:00 UTC";
-			sesion = '<?php echo $_GET['sesion']; ?>';
+			//sesion = '?php echo $_GET['sesion']; ?>';
 			
 			let cookieSesion = getCookie("SesionLogin");
 			//alert("Cerrando sesión..." + cookieSesion);
-			if (cookieSesion === "LoginMaster" || sesion === "LM") {
+			//if (cookieSesion === "LoginMaster" || sesion === "LM") {
 				document.cookie = "SesionLogin=00; expires=Thu, 01 Jan 1970 00:00:00 UTC";
 				window.location.assign("../loginMaster/inicio");
-			} else {
+			/*} else {
 				window.location.assign("https://www.messbook.com.mx/incidencias");
-			}
+			}*/
 			
 		});
 		// Leer cookies antes de borrarlas
