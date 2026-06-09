@@ -1,10 +1,14 @@
 <?php
-    
+
     include 'conn.php';
     if($_COOKIE['noEmpleado'] == '' || $_COOKIE['noEmpleado'] == null){
         echo '<script>window.location.assign("index")</script>';
     }
 ?>
+<!-- Identidad institucional MESS (paleta + tema claro/oscuro) -->
+<link rel="stylesheet" href="css/vacaciones.css">
+<!-- Aplica el tema guardado antes de renderizar (evita el flash), estilo ticketsBI -->
+<script>(function(){try{if(localStorage.getItem('mess-theme')==='dark'){document.body.classList.add('theme-dark');}}catch(e){}})();</script>
 <!-- Sidebar -->
 <ul class = "navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id = "accordionSidebar">
 

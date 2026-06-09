@@ -161,9 +161,9 @@ function renderCanceladas(filas) {
 }
 
 function inicializarTablas() {
-    $('#TporAutorizar').DataTable({ "language": DT_LANG_ES });
-    $('#Tautorizadas').DataTable({ "language": DT_LANG_ES });
-    $('#Tcanceladas').DataTable({ "language": DT_LANG_ES });
+    $('#TporAutorizar').DataTable({ "language": DT_LANG_ES, "autoWidth": false });
+    $('#Tautorizadas').DataTable({ "language": DT_LANG_ES, "autoWidth": false });
+    $('#Tcanceladas').DataTable({ "language": DT_LANG_ES, "autoWidth": false });
 }
 
 /* --------------------- Acción del modal (cancelar) ----------------- */

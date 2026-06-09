@@ -99,7 +99,7 @@
                                             <div class="col-xl-1"></div>
 
                                             <!-- Primera opción: Vacaciones -->
-                                            <div class="col-xl-3" style="box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); padding: 10px; border-radius: 8px; background-color: #ecebeb;">
+                                            <div class="col-xl-3 opcion-incidencia" style="box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); padding: 10px; border-radius: 8px;">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio" name="ti1" id="ti1" onchange="tIncidencia(1);" value="1" required checked>
                                                     <label class="form-check-label" for="ti1">
@@ -109,7 +109,7 @@
                                             </div>
 
                                             <!-- Segunda opción: Permiso sin goce -->
-                                            <div class="col-xl-3" style="box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); padding: 10px; border-radius: 8px; background-color: #ecebeb;">
+                                            <div class="col-xl-3 opcion-incidencia" style="box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); padding: 10px; border-radius: 8px;">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio" name="ti1" id="ti2" onchange="tIncidencia(2);" value="2" required>
                                                     <label class="form-check-label" for="ti2">
@@ -119,7 +119,7 @@
                                             </div>
 
                                             <!-- Tercera opción: Permiso con goce -->
-                                            <div class="col-xl-4" style="box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); padding: 10px; border-radius: 8px; background-color: #ecebeb;">
+                                            <div class="col-xl-4 opcion-incidencia" style="box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); padding: 10px; border-radius: 8px;">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio" name="ti1" id="ti3" onchange="tIncidencia(3);" value="3" required>
                                                     <label class="form-check-label" for="ti3">

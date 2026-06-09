@@ -48,11 +48,10 @@
                     <?php include 'conteo.php'; ?>
 
                     <!-- Content Row -->
-                    <div class="card shadow mb-2">
+                    <div class="row">
+                        <div class="card shadow mb-2">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-xl-1"></div>
-                                <div class="col-xl-10">
                                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                                         <li class="nav-item">
                                             <a class="nav-link active btn-outline-warning" type="button" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Por autorizar</a>
@@ -67,7 +66,8 @@
                                     <div class="tab-content" id="myTabContent">
                                         <!-- POR AUTORIZAR -->
                                         <div class="tab-pane fade show active in" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                            <table class="table table-sm table-striped" id="TporAutorizar" name="TporAutorizar">
+                                            <div class="table-responsive">
+                                            <table class="table table-sm table-striped w-100" id="TporAutorizar" name="TporAutorizar">
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">T/F Solicitud</th>
@@ -79,10 +79,12 @@
                                                 </thead>
                                                 <tbody></tbody>
                                             </table>
+                                            </div>
                                         </div>
                                         <!-- AUTORIZADAS -->
                                         <div class="tab-pane fade" id="autorizadas" role="tabpanel" aria-labelledby="autorizadas-tab">
-                                            <table class="table table-sm table-striped" id="Tautorizadas" name="Tautorizadas">
+                                            <div class="table-responsive">
+                                            <table class="table table-sm table-striped w-100" id="Tautorizadas" name="Tautorizadas">
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">T. de solicitud</th>
@@ -96,10 +98,12 @@
                                                 </thead>
                                                 <tbody></tbody>
                                             </table>
+                                            </div>
                                         </div>
                                         <!-- CANCELADAS / RECHAZADAS -->
                                         <div class="tab-pane fade" id="canceladas" role="tabpanel" aria-labelledby="canceladas-tab">
-                                            <table class="table table-sm table-striped" id="Tcanceladas" name="Tcanceladas">
+                                            <div class="table-responsive">
+                                            <table class="table table-sm table-striped w-100" id="Tcanceladas" name="Tcanceladas">
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">T. de solicitud</th>
@@ -113,6 +117,7 @@
                                                 </thead>
                                                 <tbody></tbody>
                                             </table>
+                                            </div>
                                         </div>
                                     </div>
 
