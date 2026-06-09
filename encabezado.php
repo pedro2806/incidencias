@@ -36,6 +36,35 @@
 <!-- Topbar Navbar -->
 <ul class = "navbar-nav ml-auto">
 
+    <!-- Toggle de tema claro/oscuro (estilo ticketsBI) -->
+    <li class = "nav-item d-flex align-items-center mr-2">
+        <button id="themeToggle" type="button" class="theme-toggle-btn" title="Cambiar tema">
+            <i class="fas fa-moon"></i>
+        </button>
+    </li>
+    <script>
+    (function () {
+        var btn = document.getElementById('themeToggle');
+        if (!btn) return;
+        function applyTheme(theme) {
+            var icon = btn.querySelector('i');
+            if (theme === 'dark') {
+                document.body.classList.add('theme-dark');
+                if (icon) { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); }
+            } else {
+                document.body.classList.remove('theme-dark');
+                if (icon) { icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); }
+            }
+            try { localStorage.setItem('mess-theme', theme); } catch (e) {}
+        }
+        // sincroniza el icono con el tema ya aplicado por el script temprano
+        applyTheme(document.body.classList.contains('theme-dark') ? 'dark' : 'light');
+        btn.addEventListener('click', function () {
+            applyTheme(document.body.classList.contains('theme-dark') ? 'light' : 'dark');
+        });
+    })();
+    </script>
+
     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
     <li class = "nav-item dropdown no-arrow d-sm-none">
         <a class = "nav-link dropdown-toggle" href = "#" id = "searchDropdown" role = "button"
