@@ -69,10 +69,12 @@ if (empty($id_usuario) || empty($noEmpleado)) {
         echo '<script>document.cookie = "diasD='.$diasD.';expires=" + new Date(Date.now() + 86400000).toUTCString() + ";SameSite=Lax;";</script>';
         echo '<script>document.cookie = "rol='.$rol.';expires=" + new Date(Date.now() + 86400000).toUTCString() + ";SameSite=Lax;";</script>';
         echo '<script>document.cookie = "SesionLogin=LoginMaster; expires=" + new Date(Date.now() + 99999000).toUTCString() + ";SameSite=Lax;";</script>';
-        if($sistema == "saladeJuntas"){ 
-            echo '<script>window.location.assign("SalaDeJuntas/")</script>';                
+        if($sistema == "saladeJuntas"){
+            echo '<script>window.location.assign("SalaDeJuntas/")</script>';
+        } else if($sistema == "vacaciones"){
+            echo '<script>window.location.assign("nuevasolicitud")</script>';
         } else{
-            echo '<script>window.location.assign("inicio")</script>';                
+            echo '<script>window.location.assign("inicio")</script>';
         }
         session_start();
         $_SESSION['nombredelusuario'] = $nombreEmpleado;
