@@ -248,24 +248,40 @@ data.forEach(function (solicitud) {
 
     
     // Construcción de la fila de la tabla
-    const fila = [        
+    const btnComentarios = `<button class='btn btn-outline-primary btn-sm'
+            data-comentarios="${comentariosEscapados}"
+            onclick='verComentarios(this)'>
+        <i class='fas fa-comments'></i>
+    </button>`;
+
+    let fila;
+    if (selectorTabla === "#tablaDetalleIncidencias tbody") {
+        // 8 columnas: Solicita | Responsable | Fecha Incidencia | Fecha Cierre | Tipo | Detalle | Comentarios | Estatus
+        fila = [
             QuienSolicita,
             solicitud.responsable,
-            selectorTabla === "#TSolTodas tbody" ? `<span class="badge text-bg-dark">${solicitud.estatus}</span>` : accionesPorTipo,
+            solicitud.fecha_incidente,
+            solicitud.fecha_cierre,
+            solicitud.tipo,
+            solicitud.detalle_incidencia,
+            btnComentarios,
+            `<span class="badge ${solicitud.estilo_estatus}">${solicitud.estatus}</span>`
+        ];
+    } else {
+        // 9 columnas: Solicita | Dirigida a | Estatus | Fecha Incidente | Fecha Cierre | Tipo | Clasificación | Comentarios | Acciones
+        fila = [
+            QuienSolicita,
+            solicitud.responsable,
+            selectorTabla === "#TSolTodas tbody" ? `<span class="badge text-bg-dark">${solicitud.estatus}</span>` : '',
             solicitud.fecha_incidente,
             solicitud.fecha_cierre,
             solicitud.tipo + " - " + solicitud.fecha_incidente,
             solicitud.detalle_incidencia,
-            `<button class='btn btn-outline-primary btn-sm'
-                    data-comentarios="${comentariosEscapados}"
-                    onclick='verComentarios(this)'>
-                <i class='fas fa-comments'></i>
-            </button>`,
-            selectorTabla === "#tablaDetalleIncidencias tbody" ? 
-                `<span class="badge ${solicitud.estilo_estatus}">${solicitud.estatus}</span>` :     
-                botonFinal
+            btnComentarios,
+            botonFinal
         ];
-    
+    }
+
     tabla.row.add(fila);
     });
     tabla.draw();
