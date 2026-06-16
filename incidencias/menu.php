@@ -16,13 +16,6 @@
     </div>
 </a>
 <hr class="sidebar-divider my-0">
-<!-- Nav Item - Dashboard -->
-<li class="nav-item active btn-warning">
-    <a class="nav-link" href="../logout.php?sesion=LM">
-        <i class="fas fa-fw fa-backward"></i>
-        <span>Volver</span>
-    </a>
-</li>
 <!-- Divider -->
 <hr class="sidebar-divider">
 <!-- Heading -->
