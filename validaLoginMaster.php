@@ -17,8 +17,12 @@ if ($accion == 'getPlaca') {
         $rowUsuario = $resultUsuario->fetch_assoc();
         $id_usuario = $rowUsuario['id_usuario'];
 
-        // Obtener todas las placas y modelos en un solo array
-        $sqlPlaca = "SELECT id_vehiculo, placa, modelo FROM inventario WHERE id_usuario = $id_usuario";
+        $sqlPlaca = "SELECT id_vehiculo, placa, modelo FROM inventario WHERE id_usuario = $id_usuario OR id_us_asignado = $id_usuario
+                     UNION
+                     SELECT inv.id_vehiculo, inv.placa, inv.modelo
+                     FROM inventario inv
+                     INNER JOIN prestamos p ON inv.id_vehiculo = p.id_vehiculo
+                     WHERE p.id_usuario = $id_usuario AND p.estatus IN ('AUTORIZADO','EN CURSO')";
         $resultPlaca = $conn->query($sqlPlaca);
 
         $vehiculos = [];
