@@ -136,8 +136,8 @@ $noEmpleadoInc = isset($_POST["noEmpleadoInc"]) ? $_POST["noEmpleadoInc"] : $noE
                         ELSE 'otro'
                     END AS solicita
                     FROM incidencias_solicitudes isol
-                    INNER JOIN usuarios u ON isol.solicita = u.noEmpleado
-                    INNER JOIN usuarios ur ON isol.responsable = ur.noEmpleado
+                    INNER JOIN usuarios u ON isol.solicita = u.id_usuario
+                    INNER JOIN usuarios ur ON isol.responsable = ur.id_usuario
                     INNER JOIN incidencias_clasificacion ic ON isol.clasificacion = ic.id
                     WHERE isol.tipo = 'Personal'                        
                     ORDER BY isol.fecha_solicitud DESC"; 
