@@ -11,7 +11,7 @@
     $tipo = $_POST['tipo'];
     $solicita = $_COOKIE['noEmpleado'];
     
-    $sqlCorreo = "SELECT correo as correoResponsable, nombre as nombreResponsable, (SELECT correo FROM usuarios WHERE noEmpleado = (SELECT jefe FROM usuarios WHERE noEmpleado = '$responsable')) AS correoJefe
+    $sqlCorreo = "SELECT correo as correoResponsable, nombre as nombreResponsable, (SELECT correo FROM usuarios WHERE id_usuario = (SELECT jefe FROM usuarios WHERE id_usuario = '$responsable')) AS correoJefe
                     FROM usuarios 
                     WHERE noEmpleado = '$responsable'";
                     //echo $sqlCorreo; 
