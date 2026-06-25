@@ -109,6 +109,7 @@
                                                 <option value="Operación">Operaciónes</option>
                                                 <option value="Personal">Personal</option>
                                                 <option value="Calidad">Calidad</option>
+                                                <option value="Calidad">Comercial</option>
                                             </select>
                                         </div>
                                     </div>
