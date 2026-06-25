@@ -109,7 +109,7 @@
                                                 <option value="Operación">Operaciónes</option>
                                                 <option value="Personal">Personal</option>
                                                 <option value="Calidad">Calidad</option>
-                                                <option value="Calidad">Comercial</option>
+                                                <option value="Comercial">Comercial</option>
                                             </select>
                                         </div>
                                     </div>
@@ -385,7 +385,7 @@
         var tIncidencia = function(ti) {
             opcion = "clasficacion";
             tipo = ti;
-            if(tipo === "Personal") {
+            if(tipo === "Personal" || tipo === "Comercial") {
                 $('#divformIncidencias').show();
                 $('#formFiltro').hide();
             }else{
