@@ -28,7 +28,8 @@ if ($accion == "verificaReserva"){
         $sqlVerifica = "SELECT * FROM reservas 
                         WHERE id_sala = 1 
                         AND fecha_hora_inicio < '$ffin' 
-                        AND fecha_hora_fin > '$finicio'";
+                        AND fecha_hora_fin > '$finicio'
+                        AND estatus = 'Reservada'";
 
         $resultadoVerifica = $conn->query($sqlVerifica);
 
