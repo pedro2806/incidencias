@@ -42,8 +42,7 @@
 
                 <!-- Begin Page Content -->
                 <div class = "container-fluid">
-                    <h1 class = "h3 mb-2 text-gray-800">Solicitudes de vacaciones y permisos</h1>
-                    <p class = "mb-4">Consulta el estatus de solicitudes de vacaciones y permisos.</p>
+                    <h1 class = "h3 mb-0 text-gray-800">Solicitudes de vacaciones y permisos</h1>
 
                     <!-- Content Row -->
                     <div class = "row">
@@ -52,7 +51,7 @@
                                 <div class = "card-body">
 
                                     <div class = "row">
-                                        <div class="col-md-6 mb-2">
+                                        <div class="col-md-6 mb-1">
                                             <label for="filtro-ingeniero" class="mr-1">Filtrar por Ingeniero:</label>
                                             <select id="filtro-ingeniero" name="filtro-ingeniero" class="form-control mr-1">
                                                 <option value="0">Selecciona...</option>
@@ -75,15 +74,18 @@
                                     <div class="tab-content" id="myTabContent">
                                         <div class="tab-pane border-left-warning fade show active in" id="home" role="tabpanel" aria-labelledby="home-tab">
                                             <br>
-                                            <table class="table table-sm table-striped w-100" id = "TvacacionesPersonal" name = "TvacacionesPersonal">
-                                                <thead class = "table-primary">
-                                                    <tr>
-                                                        <th scope="col" width="24%">Empleado</th>
-                                                        <th scope="col" width="12%">T. de solicitud</th>
-                                                        <th scope="col" width="12%">Fecha de sol</th>
-                                                        <th scope="col" width="20%">No. días / Periodo</th>
-                                                        <th scope="col" width="20%">Comentarios</th>
-                                                        <th scope="col" width="8%">Estatus</th>
+                                            <table class="table table-sm table-hover w-100" id="TvacacionesPersonal" name="TvacacionesPersonal" style="border-bottom: 1px solid #e3e6f0;">
+                                                <thead>
+                                                    <tr class="bg-light text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.05rem;">
+                                                        <!-- id oculto -->
+                                                        <th width="0%" class="font-weight-bold border-0 py-2 ">ID</th>
+                                                        <th width="24%" class="font-weight-bold border-0 py-2">Empleado</th>        
+                                                        <th scope="col" width="12%" class="font-weight-bold border-0 py-2">Fecha / Tipo</th>
+                                                        <th scope="col" width="26%" class="font-weight-bold border-0 py-2">Periodo / Detalle Días</th>
+                                                        <th scope="col" width="8%" class="font-weight-bold border-0 py-2 text-center">Coments</th>
+                                                        <th scope="col" width="10%" class="font-weight-bold border-0 py-2">Estatus</th>
+                                                        <th scope="col" width="10%" class="font-weight-bold border-0 py-2">Pago</th>
+                                                        <th scope="col" width="10%" class="font-weight-bold border-0 py-2">Acciones</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>

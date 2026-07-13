@@ -99,7 +99,7 @@ if ($accion === "llenaTablaVacaciones") {
                    DATE_FORMAT(s.fesolicitud, '%Y-%m-%d') AS FechaBien,
                    (SELECT dias FROM diasvacaciones
                      WHERE anio = TIMESTAMPDIFF(YEAR, u.fechaIngreso, CURDATE())) AS diasD,
-                   u.fechaIngreso
+                   u.fechaIngreso, s.pago
             FROM solicitudes s
             INNER JOIN usuarios u ON s.empleado = u.noEmpleado
             WHERE s.fesolicitud BETWEEN DATE_SUB(CURDATE(), INTERVAL 2 YEAR) AND CURDATE()
@@ -128,7 +128,8 @@ if ($accion === "llenaTablaVacaciones") {
                 'autorizaRH'   => $row["autorizaRH"],
                 'FechaBien'    => $row["FechaBien"],
                 'Dgozados'     => $row["Dgozados"],
-                'diasDisp'     => $row["diasD"] - $diasSol
+                'diasDisp'     => $row["diasD"] - $diasSol,
+                'pago'         => $row["pago"]
             );
         }
         $stmt->close();
@@ -179,5 +180,34 @@ if ($accion === "llenaTablaServicios") {
         $stmt->close();
     }
     echo json_encode($servicios);
+    exit;
+}
+
+// --------------------- PERMUTAR SOLICITUD ------------------------- //
+// Acción para permutar una solicitud de vacaciones a otro periodo.
+if ($accion === 'permutarSolicitud') {
+    $idSolicitud = isset($_POST['idSolicitud']) ? (int) $_POST['idSolicitud'] : 0;
+    $nuevoInicio = isset($_POST['nuevaFechaInicio']) ? $_POST['nuevaFechaInicio'] : '';
+    $nuevoFin    = isset($_POST['nuevaFechaFin']) ? $_POST['nuevaFechaFin'] : '';
+
+    // Validar que los datos sean correctos
+    if ($idSolicitud <= 0 || empty($nuevoInicio) || empty($nuevoFin)) {
+        echo json_encode(array('error' => 'Datos inválidos'));
+        exit;
+    }
+
+    // Actualizar la solicitud en la base de datos
+    $sqlUpdate = "UPDATE solicitudes SET feinicio = ?, fefin = ? WHERE id = ?";
+    if ($stmtUpdate = $conn->prepare($sqlUpdate)) {
+        $stmtUpdate->bind_param("ssi", $nuevoInicio, $nuevoFin, $idSolicitud);
+        if ($stmtUpdate->execute()) {
+            echo json_encode(array('success' => true));
+        } else {
+            echo json_encode(array('error' => 'Error al actualizar la solicitud'));
+        }
+        $stmtUpdate->close();
+    } else {
+        echo json_encode(array('error' => 'Error en la preparación de la consulta'));
+    }
     exit;
 }

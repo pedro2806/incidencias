@@ -179,4 +179,48 @@ if ($accion === 'agregarSolicitud') {
     exit;
 }
 
+/* ------------------------------------------------------------------ *
+ * Validación de fechas                                                *
+ * ------------------------------------------------------------------ */
+if ($accion === 'validarFechas') {
+    $periodos = isset($_POST['periodos']) ? $_POST['periodos'] : [];
+    if (!is_array($periodos) || count($periodos) === 0) {
+        echo json_encode(['success' => false, 'message' => 'No se proporcionaron periodos para validar.']);
+        exit;
+    }
+
+    $fechas = [];
+    foreach ($periodos as $renglon) {
+        $fechaInicial = isset($renglon['fechaInicial']) ? $renglon['fechaInicial'] : '';
+        $fechaFinal   = isset($renglon['fechaFinal']) ? $renglon['fechaFinal'] : '';
+        if ($fechaInicial && $fechaFinal) {
+            $fechas[] = ['inicio' => $fechaInicial, 'fin' => $fechaFinal];
+        }
+    }
+
+    // Validar fechas en la base de datos
+    $sql = "SELECT feinicio, fefin FROM solicitudes WHERE empleado = ? AND estatus IN (1, 2)";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        echo json_encode(['success' => false, 'message' => 'Error al preparar la consulta de validación.']);
+        exit;
+    }
+
+    $stmt->bind_param("i", $noEmpleado);
+    $stmt->execute();
+    $res = $stmt->get_result();
+
+    while ($row = $res->fetch_assoc()) {
+        foreach ($fechas as $periodo) {
+            if (!($periodo['fin'] < $row['feinicio'] || $periodo['inicio'] > $row['fefin'])) {
+                echo json_encode(['success' => false, 'message' => 'Las fechas seleccionadas se superponen con solicitudes existentes.']);
+                exit;
+            }
+        }
+    }
+
+    echo json_encode(['success' => true]);
+    exit;
+}
+
 echo json_encode(['success' => false, 'message' => 'Accion no reconocida.']);

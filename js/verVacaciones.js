@@ -47,19 +47,20 @@ $(document).ready(function () {
         autoWidth: false,
         columnDefs: [
             {
-                targets: 2,  // Fecha de solicitud
-                render: function (data, type, row) {
-                    if (type === 'display' || type === 'filter') {
-                        var date = new Date(data);
-                        date.setMinutes(date.getMinutes() + date.getTimezoneOffset()); // corrige desfase UTC
-                        return ('0' + date.getDate()).slice(-2) + '/' +
-                               ('0' + (date.getMonth() + 1)).slice(-2) + '/' +
-                               date.getFullYear();
-                    }
-                    return data;
-                }
+                "targets": [0], // Oculta la columna del ID (la primera posición)
+                "visible": false,
+                "searchable": false // Evita que el ID afecte las búsquedas globales si no lo deseas
+            },
+            {
+                "targets": [7], // La columna de acciones no debe ordenarse al dar clic
+                "orderable": false
             }
-        ]
+        ],
+        "drawCallback": function(settings) {
+            $('[data-toggle="tooltip"]').tooltip({
+                container: 'body'
+            });
+        }
     });
 
     $('#TSolAbiertas').DataTable({
@@ -69,27 +70,34 @@ $(document).ready(function () {
 });
 
 function badgeTipo(tipo) {
-    if (tipo == 1) { return '<span class="badge badge-success">Vacaciones</span>'; }
-    if (tipo == 2) { return '<span class="badge badge-info text-white">Permiso sin goce</span>'; }
-    if (tipo == 3) { return '<span class="badge badge-primary">Permiso con goce</span>'; }
+    // Colores planos y sutiles para los tipos de solicitud
+    if (tipo == 1) { return '<span class="badge badge-light text-dark border">Vacaciones</span>'; }
+    if (tipo == 2) { return '<span class="badge badge-light text-muted border">Permiso sin goce</span>'; }
+    if (tipo == 3) { return '<span class="badge badge-light text-primary border">Permiso con goce</span>'; }
     return '';
 }
 
 function badgeEstatus(registro) {
-    var html = '';
-    if (registro.Estatus == 1) { html += '<span class="badge badge-warning">Por autorizar</span>'; }
+    var html = '<div class="d-flex flex-column gap-1">'; // Contenedor vertical ordenado
+    
+    if (registro.Estatus == 1) { html += '<span class="badge badge-warning-soft text-warning mb-1">Por autorizar</span>'; }
     if (registro.Estatus == 2) { html += '<span class="badge badge-success">Autorizada</span>'; }
-    // Nota: el original comprueba registro.autoriza (no se devuelve), se conserva igual.
-    if (registro.autoriza == 3) { html += '<span class="badge badge-danger">Rechazada/Cancelada</span>'; }
+    if (registro.Estatus == 3) { html += '<span class="badge badge-danger">Rechazada</span>'; }
 
-    if (registro.autorizaRH == 1) { html += '<span class="badge badge-warning">Por autorizar RH</span>'; }
-    if (registro.autorizaRH == 2) { html += '<span class="badge badge-success">Autorizada RH</span>'; }
-    if (registro.autorizaRH == 3) { html += '<span class="badge badge-danger">Rechazada/Cancelada RH</span>'; }
+    if (registro.autorizaRH == 1) { html += '<span class="badge badge-light text-warning border">Pendiente RH</span>'; }
+    if (registro.autorizaRH == 2) { html += '<span class="badge badge-light text-success border">Autorizada RH</span>'; }
+    if (registro.autorizaRH == 3) { html += '<span class="badge badge-light text-danger border">Rechazada RH</span>'; }
+    
+    html += '</div>';
     return html;
 }
 
 function llenaTablaVacaciones() {
     var empleado = $('#filtro-ingeniero').val();
+
+    var acciones = '<div class="d-flex justify-content-center gap-1">' +
+        '<button class="btn btn-sm btn-outline-primary" title="Permutar" onclick="permutarSolicitud(this)"><i class="fas fa-check"></i></button>' +        
+        '</div>';
 
     $.ajax({
         url: 'acciones_verVacaciones.php',
@@ -102,29 +110,127 @@ function llenaTablaVacaciones() {
 
             var filas = [];
             registros.forEach(function (Registro) {
+                // Estatus de pago discreto y profesional                
+                let badgePagoProvisional = '<span class="badge badge-light text-primary border font-weight-normal">Pendiente Pago</span>';
+
+                if (Registro.pago === 'Si') { 
+                    badgePagoProvisional = '<span class="badge badge-light text-success border font-weight-normal">Pagado</span>'; 
+                }             
+                
+                // Construcción limpia del tooltip
+                const textoTooltip = 'Grales: ' + (Registro.Comentarios || 'Ninguno') + '\n' +
+                                     'Colab: ' + (Registro.ComentariosE || 'Ninguno') + '\n' +
+                                     'Jefe: ' + (Registro.ComentariosJ || 'Ninguno');
+
+                // Icono minimalista en gris secundario
+                const columnaComentariosHtml = '<div class="text-center">' +
+                        '<i class="far fa-comment-alt text-secondary" ' +
+                        'style="cursor: pointer; font-size: 1rem;" ' +
+                        'data-toggle="tooltip" ' +
+                        'data-placement="top" ' +
+                        'title="' + textoTooltip + '">' +
+                        '</i>' +
+                    '</div>';
+                
                 filas.push([
-                    '<b>' + Registro.usuario,
-                    badgeTipo(Registro.tSolicitud),
-                    Registro.FechaBien,
-                    '<span class="badge badge-dark"><b>' + Registro.noDias + ' días</b></span>' +
-                        '<span class="badge badge-light"><b>' + Registro.Dgozados + ' gozados</b></span>' +
-                        '<span class="badge badge-warning"><b>' + Registro.diasDisp + ' Rest</b></span>' +
-                        '<br> <b>' + Registro.Finicio + ' - ' + Registro.FFin + '</b>',
-                    '<p style="margin-bottom: 0px; margin-top: 0px;"><small>Grales:' + Registro.Comentarios + '</small></p>' +
-                        '<p style="margin-bottom: 0px; margin-top: 0px;"><small>Colab:' + Registro.ComentariosE + '</small></p>' +
-                        '<p style="margin-bottom: 0px;"><small>Jefe:' + Registro.ComentariosJ + '</small></p>',
-                    badgeEstatus(Registro)
+                    // Columna 0: ID de solicitud (oculto, para referencia interna)
+                    Registro.id,
+                    // Columna 1: Empleado (Texto principal firme pero limpio)
+                    '<span class="text-dark font-weight-bold">' + Registro.usuario + '</span>',                                 
+                    
+                    // Columna 2: Fecha y Tipo agrupados sutilmente
+                    '<span class="text-dark font-weight-normal">' + Registro.FechaBien + '</span><br>' + 
+                    '<div class="mt-1">' + badgeTipo(Registro.tSolicitud) + '</div>',
+                    
+                    // Columna 3: No. Días / Periodo (Jerarquía visual sin exceso de fondos de color)
+                    '<span class="text-dark font-weight-bold" style="font-size: 0.9rem;">' + Registro.Finicio + ' - ' + Registro.FFin + '</span><br>' +
+                    '<small class="text-muted">' +
+                        '<b>' + Registro.noDias + '</b> Solicitado(s) · ' +
+                        '<b>' + Registro.Dgozados + '</b> Gozados · ' +
+                        '<span class="text-primary"><b>' + Registro.diasDisp + '</b> Restan</span>' +
+                    '</small>',
+                        
+                    // Columna 4: Comentarios (Icono)
+                    columnaComentariosHtml,
+                        
+                    // Columna 5: Estatus de Solicitud
+                    badgeEstatus(Registro),
+
+                    // Columna 6: Estatus de Pago
+                    badgePagoProvisional,
+                    // Columna 7:
+                    acciones    
                 ]);
             });
             table.rows.add(filas).draw(false);
         },
-        error: function (jqXHR, textStatus, errorThrown) {
-            //console.error('Error al obtener vacaciones:', textStatus, errorThrown);
-        }
+        error: function (jqXHR, textStatus, errorThrown) {}
     });
 
     llenaTablaServicios();
 }
+
+//Permutar solicitud - Se cambian fechas de vacaciones a otro periodo, se mantiene el mismo estatus de solicitud y estatus de pago. 
+// Aqui se procede abrir un swal para que el usuario ingrese las nuevas fechas de vacaciones y se haga la actualización en la base de datos.
+function permutarSolicitud(button) {
+    var row = $(button).closest('tr');
+    var table = $('#TvacacionesPersonal').DataTable();
+    var data = table.row(row).data();
+
+    //fechas anteriores de la solicitud
+    const fechaInicioAnterior = data[3].split(' - ')[0];
+    const fechaFinAnterior = data[3].split(' - ')[1];
+
+    swal.fire({
+        title: 'Permutar solicitud',
+        html: '<p>Ingresa las nuevas fechas de vacaciones:</p>' +
+            '<p>Fechas actuales: <b>' + fechaInicioAnterior + ' - ' + fechaFinAnterior + '</b></p>' +
+            '<input type="date" id="nuevaFechaInicio" class="swal2-input" placeholder="Nueva fecha de inicio (YYYY-MM-DD)">' +
+            '<input type="date" id="nuevaFechaFin" class="swal2-input" placeholder="Nueva fecha de fin (YYYY-MM-DD)">',
+        showCancelButton: true,
+        confirmButtonText: 'Permutar',
+        cancelButtonText: 'Cancelar',
+        preConfirm: () => {
+            const nuevaFechaInicio = document.getElementById('nuevaFechaInicio').value;
+            const nuevaFechaFin = document.getElementById('nuevaFechaFin').value;
+
+            if (!nuevaFechaInicio || !nuevaFechaFin) {
+                swal.showValidationMessage('Por favor ingresa ambas fechas.');
+                return false;
+            }   
+
+            return { nuevaFechaInicio, nuevaFechaFin };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const { nuevaFechaInicio, nuevaFechaFin } = result.value;
+
+            $.ajax({
+                url: 'acciones_verVacaciones.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    opcion: 'permutarSolicitud',
+                    idSolicitud: data[0], // Asumiendo que el ID de la solicitud está en la primera columna
+                    nuevaFechaInicio: nuevaFechaInicio,
+                    nuevaFechaFin: nuevaFechaFin
+                },
+                success: function (response) {
+                    if (response.success) {
+                        swal.fire('Éxito', 'La solicitud ha sido permutada correctamente.', 'success');
+                        llenaTablaVacaciones(); // Refresca la tabla después de permutar
+                    } else {
+                        swal.fire('Error', 'Hubo un problema al permutar la solicitud.', 'error');
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    swal.fire('Error', 'Hubo un problema al permutar la solicitud.', 'error');
+                }
+            });
+        }
+    });
+}
+
 
 function llenaTablaServicios() {
     var empleado = $('#filtro-ingeniero').val();

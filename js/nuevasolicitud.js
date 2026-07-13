@@ -165,6 +165,33 @@ function cargaJefeAutoriza() {
     });
 }
 
+// ------------------------- Validación de fechas ------------------------- //
+// Validacion especial para vevrificar que el usuario no solicite vacaciones repetidas en el mismo periodo de tiempo. 
+// Se hace una validación en el backend para evitar que se dupliquen las solicitudes.    
+function validarFechas(callback) {
+    const periodos = [];
+    $('.dynamic-row .row').each(function (index, row) {
+        periodos.push({
+            fechaInicial: $(row).find('input[name="fechaInicial[]"]').val(),
+            fechaFinal: $(row).find('input[name="fechaFinal[]"]').val()
+        });
+    });
+
+    $.ajax({
+        url: BACKEND,
+        method: 'POST',
+        dataType: 'json',
+        data: { accion: 'validarFechas', periodos: periodos },
+        success: function (data) {
+            callback(data); // Pasamos la respuesta al callback
+        },
+        error: function () {
+            callback({ success: false, message: "Error al validar las fechas." });
+        }
+    });
+}
+    
+
 /* -------------------------- Envío de solicitud ------------------------- */
 
 function generarSolicitud() {
@@ -184,74 +211,82 @@ function generarSolicitud() {
         return;
     }
 
-    // Recolectar los periodos de las filas dinámicas
-    const periodos = [];
-    $('.dynamic-row .row').each(function (index, row) {
-        periodos.push({
-            fechaInicial: $(row).find('input[name="fechaInicial[]"]').val(),
-            fechaFinal: $(row).find('input[name="fechaFinal[]"]').val(),
-            noDias: $(row).find('input[name="noDias[]"]').val()
-        });
-    });
-
-    $.ajax({
-        url: BACKEND,
-        method: 'POST',
-        dataType: 'json',
-        data: {
-            accion: 'agregarSolicitud',
-            opIncidencia: opIncidencia,
-            notas: notas,
-            comentarios: comentarios,
-            solicita: solicita,
-            periodos: periodos
-        },
-        success: function (data) {
-            if (data && data.success === false) {
-                Swal.fire({ title: "La solicitúd no se pudo procesar!", icon: "error", draggable: true });
-                return;
-            }
-
-            const idRegistroReferencia = (data && data.id_registro_referencia)
-                ? parseInt(data.id_registro_referencia, 10) : 0;
-
-            function mostrarExito() {
-                Swal.fire({ title: "¡La solicitud se procesó con éxito!", icon: "success", draggable: true })
-                    .then(function () {
-                        registrarNotificacionVacaciones(solicita, idRegistroReferencia, function () {
-                            window.location.href = 'solicitudestatus';
-                        });
-                    });
-            }
-
-            // Aviso de vehículo antes de cerrar el flujo
-            const noEmpleadoSolicita = solicita || getCookie('noEmpleado');
-            $.ajax({
-                url: 'getInfoLoginMaster.php',
-                method: 'POST',
-                dataType: 'json',
-                data: { accion: 'getPlaca', noEmpleado: noEmpleadoSolicita },
-                success: function (vehiculoData) {
-                    if (vehiculoData && vehiculoData.success === true) {
-                        Swal.fire({
-                            title: '¡Recuerda!',
-                            html: 'Tienes un vehículo asignado con placa <b>' + vehiculoData.placa + '</b>.<br><br>' +
-                                  'Durante los días que <b>no labores</b>, deberás dejar tu vehículo en las instalaciones de la empresa.',
-                            icon: 'warning',
-                            confirmButtonText: 'Entendido',
-                            confirmButtonColor: '#3085d6'
-                        }).then(mostrarExito);
-                    } else {
-                        mostrarExito();
-                    }
-                },
-                error: mostrarExito
-            });
-        },
-        error: function () {
-            Swal.fire({ title: "La solicitúd no se pudo procesar!", icon: "error", draggable: true });
+    // 1. Ejecutamos la validación
+    validarFechas(function(validacionFechasRepetidas) {
+        if (validacionFechasRepetidas && validacionFechasRepetidas.success === false) {
+            Swal.fire({ title: validacionFechasRepetidas.message, icon: "error" });
+            return; // Aquí detiene el flujo con éxito si hay error de validación
         }
-    });
+
+        // 2. TODO LO DEMÁS DEBE IR AQUÍ ADENTRO (Solo se ejecuta si las fechas son válidas)
+        const periodos = [];
+        $('.dynamic-row .row').each(function (index, row) {
+            periodos.push({
+                fechaInicial: $(row).find('input[name="fechaInicial[]"]').val(),
+                fechaFinal: $(row).find('input[name="fechaFinal[]"]').val(),
+                noDias: $(row).find('input[name="noDias[]"]').val()
+            });
+        });
+
+        $.ajax({
+            url: BACKEND,
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                accion: 'agregarSolicitud',
+                opIncidencia: opIncidencia,
+                notas: notas,
+                comentarios: comentarios,
+                solicita: solicita,
+                periodos: periodos
+            },
+            success: function (data) {
+                if (data && data.success === false) {
+                    Swal.fire({ title: "La solicitud no se pudo procesar!", icon: "error", draggable: true });
+                    return;
+                }
+
+                const idRegistroReferencia = (data && data.id_registro_referencia)
+                    ? parseInt(data.id_registro_referencia, 10) : 0;
+
+                function mostrarExito() {
+                    Swal.fire({ title: "¡La solicitud se procesó con éxito!", icon: "success", draggable: true })
+                        .then(function () {
+                            registrarNotificacionVacaciones(solicita, idRegistroReferencia, function () {
+                                window.location.href = 'solicitudestatus';
+                            });
+                        });
+                }
+
+                // Aviso de vehículo antes de cerrar el flujo
+                const noEmpleadoSolicita = solicita || getCookie('noEmpleado');
+                $.ajax({
+                    url: 'getInfoLoginMaster.php',
+                    method: 'POST',
+                    dataType: 'json',
+                    data: { accion: 'getPlaca', noEmpleado: noEmpleadoSolicita },
+                    success: function (vehiculoData) {
+                        if (vehiculoData && vehiculoData.success === true) {
+                            Swal.fire({
+                                title: '¡Recuerda!',
+                                html: 'Tienes un vehículo asignado con placa <b>' + vehiculoData.placa + '</b>.<br><br>' +
+                                      'Durante los días que <b>no labores</b>, deberás dejar tu vehículo en las instalaciones de la empresa.',
+                                icon: 'warning',
+                                confirmButtonText: 'Entendido',
+                                confirmButtonColor: '#3085d6'
+                            }).then(mostrarExito);
+                        } else {
+                            mostrarExito();
+                        }
+                    },
+                    error: mostrarExito
+                });
+            },
+            error: function () {
+                Swal.fire({ title: "La solicitud no se pudo procesar!", icon: "error", draggable: true });
+            }
+        });
+    }); // <-- Aquí cierra el bloque del callback de validarFechas
 }
 
 function registrarNotificacionVacaciones(solicita, idRegistroReferencia, callback) {
