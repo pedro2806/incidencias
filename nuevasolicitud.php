@@ -62,143 +62,147 @@
                                             <b><?php echo date("d-m-Y"); ?></b>
                                         </div>
                                     </div>
+                    <form method="POST" class="bg-white p-3 rounded" style="border: 1px solid #e3e6f0;">
+                        <!-- variables ocultas -->
+                        <input type="hidden" id="noEmpleado" name="noEmpleado">
+                        <input type="hidden" name="opIncidencia" id="opIncidencia" value="1">
 
-                                    <form method="POST">
-                                        <!-- encabezado.php (load handler) escribe aquí el No. de empleado de la cookie -->
-                                        <input type="hidden" id="noEmpleado" name="noEmpleado">
-                                        <div class="row card-footer border-left-primary">
-                                            <div class="col-sm-1 mb-0">
-                                                <b>Solicita:</b>
-                                            </div>
-                                            <div class="col-sm-3 mb-0">
-                                                <h5 class="text-primary" id="NSolicita" name="NSolicita"></h5>
-                                            </div>
-                                            <div class="col-sm-4 mb-0">
-                                                <div id="Divsolicita" name="Divsolicita">
-                                                    <select id="solicita" name="solicita" class="form-select">
-                                                        <option value="">Selecciona...</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div id="DivsolicitaMss" name="DivsolicitaMss">
-                                                    <div class="badge bg-primary text-white" role="alert" style="font-size: 12px;">
-                                                        Puedes solicitar vacaciones para los colaboradores a tu cargo.
-                                                    </div>
-                                                </div>
+                        <!-- SECCIÓN 1: Solicitante -->
+                        <div class="row align-items-center mb-3 pb-2" style="border-bottom: 1px solid #eaecf4;">
+                            <div class="col-md-2 col-sm-3 mb-1 mb-md-0">
+                                <span class="text-muted small font-weight-bold text-uppercase" style="letter-spacing: 0.05rem;">Solicita:</span>
+                            </div>
+                            <div class="col-md-4 col-sm-9 mb-1 mb-md-0">
+                                <h5 class="text-dark font-weight-bold m-0" id="NSolicita" name="NSolicita"></h5>
+                                <div id="Divsolicita" name="Divsolicita" class="mt-1">
+                                    <select id="solicita" name="solicita" class="form-control form-control-sm">
+                                        <option value="">Selecciona colaborador...</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12 text-md-left">
+                                <span class="text-primary small font-weight-normal bg-light p-1 px-2 rounded border">
+                                    <i class="fas fa-info-circle mr-1"></i> Solicitudes para colaboradores a tu cargo.
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- SECCIÓN 2: Tipo de Incidencia -->
+                        <div class="mb-4">
+                            <label class="text-muted small font-weight-bold text-uppercase mb-1 d-block" style="letter-spacing: 0.05rem;">
+                                Tipo de incidencia
+                            </label>
+                            
+                            <div class="row no-gutters">
+                                <!-- Opción: Vacaciones -->
+                                <div class="col-lg-4 pr-lg-1 mb-1 mb-lg-0">
+                                    <div class="card bg-light border-1 h-100">
+                                        <div class="card-body p-2">
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input" type="radio" name="ti1" id="ti1" onchange="tIncidencia(1);" value="1" required checked>
+                                                <label class="custom-control-label text-dark font-weight-bold w-100 small" style="cursor: pointer;" for="ti1">
+                                                    Vacaciones
+                                                </label>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
 
-                                        <div class="row card-footer border-left-primary">
-                                            <div class="col-xl-8 mb-0">
-                                                <b>Por favor selecciona que tipo de incidencia es la que se autorizará:</b>
+                                <!-- Opción: Permiso sin goce -->
+                                <div class="col-lg-4 px-lg-1 mb-1 mb-lg-0">
+                                    <div class="card bg-light border-1 h-100">
+                                        <div class="card-body p-2">
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input" type="radio" name="ti1" id="ti2" onchange="tIncidencia(2);" value="2" required>
+                                                <label class="custom-control-label text-dark font-weight-bold w-100 small" style="cursor: pointer;" for="ti2">
+                                                    Permiso sin goce
+                                                </label>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
 
-                                        <div class="row card-footer border-left-primary">
-                                            <div class="col-xl-1"></div>
-
-                                            <!-- Primera opción: Vacaciones -->
-                                            <div class="col-xl-3 opcion-incidencia" style="box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); padding: 10px; border-radius: 8px;">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="ti1" id="ti1" onchange="tIncidencia(1);" value="1" required checked>
-                                                    <label class="form-check-label" for="ti1">
-                                                        <b>Vacaciones</b>
-                                                    </label>
-                                                </div>
-                                            </div>
-
-                                            <!-- Segunda opción: Permiso sin goce -->
-                                            <div class="col-xl-3 opcion-incidencia" style="box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); padding: 10px; border-radius: 8px;">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="ti1" id="ti2" onchange="tIncidencia(2);" value="2" required>
-                                                    <label class="form-check-label" for="ti2">
-                                                        <b>Permiso sin goce</b>
-                                                    </label>
-                                                </div>
-                                            </div>
-
-                                            <!-- Tercera opción: Permiso con goce -->
-                                            <div class="col-xl-4 opcion-incidencia" style="box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); padding: 10px; border-radius: 8px;">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="ti1" id="ti3" onchange="tIncidencia(3);" value="3" required>
-                                                    <label class="form-check-label" for="ti3">
-                                                        <b>Permiso con goce. (ver anexo: Reglamento)</b>
-                                                        <input type="hidden" name="opIncidencia" id="opIncidencia" value="1">
-                                                    </label>
-                                                </div>
+                                <!-- Opción: Permiso con goce -->
+                                <div class="col-lg-4 pl-lg-1">
+                                    <div class="card bg-light border-1 h-100">
+                                        <div class="card-body p-2">
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input" type="radio" name="ti1" id="ti3" onchange="tIncidencia(3);" value="3" required>
+                                                <label class="custom-control-label text-dark font-weight-bold w-100 small" style="cursor: pointer;" for="ti3">
+                                                    Permiso con goce <span class="text-muted font-weight-normal font-italic">(Reglamento)</span>
+                                                </label>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                                        <div class="row card-footer border-left-primary">
-                                            <div class="col-xl-12"><br>
-                                                <b>Favor de tomar nota de los días que el empleado estará fuera de Jornada Laboral (aplica para permiso sin goce, con goce y vacaciones):</b>
+                    <!-- SECCIÓN 3: Fechas y Días -->
+                        <div class="mb-3 pt-2" style="border-top: 1px solid #eaecf4;">
+                            <label class="text-muted small font-weight-bold text-uppercase mb-2 d-block" style="letter-spacing: 0.05rem;">
+                                Días fuera de jornada
+                            </label>
+
+                            <div class="row align-items-center">
+                                <!-- Contenedor de renglones -->
+                                <div class="col-lg-10 col-md-9 mb-0 mb-md-0">
+                                    <div id="renglones-container">
+                                        <!-- Renglón base bien espaciado -->
+                                        <div class="row align-items-center bg-light p-2 rounded mb-2 border mx-0 item-row" id="renglon-1">
+                                            <div class="col-sm-5 my-1">
+                                                <input type="date" class="form-control form-control-sm bg-white" id="fechaInicial-1" name="fechaInicial[]" onchange="diasEntreFechas(1);" required>
+                                            </div>
+                                            <div class="col-sm-5 my-1">
+                                                <input type="date" class="form-control form-control-sm bg-white" id="fechaFinal-1" name="fechaFinal[]" onchange="diasEntreFechas(1);" required>
+                                            </div>
+                                            <div class="col-sm-2 my-1 text-right d-flex align-items-center justify-content-end">
+                                                <span class="small text-muted mr-2">Días:</span>
+                                                <input type="number" class="form-control form-control-sm bg-transparent border-0 font-weight-bold p-0 text-center text-dark" id="noDias-1" name="noDias[]" readonly style="width: 40px; font-size: 1rem;">
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Controles laterales (Alineación corregida) -->
+                                <div class="col-lg-2 col-md-3">
+                                    <div class="btn-group btn-group-sm border rounded bg-white w-100">
+                                        <button type="button" class="btn btn-light text-success border-0 py-2" onclick="agregarRenglon()" data-toggle="tooltip" title="Agregar Periodo">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-light text-danger border-0 py-2" onclick="eliminarUltimoRenglon()" data-toggle="tooltip" title="Remover Último">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                                        <div class="row card-footer border-left-primary dynamic-row">
-                                            <div class="col-sm-10">
-                                                <div id="renglones-container">
-                                                    <!-- Renglón inicial que no se puede eliminar -->
-                                                    <div class="row" id="renglon-1">
-                                                        <div class="col-sm-1"></div>
-                                                        <div class="col-sm-4">
-                                                            <div class="mb-1">
-                                                                <label for="fechaInicial-1" class="form-label">Fecha de inicio</label>
-                                                                <input type="date" class="form-control" id="fechaInicial-1" name="fechaInicial[]" onchange="diasEntreFechas(1);" required>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <div class="mb-1">
-                                                                <label for="fechaFinal-1" class="form-label">Fecha de término</label>
-                                                                <input type="date" class="form-control" id="fechaFinal-1" name="fechaFinal[]" onchange="diasEntreFechas(1);" required>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-3">
-                                                            <div class="mb-1">
-                                                                <label for="noDias-1" class="form-label">No de días</label>
-                                                                <input type="number" class="form-control" id="noDias-1" name="noDias[]" readonly>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <div class="mb-1">
-                                                    <label class="form-label">Opciones</label><br>
-                                                    <button type="button" class="btn btn-success" onclick="agregarRenglon()"><i class="fas fa-plus"></i></button>
-                                                    <button type="button" class="btn btn-danger" onclick="eliminarUltimoRenglon()"><i class="fas fa-trash"></i></button>
-                                                </div>
-                                            </div>
-                                            <br>
-                                        </div>
+                        <!-- SECCIÓN 4: Notas y Comentarios -->
+                        <div class="row mb-3 pt-1" style="border-top: 1px solid #eaecf4;">
+                            <div class="col-md-6 mb-1 mb-md-0 pr-md-1">
+                                <label for="notas" class="text-muted small font-weight-bold text-uppercase mb-1 d-block">Fechas no corridas / Excepciones</label>
+                                <textarea class="form-control bg-light border-0 small p-2" id="notas" name="notas" rows="2" placeholder="Días intermedios no laborables..."></textarea>
+                            </div>
+                            <div class="col-md-6 pl-md-1">
+                                <label for="comentarios" class="text-muted small font-weight-bold text-uppercase mb-1 d-block">Comentarios adicionales</label>
+                                <textarea class="form-control bg-light border-0 small p-2" id="comentarios" name="comentarios" rows="2" placeholder="Motivo o aclaraciones..."></textarea>
+                            </div>
+                        </div>
 
-                                        <div class="row card-header border-left-primary">
-                                            <div class="col-xl-6">
-                                                <div class="mb-0">
-                                                    <b class="form-label">Indicar fechas cuando los días no sean un periodo corrido</b>
-                                                    <textarea class="form-control" id="notas" name="notas" rows="3"></textarea>
-                                                </div>
-                                            </div>
-                                            <div class="col-xl-6">
-                                                <div class="mb-0">
-                                                    <b class="form-label">Comentarios</b>
-                                                    <textarea class="form-control" id="comentarios" name="comentarios" rows="3"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row card-header border-left-success">
-                                            <div class="col-xl-3"></div>
-                                            <div class="col-xl-6">
-                                                <center>
-                                                    <h4 class="text-success text-xl">Autoriza: <span id="autorizaJefe"></span></h4><br>
-                                                    <button id="btnSolicitar" type="button" class="btn btn-success" onclick="generarSolicitud()">Solicitar</button><br>
-                                                    <p id="mensaje" class="badge text-bg-primary"></p>
-                                                </center>
-                                            </div>
-                                        </div>
-                                    </form>
+                        <!-- SECCIÓN 5: Cierre / Envío -->
+                        <div class="bg-light p-2 rounded text-center border mt-2">
+                            <button id="btnSolicitar" type="button" class="btn btn-primary btn-sm px-4 font-weight-bold shadow-sm align-middle" onclick="generarSolicitud()">
+                                Enviar Solicitud
+                            </button>
+                            <br>
+                            <h6 class="text-dark m-0 d-inline-block align-middle mr-3">
+                                Autoriza: <span class="font-weight-bold text-primary" id="autorizaJefe"></span>
+                            </h6>
+                            <br>
+                            <span id="mensaje" class="text-light small ml-2 align-middle"></span>
+                        </div>
+                    </form>
                                 </div>
                             </div>
                         </div>

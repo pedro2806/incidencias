@@ -29,25 +29,20 @@ function agregarRenglon() {
     renglonCounter++;
 
     const nuevoRenglon = document.createElement('div');
-    nuevoRenglon.classList.add('row');
+    // Asignamos las clases exactas aquí para evitar el row anidado
+    nuevoRenglon.className = "row align-items-center bg-light p-2 rounded mb-2 border mx-0 item-row";
     nuevoRenglon.id = `renglon-${renglonCounter}`;
 
     nuevoRenglon.innerHTML = `
-        <div class="col-sm-1"></div>
-        <div class="col-sm-4">
-            <div class="mb-1">
-                <input type="date" class="form-control" id="fechaInicial-${renglonCounter}" name="fechaInicial[]" onchange="diasEntreFechas(${renglonCounter});" required>
-            </div>
+        <div class="col-sm-5 my-1">                
+            <input type="date" class="form-control form-control-sm bg-white" id="fechaInicial-${renglonCounter}" name="fechaInicial[]" onchange="diasEntreFechas(${renglonCounter});" required>                
         </div>
-        <div class="col-sm-4">
-            <div class="mb-1">
-                <input type="date" class="form-control" id="fechaFinal-${renglonCounter}" name="fechaFinal[]" onchange="diasEntreFechas(${renglonCounter});" required>
-            </div>
+        <div class="col-sm-5 my-1">                
+            <input type="date" class="form-control form-control-sm bg-white" id="fechaFinal-${renglonCounter}" name="fechaFinal[]" onchange="diasEntreFechas(${renglonCounter});" required>                
         </div>
-        <div class="col-sm-3">
-            <div class="mb-1">
-                <input type="number" class="form-control" id="noDias-${renglonCounter}" name="noDias[]" readonly>
-            </div>
+        <div class="col-sm-2 my-1 text-right d-flex align-items-center justify-content-end">                
+            <span class="small text-muted mr-2">Días:</span>
+            <input type="number" class="form-control form-control-sm bg-transparent border-0 font-weight-bold p-0 text-center text-dark" id="noDias-${renglonCounter}" name="noDias[]" readonly style="width: 40px; font-size: 1rem;">                
         </div>
     `;
 
@@ -170,12 +165,25 @@ function cargaJefeAutoriza() {
 // Se hace una validación en el backend para evitar que se dupliquen las solicitudes.    
 function validarFechas(callback) {
     const periodos = [];
-    $('.dynamic-row .row').each(function (index, row) {
-        periodos.push({
-            fechaInicial: $(row).find('input[name="fechaInicial[]"]').val(),
-            fechaFinal: $(row).find('input[name="fechaFinal[]"]').val()
-        });
+    
+    // Buscamos directamente en el contenedor los bloques de periodo
+    $('#renglones-container .item-row').each(function (index, row) {
+        const fIni = $(row).find('input[name="fechaInicial[]"]').val();
+        const fFin = $(row).find('input[name="fechaFinal[]"]').val();
+        
+        // Only add them if the user has filled both fields
+        if (fIni && fFin) {
+            periodos.push({
+                fechaInicial: fIni,
+                fechaFinal: fFin
+            });
+        }
     });
+
+    if (periodos.length === 0) {
+        callback({ success: false, message: "Por favor, ingresa al menos un periodo válido de fechas." });
+        return;
+    }
 
     $.ajax({
         url: BACKEND,
@@ -183,7 +191,7 @@ function validarFechas(callback) {
         dataType: 'json',
         data: { accion: 'validarFechas', periodos: periodos },
         success: function (data) {
-            callback(data); // Pasamos la respuesta al callback
+            callback(data);
         },
         error: function () {
             callback({ success: false, message: "Error al validar las fechas." });
@@ -220,12 +228,18 @@ function generarSolicitud() {
 
         // 2. TODO LO DEMÁS DEBE IR AQUÍ ADENTRO (Solo se ejecuta si las fechas son válidas)
         const periodos = [];
-        $('.dynamic-row .row').each(function (index, row) {
-            periodos.push({
-                fechaInicial: $(row).find('input[name="fechaInicial[]"]').val(),
-                fechaFinal: $(row).find('input[name="fechaFinal[]"]').val(),
-                noDias: $(row).find('input[name="noDias[]"]').val()
-            });
+        $('#renglones-container .item-row').each(function (index, row) {
+            const fIni = $(row).find('input[name="fechaInicial[]"]').val();
+            const fFin = $(row).find('input[name="fechaFinal[]"]').val();
+            const dias = $(row).find('input[name="noDias[]"]').val();
+
+            if (fIni && fFin) {
+                periodos.push({
+                    fechaInicial: fIni,
+                    fechaFinal: fFin,
+                    noDias: dias ? parseInt(dias, 10) : 1
+                });
+            }
         });
 
         $.ajax({
