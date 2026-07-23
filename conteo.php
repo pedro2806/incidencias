@@ -145,7 +145,7 @@ include 'conn.php';
                             días
                         </div>
                         <div class = "h5 mb-0 font-weight-bold text-gray-800">
-                            Días disp: <?php echo $dias-$diasSol; echo ' días ';?>  
+                            Días disp: <?php echo $dias-($diasSol+$deuda); echo ' días ';?>  
                             <input type="hidden" class="form-control" id="diasDisponibles" name="diasDisponibles" value="<?php echo $dias-$diasSol; ?>" readonly>
                         </div>
                     </div>
