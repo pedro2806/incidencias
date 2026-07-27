@@ -1,173 +1,134 @@
 <?php 
 include 'conn.php';
-    if($_COOKIE['noEmpleado'] == '' || $_COOKIE['noEmpleado'] == null){
-        echo '<script>window.location.assign("index")</script>';
-    }
+
+// Validar sesión de empleado
+if(empty($_COOKIE['noEmpleado'])){
+    echo '<script>window.location.assign("index")</script>';
+    exit;
+}
+
+$noEmpleado = (int) $_COOKIE['noEmpleado'];
+
+// Consulta SQL unificada que reemplaza toda la lógica anterior
+$sql = "SELECT u.antiguedad, d.departamento AS departamento, p.puesto AS puesto, j.nombre AS jefe, u.fechaIngreso, 
+        u.inicio_actual, u.fin_actual,
+        COALESCE(dv_actual.dias, 0) AS dias_ley_actual, 
+        
+        -- Días solicitados en el periodo actual
+        COALESCE(( SELECT SUM(s.dias) FROM solicitudes s WHERE s.empleado = u.noEmpleado AND s.fesolicitud BETWEEN u.inicio_actual AND u.fin_actual AND s.estatus = 2 AND s.autorizaRH = 2 AND s.tipo = 1 ), 0) AS diasSol, 
+        
+        -- Días disponibles totales: (Días de ley + Ajuste por exceso/remanente anterior) - Días solicitados actuales
+        ( 
+            (COALESCE(dv_actual.dias, 0) - GREATEST(0, COALESCE(( SELECT SUM(s.dias) FROM solicitudes s WHERE s.empleado = u.noEmpleado AND s.fesolicitud BETWEEN u.inicio_anterior AND u.fin_anterior AND s.estatus = 2 AND s.autorizaRH = 2 AND s.tipo = 1 ), 0) - COALESCE(dv_anterior.dias, 0))) 
+            - 
+            COALESCE(( SELECT SUM(s.dias) FROM solicitudes s WHERE s.empleado = u.noEmpleado AND s.fesolicitud BETWEEN u.inicio_actual AND u.fin_actual AND s.estatus = 2 AND s.autorizaRH = 2 AND s.tipo = 1 ), 0)
+        ) AS diasdisponibles, 
+        
+        u.foto
+        FROM ( SELECT foto, noEmpleado, fechaIngreso, jefe, departamento, puesto, TIMESTAMPDIFF(YEAR, fechaIngreso, CURDATE()) AS antiguedad, 
+        CASE WHEN MAKEDATE(YEAR(CURDATE()), DAYOFYEAR(fechaIngreso)) > CURDATE() THEN MAKEDATE(YEAR(CURDATE()) - 1, DAYOFYEAR(fechaIngreso)) ELSE MAKEDATE(YEAR(CURDATE()), DAYOFYEAR(fechaIngreso)) END AS inicio_actual, 
+        CASE WHEN MAKEDATE(YEAR(CURDATE()), DAYOFYEAR(fechaIngreso)) > CURDATE() THEN MAKEDATE(YEAR(CURDATE()), DAYOFYEAR(fechaIngreso)) ELSE MAKEDATE(YEAR(CURDATE()) + 1, DAYOFYEAR(fechaIngreso)) END AS fin_actual,             
+        CASE WHEN MAKEDATE(YEAR(CURDATE()), DAYOFYEAR(fechaIngreso)) > CURDATE() THEN MAKEDATE(YEAR(CURDATE()) - 2, DAYOFYEAR(fechaIngreso)) ELSE MAKEDATE(YEAR(CURDATE()) - 1, DAYOFYEAR(fechaIngreso)) END AS inicio_anterior, 
+        CASE WHEN MAKEDATE(YEAR(CURDATE()), DAYOFYEAR(fechaIngreso)) > CURDATE() THEN MAKEDATE(YEAR(CURDATE()) - 1, DAYOFYEAR(fechaIngreso)) ELSE MAKEDATE(YEAR(CURDATE()), DAYOFYEAR(fechaIngreso)) END AS fin_anterior 
+        FROM usuarios WHERE noEmpleado = $noEmpleado ) u 
+        LEFT JOIN usuarios j ON u.jefe = j.noEmpleado 
+        LEFT JOIN departamento d ON u.departamento = d.id 
+        LEFT JOIN puesto p ON u.puesto = p.id 
+        LEFT JOIN diasvacaciones dv_actual ON dv_actual.anio = u.antiguedad 
+        LEFT JOIN diasvacaciones dv_anterior ON dv_anterior.anio = GREATEST(0, u.antiguedad - 1) 
+        GROUP BY u.noEmpleado;";
+
+$resultado = mysqli_query($conn, $sql) or die(mysqli_error($conn));
+$datos = mysqli_fetch_assoc($resultado);
+
+// Variables aseguradas
+$nombreUsuario = isset($_COOKIE['nombredelusuario']) ? $_COOKIE['nombredelusuario'] : 'Colaborador';
+$antiguedad = $datos['antiguedad'] ?? 0;
+$diasLey = $datos['dias_ley_actual'] ?? 0;
+$diasSol = $datos['diasSol'] ?? 0;
+$diasDisponibles = $datos['diasdisponibles'] ?? 0;
+$fechaRenovacion = $datos['fin_actual'] ?? '';
 ?>
-<!-- Content Row -->
-<div class = "row">
 
-    <!-- Earnings (Monthly) Card Example -->
-    <div class = "col-xl-3 col-md-6 mb-1">
-        <div class = "card border-left-primary shadow h-60 py-0">
-            <div class = "card-body">
-                <div class = "row no-gutters align-items-center">
-                    <div class = "col mr-2">
-                        <div class = "text-md font-weight-bold text-primary text-uppercase mb-1">
-                        </div>                                            
-                        <div class = "h5 mb-0 font-weight-bold text-gray-800">
-                            <?php echo $valor = $_COOKIE['nombredelusuario'].'  <br>  '; echo 'No. '.$_COOKIE['noEmpleado']?>
+<!-- Content Row / Rediseño de Tarjetas de Vacaciones -->
+<div class="row">
+
+    <!-- Tarjeta 1: Perfil / Usuario -->
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card border-left-primary shadow h-100 py-0">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">                        
+                        <div class="h6 mb-0 font-weight-bold text-gray-800">
+                            <?php echo htmlspecialchars($nombreUsuario); ?>
                         </div>
-                    </div>                                        
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Earnings (Monthly) Card Example -->
-    <div class = "col-xl-3 col-md-6 mb-1">
-        <div class = "card border-left-info shadow h-60 py-0">
-            <div class = "card-body">
-                <div class = "row no-gutters align-items-center">
-                    <div class = "col mr-2">
-                        <div class = "h5 mb-0 font-weight-bold text-gray-800">
-                            Antigüedad: <?php echo $valor = $_COOKIE['antiguedad'];?>  años
-                        </div>
-                        <div class = "h5 mb-0 font-weight-bold text-gray-800">
-                            Vac. por ley: <?php
-                                // Saneo a entero: si la cookie 'antiguedad' viene vacía/ausente,
-                                // queda 0 (anio = 0, válido) en vez de "WHERE anio = " (error de sintaxis).
-                                $antiguedad = isset($_COOKIE['antiguedad']) ? (int) $_COOKIE['antiguedad'] : 0;
-
-                                $Qdias = "SELECT * FROM diasvacaciones WHERE anio = $antiguedad";
-                                $resdias= mysqli_query( $conn, $Qdias ) or die (mysqli_error($conn));
-                                
-                                While ($row3 = mysqli_fetch_array($resdias)){
-                                    $dias = $row3["dias"];
-                                }
-                                echo $dias;
-                            ?> días
-                        </div>
-                    </div>                    
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- DIAS SOL Y DIAS DISPO -->
-    <div class = "col-xl-3 col-md-6 mb-1">
-        <div class = "card border-left-warning h-60 py-0">
-            <div class = "card-body">
-                <div class = "row no-gutters align-items-center">
-                    <div class = "col mr-2">
-                        <div class = "h5 mb-0 font-weight-bold text-gray-800">
-                            
-                            Días solic: 
-                            <?php
-                                $noEmp = $_COOKIE['noEmpleado'];
-                                
-                                $Qdias = "SELECT * FROM usuarios WHERE noEmpleado = $noEmp";
-                                $resdias= mysqli_query( $conn, $Qdias ) or die (mysqli_error($conn));
-                                
-                                While ($row3 = mysqli_fetch_array($resdias)){
-                                    $FechaI = $row3["fechaIngreso"];
-                                }
-                                
-                                $FechaIng = substr($FechaI, 4, 6);
-                                
-                                $anio = date("Y");
-                                
-                                $fechaCompara = $anio.$FechaIng;
-                                
-                                $hoy = date("Y-m-d");
-                                
-                                if ($fechaCompara <= $hoy){
-                                    $anioNext = $anio + 1;
-                                    $fechaPrev = $anio.$FechaIng;
-                                    $fechaNext = $anioNext.$FechaIng;
-                                    
-                                    $QdiasSol = "SELECT IFNULL(SUM(dias), '0') as diasSol 
-                                                    FROM solicitudes 
-                                                    WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) 
-                                                    AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext' AND tipo = 1";
-                                    $resdiasSol= mysqli_query( $conn, $QdiasSol ) or die (mysqli_error($conn));
-                                    
-                                    While ($rowSol = mysqli_fetch_array($resdiasSol)){
-                                        $diasSol = $rowSol["diasSol"];
-                                    }
-
-                                    $anioAnt = $anio -1;
-                                    $fechaAnt = $anioAnt.$FechaIng;
-                                    $fechaSig = $anio.$FechaIng;
-
-                                    $QdiasSolAnt ="SELECT IFNULL(SUM(dias), '0') as diasSol, (SELECT dias FROM diasvacaciones WHERE anio = $antiguedad-1) as vacLey
-                                                    FROM solicitudes 
-                                                    WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) 
-                                                    AND fesolicitud BETWEEN '$fechaAnt' AND '$fechaSig' AND tipo = 1";
-                                    $resdiasSolAnt= mysqli_query( $conn, $QdiasSolAnt ) or die (mysqli_error($conn));
-                                    While ($rowSolAnt = mysqli_fetch_array($resdiasSolAnt)){
-                                        $diasSolAnt = $rowSolAnt["diasSol"];
-                                        $vacLey = $rowSolAnt["vacLey"];
-                                    }
-
-                                }else{
-                                    $anioPrev = $anio - 1;
-                                    $fechaPrev = $anioPrev.$FechaIng;
-                                    $fechaNext = $anio.$FechaIng;
-                                    
-                                    $QdiasSol = "SELECT SUM(dias) as diasSol FROM solicitudes WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) AND fesolicitud BETWEEN '$fechaPrev' AND '$fechaNext' AND tipo = 1";
-                                    $resdiasSol= mysqli_query( $conn, $QdiasSol ) or die (mysqli_error($conn));
-                                    
-                                    While ($rowSol = mysqli_fetch_array($resdiasSol)){
-                                        $diasSol = $rowSol["diasSol"];
-                                    }
-                                    
-                                    $anioAnt = $anio -2;;
-                                    $fechaAnt = $anioAnt.$FechaIng;
-                                    $fechaSig = $anioPrev.$FechaIng;
-                                    $QdiasSolAnt ="SELECT IFNULL(SUM(dias), '0') as diasSol, (SELECT dias FROM diasvacaciones WHERE anio = $antiguedad-1) as vacLey
-                                                    FROM solicitudes 
-                                                    WHERE empleado = $noEmp AND (estatus = 2 && autorizaRH = 2) 
-                                                    AND fesolicitud BETWEEN '$fechaAnt' AND '$fechaSig' AND tipo = 1";
-                                    $resdiasSolAnt= mysqli_query( $conn, $QdiasSolAnt ) or die (mysqli_error($conn));
-                                    While ($rowSolAnt = mysqli_fetch_array($resdiasSolAnt)){
-                                        $diasSolAnt = $rowSolAnt["diasSol"];
-                                        $vacLey = $rowSolAnt["vacLey"];
-                                    }
-                                }
-                                $deuda = ($vacLey-$diasSolAnt)*(-1);
-                                echo $diasSol;
-                                
-                                
-                            ?>
-                            
-                            
-                            días
-                        </div>
-                        <div class = "h5 mb-0 font-weight-bold text-gray-800">
-                            Días disp: <?php echo $dias-($diasSol+$deuda); echo ' días ';?>  
-                            <input type="hidden" class="form-control" id="diasDisponibles" name="diasDisponibles" value="<?php echo $dias-$diasSol; ?>" readonly>
-                        </div>
+                        <div class="text-muted small mt-1">No. Empleado: <?php echo $noEmpleado; ?></div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-user fa-2x text-gray-300"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- FECHA DE RENOVACION -  DIAS GOZADOS -->
-    <div class = "col-xl-3 col-md-6 mb-1">
-        <div class = "card border-left-success h-60 py-0">
-            <div class = "card-body">
-                <div class = "row no-gutters align-items-center">
-                    <div class = "col mr-2">
-                        <div class = "h5 mb-0 font-weight-bold text-gray-800">                            
-                            <?php
-                                //echo '*Deuda: -'.$deuda . '*'; 
-                            ?> 
+    <!-- Tarjeta 2: Antigüedad y Días de Ley -->
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card border-left-info shadow h-100 py-0">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">                        
+                        <div class="h6 mb-0 font-weight-bold text-gray-800">
+                            Antigüedad: <?php echo $antiguedad; ?> años
                         </div>
-                        <div class = "h5 mb-0 font-weight-bold text-gray-800">
-                            Renovación Vac: <?php echo $fechaNext; ?>                        
+                        <div class="h6 mb-0 font-weight-bold text-gray-800 mt-1">
+                            Vac. por ley: <?php echo $diasLey; ?> días
                         </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calendar-alt fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tarjeta 3: Días Solicitados y Disponibles -->
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card border-left-warning shadow h-100 py-0">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">                        
+                        <div class="h6 mb-0 font-weight-bold text-gray-800">
+                            Días solicitados: <?php echo $diasSol; ?>
+                        </div>
+                        <div class="h6 mb-0 font-weight-bold text-success mt-1">
+                            Días disponibles: <?php echo $diasDisponibles; ?> días
+                        </div>
+                        <!-- Input oculto requerido para formularios -->
+                        <input type="hidden" class="form-control" id="diasDisponibles" name="diasDisponibles" value="<?php echo $diasDisponibles; ?>" readonly>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tarjeta 4: Fecha de Renovación -->
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card border-left-success shadow h-100 py-0">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">                        
+                        <div class="text-muted small">Renovación de Vacaciones:</div>
+                        <div class="h6 mb-0 font-weight-bold text-gray-800 mt-1">
+                            <?php echo $fechaRenovacion; ?>                        
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-clock fa-2x text-gray-300"></i>
                     </div>
                 </div>
             </div>
