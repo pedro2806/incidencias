@@ -28,7 +28,7 @@ $sql = "SELECT u.antiguedad, d.departamento AS departamento, p.puesto AS puesto,
         FROM ( SELECT foto, noEmpleado, fechaIngreso, jefe, departamento, puesto, TIMESTAMPDIFF(YEAR, fechaIngreso, CURDATE()) AS antiguedad, 
         CASE WHEN MAKEDATE(YEAR(CURDATE()), DAYOFYEAR(fechaIngreso)) > CURDATE() THEN MAKEDATE(YEAR(CURDATE()) - 1, DAYOFYEAR(fechaIngreso)) ELSE MAKEDATE(YEAR(CURDATE()), DAYOFYEAR(fechaIngreso)) END AS inicio_actual, 
         CASE WHEN MAKEDATE(YEAR(CURDATE()), DAYOFYEAR(fechaIngreso)) > CURDATE() THEN MAKEDATE(YEAR(CURDATE()), DAYOFYEAR(fechaIngreso)) ELSE MAKEDATE(YEAR(CURDATE()) + 1, DAYOFYEAR(fechaIngreso)) END AS fin_actual,             
-        CASE WHEN MAKEDATE(YEAR(CURDATE()), DAYOFYEAR(fechaIngreso)) > CURDATE() THEN MAKEDATE(YEAR(CURDATE()) - 2, DAYOFYEAR(fechaIngreso)) ELSE MAKEDATE(YEAR(CURDATE()) - 1, DAYOFYEAR(fechaIngreso)) END AS inicio_anterior, 
+        CASE WHEN MAKEDATE(YEAR(CURDATE()), DAYOFYEAR(fechaIngreso)) > CURDATE() THEN MAKEDATE(YEAR(CURDATE()) - 1, DAYOFYEAR(fechaIngreso)) ELSE MAKEDATE(YEAR(CURDATE()) - 1, DAYOFYEAR(fechaIngreso)) END AS inicio_anterior, 
         CASE WHEN MAKEDATE(YEAR(CURDATE()), DAYOFYEAR(fechaIngreso)) > CURDATE() THEN MAKEDATE(YEAR(CURDATE()) - 1, DAYOFYEAR(fechaIngreso)) ELSE MAKEDATE(YEAR(CURDATE()), DAYOFYEAR(fechaIngreso)) END AS fin_anterior 
         FROM usuarios WHERE noEmpleado = $noEmpleado ) u 
         LEFT JOIN usuarios j ON u.jefe = j.noEmpleado 
