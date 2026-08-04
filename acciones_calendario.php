@@ -3,8 +3,10 @@
 include 'conn.php';
 mysqli_set_charset($conn, "utf8");
 $noEmpleado_cookie = isset($_COOKIE['noEmpleado']) ? $_COOKIE['noEmpleado'] : null;
-$opcion = $_GET["opcion"];
-$ing = $_GET["ing"];
+// Con isset: las vistas que llegan por POST (o sin 'ing') emitian un warning que
+// se colaba ANTES del JSON y hacia que jQuery lo descartara como respuesta invalida.
+$opcion = isset($_GET["opcion"]) ? $_GET["opcion"] : '';
+$ing = isset($_GET["ing"]) ? $_GET["ing"] : '';
 $accion = isset($_POST['accion']) ? $_POST['accion'] : '';
 
 // Consulta de las solicitudes de vacaciones aprobadas
@@ -81,7 +83,7 @@ if ($opcion == "departamento") {
                     FROM solicitudes s
                     INNER JOIN usuarios u ON s.empleado = u.noEmpleado
                     WHERE s.estatus = 2
-                      AND s.autorizaRH = 2
+                      AND (s.autorizaRH = 2 OR s.autorizaRh = 1)
                       AND u.estatus = 1
                       AND u.noEmpleado <> $noEmp
                       AND u.departamento = (SELECT departamento FROM usuarios WHERE noEmpleado = $noEmp)";
