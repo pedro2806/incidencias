@@ -15,7 +15,9 @@ if ($opcion == "rrhh") {
     $sql = "SELECT s.empleado, s.fesolicitud, s.feinicio, DATE_ADD(s.fefin, INTERVAL 1 DAY) as fefin, u.nombre
             FROM solicitudes s
             INNER JOIN usuarios u ON s.empleado = u.noEmpleado
-            WHERE s.estatus = 2 AND s.autorizaRH = 2 AND u.estatus = 1"; // Filtrar solo las aprobadas
+            WHERE s.estatus = 2 
+            AND (s.autorizaRH = 2 OR s.autorizaRH = 1)
+            AND u.estatus = 1"; // Filtrar solo las aprobadas
     
     // Validamos que no sea vacío, ni cero, ni el string "null"
     if (!empty($ing) && $ing !== 'null' && $ing !== 'undefined') {
@@ -48,7 +50,10 @@ if ($opcion == "jefes") {
     $sqlJefes = "SELECT s.empleado, s.fesolicitud, s.feinicio, DATE_ADD(s.fefin, INTERVAL 1 DAY) as fefin, u.nombre, u.jefe
                 FROM solicitudes s
                 INNER JOIN usuarios u ON s.empleado = u.noEmpleado
-                WHERE s.estatus = 2 AND s.autorizaRH = 2 AND u.jefe = $noEmpleado_cookie AND u.estatus = 1";
+                WHERE s.estatus = 2 
+                AND (s.autorizaRH = 2 OR s.autorizaRH = 1)
+                AND u.jefe = $noEmpleado_cookie 
+                AND u.estatus = 1";
     
     $resultJefes = $conn->query($sqlJefes);
     
@@ -83,7 +88,7 @@ if ($opcion == "departamento") {
                     FROM solicitudes s
                     INNER JOIN usuarios u ON s.empleado = u.noEmpleado
                     WHERE s.estatus = 2
-                      AND (s.autorizaRH = 2 OR s.autorizaRh = 1)
+                      AND (s.autorizaRH = 2 OR s.autorizaRH = 1)
                       AND u.estatus = 1
                       AND u.noEmpleado <> $noEmp
                       AND u.departamento = (SELECT departamento FROM usuarios WHERE noEmpleado = $noEmp)";
