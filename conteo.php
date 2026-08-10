@@ -14,8 +14,14 @@ $sql = "SELECT u.antiguedad, d.departamento AS departamento, p.puesto AS puesto,
         u.inicio_actual, u.fin_actual,
         COALESCE(dv_actual.dias, 0) AS dias_ley_actual, 
         
+        -- NUEVO: Días que le correspondían por ley en el periodo anterior
+        COALESCE(dv_anterior.dias, 0) AS dias_ley_anterior,
+        
         -- Días solicitados en el periodo actual
         COALESCE(( SELECT SUM(s.dias) FROM solicitudes s WHERE s.empleado = u.noEmpleado AND s.fesolicitud BETWEEN u.inicio_actual AND u.fin_actual AND s.estatus = 2 AND s.autorizaRH = 2 AND s.tipo = 1 ), 0) AS diasSol, 
+        
+        -- Días solicitados en el periodo anterior
+        COALESCE(( SELECT SUM(s.dias) FROM solicitudes s WHERE s.empleado = u.noEmpleado AND s.fesolicitud BETWEEN u.inicio_anterior AND u.fin_anterior AND s.estatus = 2 AND s.autorizaRH = 2 AND s.tipo = 1 ), 0) AS diasSolAnterior, 
         
         -- Días disponibles totales: (Días de ley + Ajuste por exceso/remanente anterior) - Días solicitados actuales
         ( 
@@ -48,6 +54,9 @@ $diasLey = $datos['dias_ley_actual'] ?? 0;
 $diasSol = $datos['diasSol'] ?? 0;
 $diasDisponibles = $datos['diasdisponibles'] ?? 0;
 $fechaRenovacion = $datos['fin_actual'] ?? '';
+$diasLeyAnterior = $datos['dias_ley_anterior'] ?? 0;
+$diasSolAnterior = $datos['diasSolAnterior'] ?? 0;
+$diasDeuda = max(0, $diasSolAnterior - $diasLeyAnterior);
 ?>
 
 <!-- Content Row / Rediseño de Tarjetas de Vacaciones -->
@@ -73,16 +82,16 @@ $fechaRenovacion = $datos['fin_actual'] ?? '';
     </div>
     
     <!-- Tarjeta 2: Antigüedad y Días de Ley -->
-    <div class="col-xl-3 col-md-6 mb-3">
+    <div class="col-xl-2 col-md-6 mb-2">
         <div class="card border-left-info shadow h-100 py-0">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">                        
                         <div class="h6 mb-0 font-weight-bold text-gray-800">
-                            Antigüedad: <?php echo $antiguedad; ?> años
+                            Antig.: <?php echo $antiguedad; ?> años
                         </div>
                         <div class="h6 mb-0 font-weight-bold text-gray-800 mt-1">
-                            Vac. por ley: <?php echo $diasLey; ?> días
+                            Vac. X ley: <?php echo $diasLey; ?> días
                         </div>
                     </div>
                     <div class="col-auto">
@@ -117,14 +126,16 @@ $fechaRenovacion = $datos['fin_actual'] ?? '';
     </div>
     
     <!-- Tarjeta 4: Fecha de Renovación -->
-    <div class="col-xl-3 col-md-6 mb-3">
+    <div class="col-xl-4 col-md-6 mb-3">
         <div class="card border-left-success shadow h-100 py-0">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">                        
-                        <div class="text-muted small">Renovación de Vacaciones:</div>
+                    <div class="col mr-2">                                                
                         <div class="h6 mb-0 font-weight-bold text-gray-800 mt-1">
-                            <?php echo $fechaRenovacion; ?>                        
+                            Renovación de Vac.: <?php echo $fechaRenovacion; ?>                        
+                        </div>
+                        <div class="h6 mb-0 font-weight-bold text-gray-800 mt-1">
+                            Días adelantados  del periodo anterior: <?php echo $diasDeuda; ?>                        
                         </div>
                     </div>
                     <div class="col-auto">

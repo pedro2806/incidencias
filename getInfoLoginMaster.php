@@ -28,6 +28,10 @@ $correo = $_POST["correo"];
     if($accion == "getInfo") {
         
         $sql = "SELECT u.antiguedad, d.departamento AS departamento, p.puesto AS puesto, j.nombre AS jefe, u.fechaIngreso, COALESCE(dv_actual.dias, 0) AS dias_ley_actual, 
+                -- NUEVO: Días que le correspondían por ley en el periodo anterior
+                COALESCE(dv_anterior.dias, 0) AS dias_ley_anterior,
+                -- Días solicitados en el periodo anterior
+                COALESCE(( SELECT SUM(s.dias) FROM solicitudes s WHERE s.empleado = u.noEmpleado AND s.fesolicitud BETWEEN u.inicio_anterior AND u.fin_anterior AND s.estatus = 2 AND s.autorizaRH = 2 AND s.tipo = 1 ), 0) AS diasSolAnterior,
                 COALESCE(( SELECT SUM(s.dias) FROM solicitudes s WHERE s.empleado = u.noEmpleado AND s.fesolicitud BETWEEN u.inicio_actual AND u.fin_actual AND s.estatus = 2 AND s.autorizaRH = 2 AND s.tipo = 1 ), 0) AS diasSol, 
                 ( COALESCE(dv_actual.dias, 0) - GREATEST(0, COALESCE(( SELECT SUM(s.dias) FROM solicitudes s WHERE s.empleado = u.noEmpleado AND s.fesolicitud BETWEEN u.inicio_anterior AND u.fin_anterior AND s.estatus = 2 AND s.autorizaRH = 2 AND s.tipo = 1 ), 0) - COALESCE(dv_anterior.dias, 0) ) ) AS diasdisponibles, 
                 u.foto
