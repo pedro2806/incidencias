@@ -27,23 +27,41 @@ $correo = $_POST["correo"];
 //MODIFICAR Usuario 
     if($accion == "getInfo") {
         
-        $sql = "SELECT u.antiguedad, d.departamento AS departamento, p.puesto AS puesto, j.nombre AS jefe, u.fechaIngreso, COALESCE(dv_actual.dias, 0) AS dias_ley_actual, 
-                -- NUEVO: Días que le correspondían por ley en el periodo anterior
-                COALESCE(dv_anterior.dias, 0) AS dias_ley_anterior,
-                -- Días solicitados en el periodo anterior
-                COALESCE(( SELECT SUM(s.dias) FROM solicitudes s WHERE s.empleado = u.noEmpleado AND s.fesolicitud BETWEEN u.inicio_anterior AND u.fin_anterior AND s.estatus = 2 AND s.autorizaRH = 2 AND s.tipo = 1 ), 0) AS diasSolAnterior,
-                COALESCE(( SELECT SUM(s.dias) FROM solicitudes s WHERE s.empleado = u.noEmpleado AND s.fesolicitud BETWEEN u.inicio_actual AND u.fin_actual AND s.estatus = 2 AND s.autorizaRH = 2 AND s.tipo = 1 ), 0) AS diasSol, 
-                ( COALESCE(dv_actual.dias, 0) - GREATEST(0, COALESCE(( SELECT SUM(s.dias) FROM solicitudes s WHERE s.empleado = u.noEmpleado AND s.fesolicitud BETWEEN u.inicio_anterior AND u.fin_anterior AND s.estatus = 2 AND s.autorizaRH = 2 AND s.tipo = 1 ), 0) - COALESCE(dv_anterior.dias, 0) ) ) AS diasdisponibles, 
-                u.foto
-                FROM ( SELECT foto, noEmpleado, fechaIngreso, jefe, departamento, puesto, TIMESTAMPDIFF(YEAR, fechaIngreso, CURDATE()) AS antiguedad, 
-                CASE WHEN MAKEDATE(YEAR(CURDATE()), DAYOFYEAR(fechaIngreso)) > CURDATE() THEN MAKEDATE(YEAR(CURDATE()) - 1, DAYOFYEAR(fechaIngreso)) ELSE MAKEDATE(YEAR(CURDATE()), DAYOFYEAR(fechaIngreso)) END AS inicio_actual, CASE WHEN MAKEDATE(YEAR(CURDATE()), DAYOFYEAR(fechaIngreso)) > CURDATE() THEN MAKEDATE(YEAR(CURDATE()), DAYOFYEAR(fechaIngreso)) ELSE MAKEDATE(YEAR(CURDATE()) + 1, DAYOFYEAR(fechaIngreso)) END AS fin_actual,                 
-                CASE WHEN MAKEDATE(YEAR(CURDATE()), DAYOFYEAR(fechaIngreso)) > CURDATE() THEN MAKEDATE(YEAR(CURDATE()) - 1, DAYOFYEAR(fechaIngreso)) ELSE MAKEDATE(YEAR(CURDATE()) - 1, DAYOFYEAR(fechaIngreso)) END AS inicio_anterior, CASE WHEN MAKEDATE(YEAR(CURDATE()), DAYOFYEAR(fechaIngreso)) > CURDATE() THEN MAKEDATE(YEAR(CURDATE()) - 1, DAYOFYEAR(fechaIngreso)) ELSE MAKEDATE(YEAR(CURDATE()), DAYOFYEAR(fechaIngreso)) END AS fin_anterior 
-                FROM usuarios WHERE noEmpleado = $noEmpleado ) u 
-                LEFT JOIN usuarios j ON u.jefe = j.noEmpleado 
-                LEFT JOIN departamento d ON u.departamento = d.id 
-                LEFT JOIN puesto p ON u.puesto = p.id 
-                LEFT JOIN diasvacaciones dv_actual ON dv_actual.anio = u.antiguedad 
-                LEFT JOIN diasvacaciones dv_anterior ON dv_anterior.anio = GREATEST(0, u.antiguedad - 1) GROUP BY u.noEmpleado;";
+        $sql = "SELECT 
+    u.antiguedad, 
+    d.departamento AS departamento, 
+    p.puesto AS puesto, 
+    j.nombre AS jefe, 
+    u.fechaIngreso, 
+    COALESCE(dv_actual.dias, 0) AS dias_ley_actual, 
+    COALESCE(dv_anterior.dias, 0) AS dias_ley_anterior,
+    
+    COALESCE(( SELECT SUM(s.dias) FROM solicitudes s WHERE s.empleado = u.noEmpleado AND s.fesolicitud BETWEEN u.inicio_anterior AND u.fin_anterior AND s.estatus = 2 AND s.autorizaRH = 2 AND s.tipo = 1 ), 0) AS diasSolAnterior,
+    COALESCE(( SELECT SUM(s.dias) FROM solicitudes s WHERE s.empleado = u.noEmpleado AND s.fesolicitud BETWEEN u.inicio_actual AND u.fin_actual AND s.estatus = 2 AND s.autorizaRH = 2 AND s.tipo = 1 ), 0) AS diasSol, 
+    
+    ( 
+        (COALESCE(dv_actual.dias, 0) - GREATEST(0, COALESCE(( SELECT SUM(s.dias) FROM solicitudes s WHERE s.empleado = u.noEmpleado AND s.fesolicitud BETWEEN u.inicio_anterior AND u.fin_anterior AND s.estatus = 2 AND s.autorizaRH = 2 AND s.tipo = 1 ), 0) - COALESCE(dv_anterior.dias, 0))) 
+        - 
+        COALESCE(( SELECT SUM(s.dias) FROM solicitudes s WHERE s.empleado = u.noEmpleado AND s.fesolicitud BETWEEN u.inicio_actual AND u.fin_actual AND s.estatus = 2 AND s.autorizaRH = 2 AND s.tipo = 1 ), 0)
+    ) AS diasdisponibles, 
+    
+    u.foto
+FROM ( 
+    SELECT 
+        foto, noEmpleado, fechaIngreso, jefe, departamento, puesto, 
+        TIMESTAMPDIFF(YEAR, fechaIngreso, CURDATE()) AS antiguedad, 
+        DATE_ADD(fechaIngreso, INTERVAL TIMESTAMPDIFF(YEAR, fechaIngreso, CURDATE()) YEAR) AS inicio_actual,
+        DATE_SUB(DATE_ADD(fechaIngreso, INTERVAL TIMESTAMPDIFF(YEAR, fechaIngreso, CURDATE()) + 1 YEAR), INTERVAL 1 DAY) AS fin_actual,
+        DATE_ADD(fechaIngreso, INTERVAL TIMESTAMPDIFF(YEAR, fechaIngreso, CURDATE()) - 1 YEAR) AS inicio_anterior,
+        DATE_SUB(DATE_ADD(fechaIngreso, INTERVAL TIMESTAMPDIFF(YEAR, fechaIngreso, CURDATE()) YEAR), INTERVAL 1 DAY) AS fin_anterior
+    FROM usuarios WHERE noEmpleado = '$noEmpleado'  
+) u 
+LEFT JOIN usuarios j ON u.jefe = j.noEmpleado 
+LEFT JOIN departamento d ON u.departamento = d.id 
+LEFT JOIN puesto p ON u.puesto = p.id 
+LEFT JOIN diasvacaciones dv_actual ON dv_actual.anio = u.antiguedad 
+LEFT JOIN diasvacaciones dv_anterior ON dv_anterior.anio = GREATEST(0, u.antiguedad - 1) 
+GROUP BY u.noEmpleado";
 
         $result = $conn->query($sql);
         //echo $sql;
