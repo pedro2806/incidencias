@@ -78,8 +78,10 @@ GROUP BY u.noEmpleado";
 
 // Listado de empleados para el Directorio
     if ($accion == 'listarEmpleados') {
-        // u.nave se devuelve crudo (número); cuando exista la tabla `nave`
-        // habrá que hacer LEFT JOIN nave n ON u.nave = n.id y devolver n.nombre.
+        // Nave: usuarios.nave guarda el idNave del catálogo `nave` (idNave,
+        // nave), el mismo que usa Gestión Personal; aquí se devuelve el nombre.
+        // Un id que no esté en el catálogo se devuelve tal cual, para que no
+        // desaparezca del directorio. (No es mess_activos_fijos.cat_naves.)
         // Teléfonos: tabla `telefono` 1:N (un empleado puede tener varios).
         // Se concatenan todos en un solo string ya formateado, sin filtrar tipo.
         $sql = "SELECT u.noEmpleado,
@@ -91,11 +93,12 @@ GROUP BY u.noEmpleado";
                        u.correo,
                        d.departamento AS area,
                        p.puesto       AS puesto,
-                       u.nave         AS nave,
+                       COALESCE(n.nave, NULLIF(u.nave, '')) AS nave,
                        tel.telefono   AS telefono
                 FROM usuarios u
                 LEFT JOIN departamento d ON u.departamento = d.id
                 LEFT JOIN puesto p       ON u.puesto       = p.id
+                LEFT JOIN nave n         ON n.idNave       = u.nave
                 LEFT JOIN (
                     SELECT t.noEmpleado,
                            GROUP_CONCAT(
