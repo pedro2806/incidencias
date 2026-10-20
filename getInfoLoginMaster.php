@@ -147,7 +147,8 @@ GROUP BY u.noEmpleado";
             $id_usuario = $rowUsuario['id_usuario'];
 
             // 2. Obtener placa desde la tabla inventario usando id_usuario
-            $sqlPlaca = "SELECT placa FROM mess_control_vehicular.inventario WHERE id_usuario = $id_usuario ORDER BY id_vehiculo DESC LIMIT 1";
+            // Solo activos: sin esto devolvía el vehículo más reciente aunque ya estuviera dado de baja.
+            $sqlPlaca = "SELECT placa FROM mess_control_vehicular.inventario WHERE id_usuario = $id_usuario AND estatus = 'Activo' ORDER BY id_vehiculo DESC LIMIT 1";
             $resultPlaca = $conn->query($sqlPlaca);
 
             if ($resultPlaca && $resultPlaca->num_rows > 0) {
