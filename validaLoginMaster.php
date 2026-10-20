@@ -17,12 +17,13 @@ if ($accion == 'getPlaca') {
         $rowUsuario = $resultUsuario->fetch_assoc();
         $id_usuario = $rowUsuario['id_usuario'];
 
-        $sqlPlaca = "SELECT id_vehiculo, placa, modelo FROM inventario WHERE id_usuario = $id_usuario OR id_us_asignado = $id_usuario
+        // Solo vehículos activos: uno dado de baja seguía saliendo a su último dueño.
+        $sqlPlaca = "SELECT id_vehiculo, placa, modelo FROM inventario WHERE (id_usuario = $id_usuario OR id_us_asignado = $id_usuario) AND estatus = 'Activo'
                      UNION
                      SELECT inv.id_vehiculo, inv.placa, inv.modelo
                      FROM inventario inv
                      INNER JOIN prestamos p ON inv.id_vehiculo = p.id_vehiculo
-                     WHERE p.id_usuario = $id_usuario AND p.estatus IN ('AUTORIZADO','EN CURSO')";
+                     WHERE p.id_usuario = $id_usuario AND p.estatus IN ('AUTORIZADO','EN CURSO') AND inv.estatus = 'Activo'";
         $resultPlaca = $conn->query($sqlPlaca);
 
         $vehiculos = [];
