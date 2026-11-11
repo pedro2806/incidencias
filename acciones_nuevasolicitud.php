@@ -4,7 +4,8 @@
  *
  * Acciones (POST 'accion'):
  *   - empleadosSolicita : lista de empleados para los que el usuario puede solicitar
- *   - jefeAutoriza      : nombre del jefe que autoriza al usuario en sesion
+ *   - jefeAutoriza      : nombre del jefe que autoriza al colaborador seleccionado
+ *                         (POST 'solicita'; si no viene, el usuario en sesion)
  *   - agregarSolicitud  : inserta los periodos de la solicitud
  *
  * Seguridad: todas las consultas usan prepared statements. El numero de
@@ -31,6 +32,47 @@ if ($stmt = $conn->prepare("SELECT rol FROM usuarios WHERE noEmpleado = ?")) {
         $rol = (int) $rolDb;
     }
     $stmt->close();
+}
+
+/**
+ * Indica si el usuario en sesion puede solicitar a nombre de $solicita.
+ * Mismas reglas que la lista de 'empleadosSolicita'.
+ */
+function puedeSolicitarPara($conn, $rol, $noEmpleado, $solicita)
+{
+    // Sin sesion valida no se puede solicitar para nadie
+    if ($noEmpleado <= 0 || $solicita <= 0) {
+        return false;
+    }
+    if ($solicita === $noEmpleado) {
+        return true;
+    }
+    if ($rol == 2 || ($rol != 1 && $noEmpleado == 403)) {
+        return true;
+    }
+
+    if ($rol == 1) {
+        $sql  = "SELECT 1 FROM usuarios WHERE noEmpleado = ? AND estatus = 1";
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            return false;
+        }
+        $stmt->bind_param("i", $solicita);
+    } else {
+        $sql  = "SELECT 1 FROM usuarios WHERE noEmpleado = ? AND jefe = ? AND estatus = 1";
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            return false;
+        }
+        $stmt->bind_param("ii", $solicita, $noEmpleado);
+    }
+
+    $stmt->execute();
+    $stmt->store_result();
+    $permitido = $stmt->num_rows > 0;
+    $stmt->close();
+
+    return $permitido;
 }
 
 /* ------------------------------------------------------------------ *
@@ -80,16 +122,26 @@ if ($accion === 'empleadosSolicita') {
 }
 
 /* ------------------------------------------------------------------ *
- * Nombre del jefe que autoriza al usuario en sesion                   *
+ * Nombre del jefe que autoriza al colaborador seleccionado            *
  * ------------------------------------------------------------------ */
 if ($accion === 'jefeAutoriza') {
+    $solicita = isset($_POST['solicita']) ? (int) $_POST['solicita'] : 0;
+    if ($solicita <= 0) {
+        $solicita = $noEmpleado;
+    }
+
+    if (!puedeSolicitarPara($conn, $rol, $noEmpleado, $solicita)) {
+        echo json_encode(['success' => false, 'jefe' => '']);
+        exit;
+    }
+
     $jefe = '';
     $sql  = "SELECT us.nombre AS jefe
              FROM usuarios a
              LEFT JOIN usuarios us ON a.jefe = us.noEmpleado
              WHERE a.noEmpleado = ?";
     if ($stmt = $conn->prepare($sql)) {
-        $stmt->bind_param("i", $noEmpleado);
+        $stmt->bind_param("i", $solicita);
         $stmt->execute();
         $stmt->bind_result($jefeDb);
         if ($stmt->fetch()) {

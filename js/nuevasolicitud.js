@@ -3,7 +3,7 @@
  *
  * Backend dedicado: acciones_nuevasolicitud.php
  *   - empleadosSolicita : pobla el select de empleados
- *   - jefeAutoriza      : muestra quién autoriza
+ *   - jefeAutoriza      : muestra quién autoriza al colaborador seleccionado
  *   - agregarSolicitud  : guarda la solicitud
  * Otros endpoints reutilizados:
  *   - getInfoLoginMaster.php (getPlaca)         -> aviso de vehículo
@@ -16,11 +16,14 @@ let renglonCounter = 1;
 
 $(document).ready(function () {
     empleadoSolicita();
-    cargaJefeAutoriza();
     validaRol();
-    validarAntiguedad();
-    validarDiasDisponibles();
+    actualizarBotonSolicitar();
     $('#solicita').select2();
+
+    // Al cambiar de colaborador se actualiza quién autoriza
+    $('#solicita').on('change', function () {
+        cargaJefeAutoriza($(this).val());
+    });
 });
 
 /* ------------------------- Renglones dinámicos ------------------------- */
@@ -65,6 +68,7 @@ function eliminarUltimoRenglon() {
 
 function tIncidencia(ti) {
     $('#opIncidencia').val(ti);
+    actualizarBotonSolicitar();
     if (ti == 1) {
         const noEmpleado = $('#solicita').val() || getCookie('noEmpleado');
         verificaVehiculo(noEmpleado);
@@ -139,6 +143,8 @@ function empleadoSolicita() {
                 select.append(option);
             });
             seleccionaUsuario();
+            // Sincroniza select2 y carga quién autoriza al seleccionado
+            select.trigger('change');
         },
         error: function () {
             Swal.fire({ title: "La solicitúd no se pudo procesar!", icon: "error", draggable: true });
@@ -146,16 +152,17 @@ function empleadoSolicita() {
     });
 }
 
-function cargaJefeAutoriza() {
+function cargaJefeAutoriza(noEmpleado) {
+    const solicita = noEmpleado || '';
     $.ajax({
         url: BACKEND,
         method: 'POST',
         dataType: 'json',
-        data: { accion: 'jefeAutoriza' },
+        data: { accion: 'jefeAutoriza', solicita: solicita },
         success: function (data) {
-            if (data && data.success === true) {
-                $('#autorizaJefe').text(data.jefe || '');
-            }
+            // Ignora respuestas de una selección anterior
+            if (($('#solicita').val() || '') !== solicita) return;
+            $('#autorizaJefe').text(data && data.success === true ? (data.jefe || '') : '');
         }
     });
 }
@@ -203,12 +210,6 @@ function validarFechas(callback) {
 /* -------------------------- Envío de solicitud ------------------------- */
 
 function generarSolicitud() {
-    const diasDisp = $('#diasDisponibles').val();
-    if (diasDisp < 1) {
-        Swal.fire({ title: "No tienes días disponibles para solicitar.", icon: "warning", draggable: true });
-        return;
-    }
-
     const opIncidencia = $('#opIncidencia').val();
     const notas = $('#notas').val();
     const comentarios = $('#comentarios').val();
@@ -216,6 +217,12 @@ function generarSolicitud() {
 
     if (opIncidencia == '' || opIncidencia == null) {
         Swal.fire({ title: "Es necesario seleccionar el tipo de incidencia!", icon: "warning", draggable: true });
+        return;
+    }
+
+    const motivo = motivoBloqueo(opIncidencia);
+    if (motivo) {
+        Swal.fire({ title: motivo, icon: "warning", draggable: true });
         return;
     }
 
@@ -341,34 +348,45 @@ function validaRol() {
     etiqueta.innerHTML = nombre;
 
     if (cookieRol == 1) {
-        document.getElementById('Divsolicita').style.display = 'none';
-        document.getElementById('DivsolicitaMss').style.display = 'none';
+        // jQuery ignora el selector que no exista (DivsolicitaMss ya no está en la página)
+        $('#Divsolicita, #DivsolicitaMss').hide();
     }
 }
 
-function validarAntiguedad() {
+/* ---------------------- Reglas para poder solicitar --------------------- */
+
+// Antigüedad y días disponibles solo aplican a vacaciones (tipo 1).
+// Los permisos con goce y sin goce no dependen del saldo de vacaciones.
+// Devuelve el motivo del bloqueo, o null si se puede solicitar.
+function motivoBloqueo(opIncidencia) {
+    if (opIncidencia != 1) return null;
+
     const antiguedad = getCookie('antiguedad');
     if (antiguedad < 1) {
-        $("#btnSolicitar").prop("disabled", true);
-        $("#mensaje").text("No puedes solicitar vacaciones hasta tener un año de antigüedad.");
-    } else {
-        $("#btnSolicitar").prop("disabled", false);
-        $("#mensaje").text("MESS " + new Date().getFullYear());
+        return "No puedes solicitar vacaciones hasta tener un año de antigüedad. Puedes solicitar permiso sin goce o con goce.";
     }
-}
 
-function validarDiasDisponibles() {
     const diasDisp = $('#diasDisponibles').val();
     if (diasDisp < 1) {
-        $("#btnSolicitar").prop("disabled", true);
-        $("#btnSolicitar").hide();
-        $("#mensaje").text("No puedes solicitar vacaciones. * No tienes dias disponibles. *");
-        $("#mensaje").addClass("badge text-bg-warning");
-        $("#mensaje").css("font-size", "1.2rem");
+        return "No tienes días disponibles de vacaciones. Puedes solicitar permiso sin goce o con goce.";
+    }
+
+    return null;
+}
+
+function actualizarBotonSolicitar() {
+    const motivo = motivoBloqueo($('#opIncidencia').val());
+    const btn = $('#btnSolicitar');
+    const mensaje = $('#mensaje');
+
+    mensaje.removeClass('text-bg-warning text-bg-primary').addClass('badge');
+
+    if (motivo) {
+        btn.prop('disabled', true).hide();
+        mensaje.text(motivo).addClass('text-bg-warning').css('font-size', '1.2rem');
     } else {
-        $("#btnSolicitar").prop("disabled", false);
-        $("#mensaje").text("MESS " + new Date().getFullYear());
-        $("#mensaje").addClass("badge text-bg-primary");
+        btn.prop('disabled', false).show();
+        mensaje.text("MESS " + new Date().getFullYear()).addClass('text-bg-primary').css('font-size', '');
     }
 }
 

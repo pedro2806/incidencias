@@ -84,7 +84,12 @@ GROUP BY u.noEmpleado";
         // desaparezca del directorio. (No es mess_activos_fijos.cat_naves.)
         // Teléfonos: tabla `telefono` 1:N (un empleado puede tener varios).
         // Se concatenan todos en un solo string ya formateado, sin filtrar tipo.
+        // es_agente: las cuentas de los agentes de IA (usuarios.tipo_usr = 'AGENTE').
+        // loginMaster las saca de "Empleados" y las pinta en su sub-pestaña
+        // "Agentes". Va como 1/0 y no el tipo_usr crudo, para no exponer a todos
+        // el tipo de usuario de cada quien.
         $sql = "SELECT u.noEmpleado,
+                       IF(UPPER(TRIM(u.tipo_usr)) = 'AGENTE', 1, 0) AS es_agente,
                        COALESCE(
                            NULLIF(TRIM(CONCAT_WS(' ', u.nombres, u.apellidos)), ''),
                            u.nombre
