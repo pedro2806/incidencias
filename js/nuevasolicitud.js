@@ -204,11 +204,22 @@ function validarFechas(callback) {
 
 function generarSolicitud() {
     const diasDisp = $('#diasDisponibles').val();
-    if (diasDisp < 1) {
+    const esColaborador = getCookie('rol') === '1';
+    if (diasDisp < 1 && esColaborador) {
         Swal.fire({ title: "No tienes días disponibles para solicitar.", icon: "warning", draggable: true });
         return;
     }
 
+    if (diasDisp < 1) {
+        Swal.fire({ title: "No tienes días disponibles para solicitar.", icon: "warning", draggable: true })
+            .then(procesarSolicitud);
+        return;
+    }
+
+    procesarSolicitud();
+}
+
+function procesarSolicitud() {
     const opIncidencia = $('#opIncidencia').val();
     const notas = $('#notas').val();
     const comentarios = $('#comentarios').val();
@@ -359,7 +370,7 @@ function validarAntiguedad() {
 
 function validarDiasDisponibles() {
     const diasDisp = $('#diasDisponibles').val();
-    if (diasDisp < 1) {
+    if (diasDisp < 1 && getCookie('rol') === '1') {
         $("#btnSolicitar").prop("disabled", true);
         $("#btnSolicitar").hide();
         $("#mensaje").text("No puedes solicitar vacaciones. * No tienes dias disponibles. *");

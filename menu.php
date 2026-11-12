@@ -105,6 +105,7 @@ if ($tieneAdmin){
                 <a class = "collapse-item" href = "verVacaciones">Ver solicitudes de vacaciones</a>
                 <a class = "collapse-item" href = "verActividades">Planeación semanal OTs</a>
                 <a class = "collapse-item" href = "restarDias">Restar días </a>
+                <a class = "collapse-item" href = "detalleVacaionesFull">Detalle vacaciones</a>
             </div>
         </div>
     </li>
