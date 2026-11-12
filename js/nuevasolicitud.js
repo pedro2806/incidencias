@@ -358,8 +358,15 @@ function validaRol() {
 // Antigüedad y días disponibles solo aplican a vacaciones (tipo 1).
 // Los permisos con goce y sin goce no dependen del saldo de vacaciones.
 // Devuelve el motivo del bloqueo, o null si se puede solicitar.
+// Si el jefe solicita vacaciones, no se bloquea la solicitud aunque no tenga antigüedad ni días disponibles.
 function motivoBloqueo(opIncidencia) {
     if (opIncidencia != 1) return null;
+
+    // Los usuarios con rol de jefe pueden solicitar vacaciones aunque no cumplan el mínimo
+    // de antigüedad o saldo disponible; el sistema deja libre esa excepción.
+    if (String(getCookie('rol')) === '1') {
+        return null;
+    }
 
     const antiguedad = getCookie('antiguedad');
     if (antiguedad < 1) {
