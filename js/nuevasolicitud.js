@@ -177,6 +177,7 @@ function validarFechas(callback) {
     $('#renglones-container .item-row').each(function (index, row) {
         const fIni = $(row).find('input[name="fechaInicial[]"]').val();
         const fFin = $(row).find('input[name="fechaFinal[]"]').val();
+        solicita = $('#solicita').val() || getCookie('noEmpleado');
         
         // Only add them if the user has filled both fields
         if (fIni && fFin) {
@@ -196,7 +197,7 @@ function validarFechas(callback) {
         url: BACKEND,
         method: 'POST',
         dataType: 'json',
-        data: { accion: 'validarFechas', periodos: periodos },
+        data: { accion: 'validarFechas', periodos: periodos, solicita: solicita },
         success: function (data) {
             callback(data);
         },

@@ -236,6 +236,7 @@ if ($accion === 'agregarSolicitud') {
  * ------------------------------------------------------------------ */
 if ($accion === 'validarFechas') {
     $periodos = isset($_POST['periodos']) ? $_POST['periodos'] : [];
+    $solicita = isset($_POST['solicita']) ? (int) $_POST['solicita'] : $noEmpleado;
     if (!is_array($periodos) || count($periodos) === 0) {
         echo json_encode(['success' => false, 'message' => 'No se proporcionaron periodos para validar.']);
         exit;
@@ -258,7 +259,7 @@ if ($accion === 'validarFechas') {
         exit;
     }
 
-    $stmt->bind_param("i", $noEmpleado);
+    $stmt->bind_param("i", $solicita);
     $stmt->execute();
     $res = $stmt->get_result();
 
