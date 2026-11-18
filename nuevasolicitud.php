@@ -271,7 +271,7 @@
     <script src="vendor/sweetalert2/sweetalert2.all.min.js"></script>
 
     <!-- Lógica de la página -->
-    <script src="js/nuevasolicitud.js"></script>
+    <script src="js/nuevasolicitud.js?v=1.0.1"></script>
 </body>
 
 </html>
